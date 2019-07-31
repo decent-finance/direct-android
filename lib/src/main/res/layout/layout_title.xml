@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +21,12 @@
              android:elevation="8dp">
 
     <ImageView
-            android:id="@+id/ltCexLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:src="@drawable/ic_cex_logo"
-            android:contentDescription="@string/cexd_cex_io_icon"/>
+        android:id="@+id/ltCexLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:src="@drawable/ic_cex_logo"
+        android:contentDescription="@string/cexd_cex_io_icon"/>
 
 </FrameLayout>

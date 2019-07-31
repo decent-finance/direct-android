@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,85 +23,85 @@
                   android:orientation="vertical">
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp">
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
 
             <FrameLayout
-                    android:id="@+id/fcpTitleLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:visibility="gone">
+                android:id="@+id/fcpTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:visibility="gone">
 
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Choose Country"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Choose Country"/>
 
                 <ImageButton
-                        android:id="@+id/fcpSearch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginRight="8dp"
-                        android:background="@null"
-                        android:gravity="center_vertical"/>
+                    android:id="@+id/fcpSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginRight="8dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"/>
 
             </FrameLayout>
 
             <RelativeLayout
-                    android:id="@+id/fcpSearchLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                android:id="@+id/fcpSearchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <Button
-                        android:id="@+id/fcpCloseSearch"
-                        android:layout_width="68dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:textSize="14sp"
-                        android:textStyle="bold"/>
+                    android:id="@+id/fcpCloseSearch"
+                    android:layout_width="68dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
 
                 <EditText
-                        android:id="@+id/fcpQuery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_toStartOf="@id/fcpCloseSearch"
-                        android:layout_toLeftOf="@id/fcpCloseSearch"/>
+                    android:id="@+id/fcpQuery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toStartOf="@id/fcpCloseSearch"
+                    android:layout_toLeftOf="@id/fcpCloseSearch"/>
             </RelativeLayout>
         </FrameLayout>
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ListView
-                    android:id="@+id/fcpList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingBottom="40dp"
-                    tools:listitem="@layout/country_row"/>
+                android:id="@+id/fcpList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="40dp"
+                tools:listitem="@layout/country_row"/>
 
             <Button
-                    android:id="@+id/fcpCancel"
-                    style="@style/Direct.MainButton.Big"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="8dp"
-                    android:text="@string/cexd_cancel"/>
+                android:id="@+id/fcpCancel"
+                style="@style/Direct.MainButton.Big"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:text="@string/cexd_cancel"/>
 
         </FrameLayout>
 

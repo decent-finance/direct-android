@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,20 +17,20 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:background="@drawable/shape_loader_bg"
-            android:elevation="4dp"
-            android:outlineProvider="background">
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_loader_bg"
+        android:elevation="4dp"
+        android:outlineProvider="background">
 
         <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/cexd_indicator_active"
-                android:indeterminateTintMode="src_atop"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/cexd_indicator_active"
+            android:indeterminateTintMode="src_atop"/>
 
     </FrameLayout>
 </merge>

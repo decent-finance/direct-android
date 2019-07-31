@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -168,7 +167,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="@{safeUnbox(model.shouldShowState) ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{model.shouldShowState ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                         android:layout_width="wrap_content"
