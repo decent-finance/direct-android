@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,14 +21,14 @@
     <data>
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.check.CheckActivityViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.check.CheckActivityViewModel"/>
     </data>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <include layout="@layout/layout_title"/>
 

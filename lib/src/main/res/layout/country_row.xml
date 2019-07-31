@@ -24,33 +24,33 @@
                 android:paddingTop="14dp">
 
     <ImageView
-            android:id="@+id/cr_flag"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            tools:src="@drawable/flag_ae"/>
+        android:id="@+id/cr_flag"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        tools:src="@drawable/flag_ae"/>
 
     <TextView
-            android:id="@+id/cr_dial_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            tools:text="+971"/>
+        android:id="@+id/cr_dial_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        tools:text="+971"/>
 
     <TextView
-            android:id="@+id/cr_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/cr_flag"
-            android:layout_toLeftOf="@id/cr_dial_code"
-            android:layout_toRightOf="@id/cr_flag"
-            android:layout_toStartOf="@id/cr_name"
-            tools:text="United Arab Emirates"/>
+        android:id="@+id/cr_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/cr_flag"
+        android:layout_toLeftOf="@id/cr_dial_code"
+        android:layout_toRightOf="@id/cr_flag"
+        android:layout_toStartOf="@id/cr_name"
+        tools:text="United Arab Emirates"/>
 
 </RelativeLayout>

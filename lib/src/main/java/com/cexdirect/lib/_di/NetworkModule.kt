@@ -18,10 +18,7 @@ package com.cexdirect.lib._di
 
 import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib._network.AnalyticsService
-import com.cexdirect.lib._network.MerchantService
-import com.cexdirect.lib._network.OrderService
-import com.cexdirect.lib._network.PaymentService
+import com.cexdirect.lib._network.*
 import com.cexdirect.lib._network.deserializers.OrderStatusDeserializer
 import com.cexdirect.lib._network.models.OrderStatus
 import com.cexdirect.lib._network.serializers.DateDeserializer

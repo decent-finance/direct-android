@@ -38,6 +38,10 @@ android {
         enabled true
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     testOptions {
         animationsDisabled true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'

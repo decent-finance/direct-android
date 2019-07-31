@@ -19,6 +19,7 @@ package com.cexdirect.lib.buy
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.cexdirect.lib._util.orDefault
 import com.cexdirect.lib._util.symbolMap
 import com.cexdirect.lib.databinding.ItemPairBinding
 

@@ -24,37 +24,37 @@
     <data>
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.error.ErrorActivityViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.error.ErrorActivityViewModel"/>
     </data>
 
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="36dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="36dp">
 
             <include layout="@layout/layout_title"/>
 
             <FrameLayout
-                    android:id="@+id/aeErrorFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    tools:fragment="com.cexdirect.direct.error.PurchaseFailedFragment"/>
+                android:id="@+id/aeErrorFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                tools:fragment="com.cexdirect.direct.error.PurchaseFailedFragment"/>
 
             <include
-                    android:id="@+id/abLegal"
-                    layout="@layout/layout_legal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    app:model="@{model}"/>
+                android:id="@+id/abLegal"
+                layout="@layout/layout_legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:model="@{model}"/>
 
         </LinearLayout>
 
