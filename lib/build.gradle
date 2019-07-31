@@ -122,7 +122,7 @@ publish {
     groupId = 'com.cexdirect'
     artifactId = 'lib'
     publishVersion = artifactVersionName
-    desc = 'CEX Direct Android client'
+    desc = 'CEX Direct Client Library'
     website = 'https://github.com/decent-finance/direct-android'
 }
 
