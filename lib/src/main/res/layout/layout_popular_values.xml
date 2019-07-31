@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+                name="values"
+                type="java.util.List&lt;String&gt;"/>
+
+        <variable
+                name="currency"
+                type="String"/>
+
+        <variable
+                name="listener"
+                type="com.cexdirect.lib.buy.ClickListener"/>
+    </data>
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:shrinkColumns="*"
+            android:stretchColumns="*"
+            android:visibility="@{(values == null || values.size() == 0) ? View.GONE : View.VISIBLE}">
+
+        <TableRow>
+
+            <TextView
+                    android:id="@+id/lpvFirst"
+                    style="@style/Direct.PopularAmount"
+                    android:layout_width="95dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="10dp"
+                    android:elevation="0dp"
+                    android:onClick="@{() -> listener.select(values.get(0))}"
+                    android:text="@{(values != null &amp;&amp; values.size() >= 1) ? @string/cexd_popular_placeholder(values.get(0), currency) : ``}"
+                    android:visibility="@{(values != null &amp;&amp; values.size() >= 1) ? View.VISIBLE : View.GONE}"
+                    tools:text="100"/>
+
+            <TextView
+                    android:id="@+id/lpvSecond"
+                    style="@style/Direct.PopularAmount"
+                    android:layout_width="95dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:elevation="0dp"
+                    android:onClick="@{() -> listener.select(values.get(1))}"
+                    android:text="@{(values != null &amp;&amp; values.size() >= 2) ? @string/cexd_popular_placeholder(values.get(1), currency) : ``}"
+                    android:visibility="@{(values != null &amp;&amp; values.size() >= 2) ? View.VISIBLE : View.GONE}"
+                    tools:text="200"/>
+
+            <TextView
+                    android:id="@+id/lpvThird"
+                    style="@style/Direct.PopularAmount"
+                    android:layout_width="95dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="10dp"
+                    android:elevation="0dp"
+                    android:onClick="@{() -> listener.select(values.get(2))}"
+                    android:text="@{(values != null &amp;&amp; values.size() >= 3) ? @string/cexd_popular_placeholder(values.get(2), currency) : ``}"
+                    android:visibility="@{(values != null &amp;&amp; values.size() >= 3) ? View.VISIBLE : View.GONE}"
+                    tools:text="500"/>
+        </TableRow>
+    </TableLayout>
+</layout>

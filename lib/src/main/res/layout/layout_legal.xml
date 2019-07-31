@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="model"
+                type="com.cexdirect.lib.LegalViewModel"/>
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="120dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+            <ImageView
+                    android:id="@+id/llVisaIc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_visa_icon"
+                    android:src="@drawable/ic_pic_visa"/>
+
+            <ImageView
+                    android:id="@+id/llMastercardIc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_mastercard_icon"
+                    android:src="@drawable/ic_pic_mc"/>
+
+            <ImageView
+                    android:id="@+id/llPCIIc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_pci_dss_icon"
+                    android:src="@drawable/ic_pic_pci_dss"/>
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/llLegalAddress"
+                style="@style/Direct.Legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:text="@string/cexd_legal"
+                android:textAlignment="center"/>
+
+        <com.cexdirect.lib.views.LegalButtonLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                app:clickEvent="@{model.legalClickEvent}"
+                app:rules="@{model.rules}"/>
+
+        <TextView
+                style="@style/Direct.Legal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/cexd_questions"/>
+
+        <TextView
+                style="@style/Direct.SecondaryButton"
+                android:layout_width="120dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:onClick="@{() -> model.openSupport()}"
+                android:text="@string/cexd_support"/>
+
+        <TextView
+                style="@style/Direct.SecondaryButton"
+                android:layout_width="120dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="32dp"
+                android:onClick="@{() -> model.exit()}"
+                android:text="@string/cexd_exit"/>
+
+    </LinearLayout>
+</layout>

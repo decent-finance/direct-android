@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Direct</string>
+    <string name="cexd_buy_label">BUY</string>
+    <string name="cexd_legal">© 2013–2019 CEX.IO Ltd (UK)\n\n24th Floor One Canada Square, Canary Wharf London E14 5AB,
+        United Kingdom
+    </string>
+    <string name="cexd_refund_policy">Refund policy</string>
+    <string name="cexd_terms_of_use">Terms of Use</string>
+    <string name="cexd_questions">Have any questions? Contact our</string>
+    <string name="cexd_support">24/7 support</string>
+    <string name="cexd_get">Get %1s %2s</string>
+    <string name="cexd_purchase">Purchase %1s for %2s</string>
+    <string name="cexd_buy">Buy %1s %2s for %3s %4s</string>
+    <string name="cexd_order_id">Order id: %1s</string>
+    <string name="cexd_enter_amount">Enter amount</string>
+    <string name="cexd_next">Next</string>
+    <string name="cexd_try_again">Try again!</string>
+    <string name="cexd_double_check">Please double-check your data and try again, or try a different card.</string>
+    <string name="cexd_charged">If your card has been charged, your payment will be refunded.</string>
+    <string name="cexd_sorry1">We are sorry, but we could not process your order</string>
+    <string name="cexd_purchase_could_not_be_completed">Purchase could not be completed</string>
+    <string name="cexd_sorry2">We are sorry, but we could not verify your purchase with data you provided</string>
+    <string name="cexd_verification_error">Verification Error</string>
+    <string name="cexd_not_charged">No money has been charged from your card</string>
+    <string name="cexd_location_not_supported">Location Not Supported</string>
+    <string name="cexd_sorry3">We are sorry, but we cannot process transactions from your country at this time. We aim
+        for global coverage! We will let you know when our service is available at your location
+    </string>
+    <string name="cexd_receive_emails">I agree to receive notification email</string>
+    <string name="cexd_inform_me">Inform Me!</string>
+    <string name="cexd_email_address">Email Address</string>
+    <string name="cexd_state">State</string>
+    <string name="cexd_cancel">Cancel</string>
+    <string name="cexd_country">Country</string>
+    <string name="cexd_order_completed">You have successfully completed your purchase.</string>
+    <string name="cexd_code">Code</string>
+    <string name="cexd_emailed_to">We have emailed a code to</string>
+    <string name="cexd_take_pic_id">Take Picture of your ID</string>
+    <string name="cexd_take_pic_licence">Take Picture of your drivers licence</string>
+    <string name="cexd_take_pic_passport">Take Picture of your passport</string>
+    <string name="cexd_save">Save</string>
+    <string name="cexd_amount_template">%1s %2s</string>
+    <string name="cexd_ok">OK</string>
+    <string name="cexd_magic">We are performing some special magic and will be back soon</string>
+    <string name="cexd_exit">Exit</string>
+    <string name="cexd_bought">You bought</string>
+    <string name="cexd_for">For</string>
+    <string name="cexd_tx_id">TX ID</string>
+    <string name="cexd_thank_you">Thank you for choosing our services!</string>
+    <string name="cexd_buy_more_crypto">Buy more crypto</string>
+    <string name="cexd_currency_icon">Currency icon</string>
+    <string name="cexd_edit_your_email">Edit Your Email</string>
+    <string name="cexd_email_icon">Email icon</string>
+    <string name="cexd_cvv">CVV</string>
+    <string name="cexd_cvv_desc">A 3-digit number in reverse italics on the back of your credit card</string>
+    <string name="cexd_choose_currency">Choose Currency</string>
+    <string name="cexd_find_a_shot_to_upload">Find a Shot to Upload</string>
+    <string name="cexd_gallery">Gallery</string>
+    <string name="cexd_camera">Camera</string>
+    <string name="cexd_send_crypto_to">Send Crypto To</string>
+    <string name="cexd_wallet">Wallet</string>
+    <string name="cexd_verify_payment">Verify Payment</string>
+    <string name="cexd_verify_payment_desc">Your order requires further verification. If you are uncomfortable with
+        this, try a smaller amount, it may require less details.
+    </string>
+    <string name="cexd_please_fill_information">Please Fill Information</string>
+    <string name="cexd_wallet_icon">Wallet icon</string>
+    <string name="cexd_show_cvv_info">Show CVV info</string>
+    <string name="cexd_cvv_icon">CVV icon</string>
+    <string name="cexd_exp_date">Exp Date</string>
+    <string name="cexd_card_number">Card Number</string>
+    <string name="cexd_card_icon">Card icon</string>
+    <string name="cexd_enter_your_payment_card">Enter Your Payment Card</string>
+    <string name="cexd_selfie_with_your_payment_card">Selfie with Your Payment Card</string>
+    <string name="cexd_upload_photo">Upload photo</string>
+    <string name="cexd_choose_document_type">Choose Document Type</string>
+    <string name="cexd_invalid_email">Invalid Email</string>
+    <string name="cexd_password_icon">Password icon</string>
+    <string name="cexd_submit">Submit</string>
+    <string name="cexd_edit_email">Edit Email</string>
+    <string name="cexd_code_not_received">Code not received</string>
+    <string name="cexd_confirm_your_email_address">Confirm Your Email Address</string>
+    <string name="cexd_processing_your_order_done">Processing Your Order… Done!</string>
+    <string name="cexd_we_are_processing_your_order">We are processing your order…</string>
+    <string name="cexd_processing_done_icon">Processing done icon</string>
+    <string name="cexd_visa_icon">Visa icon</string>
+    <string name="cexd_mastercard_icon">Mastercard icon</string>
+    <string name="cexd_pci_dss_icon">PCI DSS icon</string>
+    <string name="cexd_cex_io_icon">CEX.IO icon</string>
+    <string name="cexd_agree">I agree with</string>
+    <string name="cexd_do_you_want_to_exit">Do you want to exit?</string>
+    <string name="cexd_popular_placeholder">%1s %2s</string>
+    <string name="cexd_order_id_label">Order ID</string>
+    <string name="cexd_order_id_copied">Order ID copied</string>
+</resources>

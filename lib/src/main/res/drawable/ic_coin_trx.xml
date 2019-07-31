@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+    <group>
+        <clip-path android:pathData="M0,0h24v24h-24z M 0,0"/>
+        <path
+                android:pathData="M20.4851,20.4853C25.1714,15.799 25.1714,8.201 20.4851,3.5147C15.7988,-1.1716 8.2009,-1.1716 3.5146,3.5147C-1.1717,8.201 -1.1717,15.799 3.5146,20.4853C8.2009,25.1716 15.7988,25.1716 20.4851,20.4853Z"
+                android:fillColor="#EB0029"/>
+        <path
+                android:pathData="M20.4558,3.4854C15.7696,-1.2009 8.1716,-1.2009 3.4853,3.4854C-1.201,8.1717 -1.201,15.7697 3.4853,20.456L20.4558,3.4854Z"
+                android:fillColor="#FF3155"/>
+        <path
+                android:pathData="M12,22C17.5228,22 22,17.5228 22,12C22,6.4771 17.5228,2 12,2C6.4771,2 2,6.4771 2,12C2,17.5228 6.4771,22 12,22ZM12,23C5.9249,23 1,18.0751 1,12C1,5.9249 5.9249,1 12,1C18.0751,1 23,5.9249 23,12C23,18.0751 18.0751,23 12,23Z"
+                android:fillColor="#ffffff"/>
+        <path
+                android:pathData="M16.5723,7.9455L6,6L11.5639,20L19.3162,10.555L16.5723,7.9455ZM16.4022,8.8028L18.0194,10.3399L13.5961,11.1409L16.4022,8.8028ZM12.6356,10.9807L7.9733,7.1141L15.5933,8.5162L12.6356,10.9807ZM12.3033,11.6645L11.5433,17.9492L7.4444,7.6344L12.3033,11.6645ZM13.007,11.9981L17.9049,11.1111L12.2867,17.9558L13.007,11.9981Z"
+                android:fillColor="#ffffff"/>
+    </group>
+</vector>

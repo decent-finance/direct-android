@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+    <group>
+        <clip-path android:pathData="M0,0h24v24h-24z M 0,0"/>
+        <path
+                android:pathData="M20.4851,20.4853C25.1714,15.799 25.1714,8.201 20.4851,3.5147C15.7988,-1.1716 8.2009,-1.1716 3.5146,3.5147C-1.1717,8.201 -1.1717,15.799 3.5146,20.4853C8.2009,25.1716 15.7988,25.1716 20.4851,20.4853Z"
+                android:fillColor="#0C87F2"/>
+        <path
+                android:pathData="M20.4558,3.4854C15.7696,-1.2009 8.1716,-1.2009 3.4853,3.4854C-1.201,8.1717 -1.201,15.7697 3.4853,20.456L20.4558,3.4854Z"
+                android:fillColor="#319BF7"
+                android:fillType="evenOdd"/>
+        <path
+                android:pathData="M12,22C17.5228,22 22,17.5228 22,12C22,6.4771 17.5228,2 12,2C6.4771,2 2,6.4771 2,12C2,17.5228 6.4771,22 12,22ZM12,23C5.9249,23 1,18.0751 1,12C1,5.9249 5.9249,1 12,1C18.0751,1 23,5.9249 23,12C23,18.0751 18.0751,23 12,23Z"
+                android:fillColor="#0A72CC"
+                android:fillType="evenOdd"/>
+        <path
+                android:pathData="M15.4795,15.499V17.5999H7.7519V16.227C8.6508,15.855 9.6503,14.889 9.6503,13.7378C9.6503,13.5002 9.634,13.2968 9.5995,13.0597H7.9386V11.3144H9.2938C9.2103,10.8911 9.1585,10.3983 9.1585,9.9424C9.1585,7.8064 10.7181,6.3999 12.9875,6.3999C13.9199,6.3999 14.6152,6.6024 14.9876,6.8064L14.5634,8.7556C14.2428,8.5694 13.7673,8.4509 13.1415,8.4509C11.9375,8.4509 11.566,9.2298 11.566,10.0441C11.566,10.4856 11.616,10.892 11.7172,11.3153H14.0398V13.0606H11.9384C11.9552,13.4848 11.9216,13.8731 11.7849,14.2637C11.6328,14.6884 11.3616,15.1116 10.9552,15.4672V15.5008L15.48,15.4994L15.4795,15.499Z"
+                android:fillColor="#ffffff"/>
+    </group>
+</vector>

@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+    <path
+            android:pathData="M12,9C13.1046,9 14,8.1046 14,7C14,5.8954 13.1046,5 12,5C10.8954,5 10,5.8954 10,7C10,8.1046 10.8954,9 12,9ZM12,11C9.7909,11 8,9.2091 8,7C8,4.7909 9.7909,3 12,3C14.2091,3 16,4.7909 16,7C16,9.2091 14.2091,11 12,11Z"
+            android:fillColor="#39414D"/>
+    <path
+            android:pathData="M18.9285,20C18.4433,16.6077 15.5259,14 11.9994,14C8.4729,14 5.5555,16.6077 5.0703,20C5.3853,20 5.8305,20 6.4994,20C8.9994,20 8.9994,20 11.9994,20C14.9994,20 14.9994,20 17.4994,20C18.1683,20 18.6135,20 18.9285,20Z"
+            android:strokeWidth="2"
+            android:fillColor="#00000000"
+            android:fillType="evenOdd"
+            android:strokeColor="#39414D"/>
+</vector>

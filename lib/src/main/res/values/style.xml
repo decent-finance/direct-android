@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<resources>
+
+    <style name="Direct" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:windowBackground">@color/cexd_screen_bg</item>
+        <item name="colorPrimary">@color/cexd_title_bg</item>
+        <item name="colorPrimaryDark">@color/cexd_title_bg</item>
+        <item name="colorAccent">@color/cexd_accent</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.Logo">
+        <item name="android:background">@color/cexd_title_bg</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="Direct.PopularAmount">
+        <item name="android:background">@drawable/shape_bg_textfield</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Direct.Textfield">
+        <item name="fontFamily">@font/open_sans</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+    </style>
+
+    <style name="Direct.Textfield.Purchase" parent="Direct.Textfield">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Direct.Textfield.L" parent="Direct.Textfield">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Direct.Textfield.M" parent="Direct.Textfield">
+        <item name="android:background">@drawable/shape_bg_textfield</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Direct.Textfield.M.Crypto" parent="Direct.Textfield.M">
+        <item name="android:background">@drawable/shape_bg_crypto_amount</item>
+    </style>
+
+    <style name="Direct.Textfield.M2" parent="Direct.Textfield">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="Direct.Textfield.M2.Bold" parent="Direct.Textfield.M2">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Direct.Textfield.S" parent="Direct.Textfield">
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
+    <style name="Direct.Textfield.S2" parent="Direct.Textfield.S">
+        <item name="android:textColor">@color/cexd_textfield_text_secondary</item>
+    </style>
+
+    <style name="Direct.Input">
+        <item name="android:textColorHint">@color/cexd_textfield_text</item>
+        <item name="android:background">@drawable/shape_bg_input</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textCursorDrawable">@drawable/shape_cursor</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.InputLayout">
+        <item name="android:addStatesFromChildren">true</item>
+        <item name="android:background">@drawable/shape_bg_input</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:layout_height">60dp</item>
+    </style>
+
+    <style name="Direct.Input2">
+        <item name="android:textColorHint">@color/cexd_textfield_text</item>
+        <item name="android:background">@color/cexd_input_bg</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textCursorDrawable">@drawable/shape_cursor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.MainButton">
+        <item name="android:background">@drawable/selector_bg_main_button</item>
+        <item name="android:textColor">@drawable/selector_text_main_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.MainButton.Big" parent="Direct.MainButton">
+        <item name="android:textSize">20sp</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:outlineProvider">background</item>
+    </style>
+
+    <style name="Direct.MainButton.Small" parent="Direct.MainButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:layout_height">32dp</item>
+    </style>
+
+    <style name="Direct.SecondaryButton">
+        <item name="android:background">@drawable/shape_bg_btn_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.SecondaryButton.Big" parent="Direct.SecondaryButton">
+        <item name="android:background">@drawable/shape_bg_secondary_button</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Direct.Legal">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.ErrorTitle" parent="Direct.Textfield">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="Direct.ErrorText" parent="Direct.Textfield">
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Direct.ErrorReason" parent="Direct.ErrorText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Direct.Checkbox">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:buttonTint">@color/cexd_black</item>
+        <item name="android:textColorSecondary">@color/cexd_white</item>
+    </style>
+
+    <style name="Direct.CountryPickerStyle">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textColorHint">@color/cexd_textfield_text</item>
+        <item name="android:background">@color/cexd_input_bg</item>
+        <item name="android:drawable">@drawable/ic_gray_search</item>
+    </style>
+
+    <style name="Direct.TextHint">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textColorHint">@color/cexd_textfield_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Direct.StepLabel">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/cexd_white</item>
+    </style>
+
+    <style name="Direct.Receipt">
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+    </style>
+
+    <style name="Direct.Receipt.Title" parent="Direct.Receipt">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Direct.Receipt.Field" parent="Direct.Receipt">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Direct.Receipt.Tx" parent="Direct.Receipt">
+        <item name="android:background">@drawable/shape_bg_tx</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="Direct.Receipt.Total" parent="Direct.Receipt">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Direct.IdentityTitle" parent="Direct.Textfield">
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Direct.TypeSelector" parent="Direct.Textfield">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <!--<item name="android:windowCloseOnTouchOutside">false</item>-->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="EditEmailDialogStyle" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:colorBackground">@color/cexd_bottom_sheet_bg</item>
+    </style>
+
+    <style name="Direct.DialogTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/cexd_white</item>
+    </style>
+
+    <style name="Direct.DialogButton">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+    </style>
+
+    <style name="Direct.Picker">
+        <item name="android:padding">10dp</item>
+        <item name="android:background">#EBEEF2</item>
+    </style>
+
+    <style name="Direct.Picker.Pair">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/cexd_black</item>
+
+        <item name="android:background">@null</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.Picker.Pair.Bold" parent="Direct.Picker.Pair">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Direct.Picker.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/cexd_black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.Textfield.Error">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/cexd_red</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.ErrorLayout">
+        <item name="android:padding">16dp</item>
+        <item name="android:clipChildren">false</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@drawable/shape_error_bg</item>
+    </style>
+
+    <style name="Direct.Transparent" parent="Direct">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/cexd_transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Direct.Stub">
+        <item name="android:windowBackground">@color/cexd_screen_bg</item>
+        <item name="colorPrimary">@color/cexd_screen_bg</item>
+        <item name="colorPrimaryDark">@color/cexd_screen_bg</item>
+        <item name="colorAccent">@color/cexd_accent</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Direct.Stub.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/cexd_stub_text</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+</resources>

@@ -1,0 +1,5 @@
+ext {
+    def configPropertiesFile = rootProject.file("config.properties")
+    configProperties = new Properties()
+    configProperties.load(new FileInputStream(configPropertiesFile))
+}

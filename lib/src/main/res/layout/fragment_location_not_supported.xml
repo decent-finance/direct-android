@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+                name="model"
+                type="com.cexdirect.lib.error.ErrorActivityViewModel"/>
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                style="@style/Direct.ErrorTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/cexd_location_not_supported"/>
+
+        <LinearLayout
+                style="@style/Direct.ErrorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+            <TextView
+                    style="@style/Direct.ErrorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cexd_sorry3"/>
+
+            <LinearLayout
+                    style="@style/Direct.InputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="40dp">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:contentDescription="@string/cexd_email_icon"
+                        android:src="@drawable/ic_email"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:clipChildren="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            style="@style/Direct.Input2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/cexd_email_address"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:text="@={model.userEmail}"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <CheckBox
+                    style="@style/Direct.Checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:checked="@={model.emailNotificationChecked}"
+                    android:text="@string/cexd_receive_emails"/>
+
+            <Button
+                    style="@style/Direct.MainButton.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:elevation="8dp"
+                    android:onClick="@{() -> model.informMe()}"
+                    android:text="@string/cexd_inform_me"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>
