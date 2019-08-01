@@ -17,6 +17,7 @@
 package com.cexdirect.lib.error
 
 import android.content.Intent
+import android.net.Uri
 import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -27,6 +28,7 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectMockRule
@@ -37,6 +39,8 @@ import com.cexdirect.lib.terms.TermsActivity
 import com.cexdirect.lib.util.TEST_PLACEMENT
 import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.Assume.assumeThat
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
@@ -193,6 +197,11 @@ class ErrorActivityTest {
 
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_support)).perform(scrollTo(), click())
+
+        val resolved = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:support@cex.io")
+        }.resolveActivity(InstrumentationRegistry.getInstrumentation().targetContext.packageManager)
+        assumeThat(resolved, notNullValue())
 
         intended(allOf(hasData("mailto:support@cex.io"), hasAction(Intent.ACTION_SENDTO)))
     }
