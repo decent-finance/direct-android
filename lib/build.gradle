@@ -3,8 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.novoda.bintray-release'
-apply plugin: "com.cmgapps.licenses"
+apply plugin: 'com.cmgapps.licenses'
 apply from: '../config.gradle'
 
 import com.cmgapps.license.OutputType
@@ -14,7 +13,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def artifactVersionName = '1.0.0-alpha1'
+version '1.0.0-alpha1'
 
 android {
     compileSdkVersion 28
@@ -22,7 +21,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionName artifactVersionName
+        versionName this.version
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
     }
@@ -92,7 +91,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             consumerProguardFiles 'consumer-proguard-rules.pro'
         }
@@ -109,21 +108,11 @@ android {
 }
 
 licenses {
-    outputType = OutputType.MD
+    outputType = OutputType.TEXT
 }
 
 allOpen {
     annotation 'com.cexdirect.lib.OpenForTesting'
-}
-
-publish {
-    userOrg = 'decent-finance'
-    repoName = 'direct-android'
-    groupId = 'com.cexdirect'
-    artifactId = 'lib'
-    publishVersion = artifactVersionName
-    desc = 'CEX Direct Client Library'
-    website = 'https://github.com/decent-finance/direct-android'
 }
 
 ext {
@@ -203,3 +192,5 @@ dependencies {
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
     kaptAndroidTest 'androidx.databinding:databinding-compiler:3.4.2'
 }
+
+apply from: 'publish.gradle'

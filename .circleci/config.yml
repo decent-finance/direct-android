@@ -1,11 +1,15 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/direct
+version: 2.1
+
+executors:
+  android:
     docker:
       - image: circleci/android:api-29
-    environment:
-      JVM_OPTS: -Xmx3200m
+    working_directory: ~/direct
+
+
+jobs:
+  prepare:
+    executor: android
     steps:
       - checkout
       - run:
@@ -14,6 +18,20 @@ jobs:
       - run:
           name: Get services.json
           command: echo $GOOGLE_SERVICES | base64 -d >> ~/direct/app/google-services.json
+      - persist_to_workspace:
+          root: ~/direct
+          paths:
+            - config.properties
+            - app/google-services.json
+
+  test:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
       - run:
           name: Make gradlew executable
           command: chmod +x gradlew
@@ -34,3 +52,74 @@ jobs:
           destination: reports
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: lib/build/test-results
+
+  assemble_debug:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Assemble debug
+          command: ./gradlew assembleDevDebug
+      - store_artifacts:
+          path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
+          destination: direct-dev.apk
+
+  publish:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Publish artifact
+          command: ./gradlew clean lib:assembleProdRelease lib:bintrayUpload
+
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - prepare
+      - test:
+          requires:
+            - prepare
+      - assemble_debug:
+          requires:
+            - test
+      - approve_publish:
+          type: approval
+          requires:
+            - test
+      - publish:
+          requires:
+            - approve_publish

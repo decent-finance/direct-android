@@ -1,0 +1,57 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/lib-prod-release.aar")
+            artifact sourcesJar
+            groupId 'com.cexdirect'
+            artifactId 'lib'
+            version this.version
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                configurations.api.allDependencies.each {
+                    if (it.name != 'unspecified') {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USERNAME')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['Production']
+    configurations = ['archives']
+
+    dryRun = false
+    publish = true
+    override = false
+
+    pkg {
+        repo = 'direct-android'
+        name = 'com.cexdirect.lib'
+        userOrg = 'decent-finance'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/decent-finance/direct-android.git'
+        description = 'CEX Direct client library'
+        version {
+            name = this.version
+            released  = new Date()
+            vcsTag = this.version
+        }
+    }
+}

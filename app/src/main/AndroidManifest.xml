@@ -4,6 +4,7 @@
           package="com.cexdirect.sample">
 
     <application
+            tools:replace="android:allowBackup, android:supportsRtl"
             android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:name="com.cexdirect.sample.DirectSample"
