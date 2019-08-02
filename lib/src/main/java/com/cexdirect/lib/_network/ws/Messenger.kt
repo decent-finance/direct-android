@@ -18,6 +18,7 @@ package com.cexdirect.lib._network.ws
 
 import androidx.lifecycle.LiveData
 import com.cexdirect.lib.Direct
+import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib._network.Resource
 import com.cexdirect.lib._network.models.ExchangeRate
 import com.cexdirect.lib._network.models.OrderInfoBody
@@ -26,16 +27,17 @@ import com.google.gson.Gson
 import com.shopify.livedataktx.filter
 import com.shopify.livedataktx.map
 
+@OpenForTesting
 class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
 
     fun subscribeToOrderInfo(): LiveData<Resource<OrderInfoData?>> =
-        cexdSocket.run {
-            sendMessage { OrderInfoSubscription(OrderInfoBody(), "orderInfo") }
-            parsedMessage
-                .filter { it.first == "orderInfo" }
-                .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
-                .map { mapResponse(it) }
-        }
+            cexdSocket.run {
+                sendMessage { OrderInfoSubscription(OrderInfoBody(), "orderInfo") }
+                parsedMessage
+                        .filter { it.first == "orderInfo" }
+                        .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
+                        .map { mapResponse(it) }
+            }
 
     fun removeOrderInfoSubscription() {
         cexdSocket.removeSubscriptionByKey("orderInfo")
@@ -45,13 +47,13 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
     }
 
     fun subscribeToExchangeRates(placementId: String = Direct.credentials.placementId): LiveData<Resource<List<ExchangeRate>?>> =
-        cexdSocket.run {
-            sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
-            parsedMessage
-                .filter { it.first == "currencies" }
-                .map { gson.fromJson(it.second, ExchangeRatesMessage::class.java).data }
-                .map { mapResponse(it) }
-        }
+            cexdSocket.run {
+                sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
+                parsedMessage
+                        .filter { it.first == "currencies" }
+                        .map { gson.fromJson(it.second, ExchangeRatesMessage::class.java).data }
+                        .map { mapResponse(it) }
+            }
 
     fun removeExchangesSubscription() {
         cexdSocket.removeSubscriptionByKey("currencies")

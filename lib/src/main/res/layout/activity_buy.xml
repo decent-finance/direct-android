@@ -25,6 +25,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.cexdirect.lib.buy.InputMode" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.buy.BuyActivityViewModel" />
@@ -62,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="32dp"
-                    android:text="@{@string/cexd_purchase(model.selectedCryptoCurrency, model.selectedFiatCurrency)}" />
+                    android:text="@{@string/cexd_purchase(model.amount.selectedCryptoCurrency, model.amount.selectedFiatCurrency)}" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -77,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:elevation="8dp"
                         android:onClick="@{() -> model.enableCryptoInput()}"
-                        android:text="@{@string/cexd_get(model.buyCryptoAmount, model.selectedCryptoCurrency)}"
+                        android:text="@{@string/cexd_get(model.amount.cryptoAmount, model.amount.selectedCryptoCurrency)}"
                         android:visibility="@{model.shouldShowCryptoInput ? View.GONE : View.VISIBLE}" />
 
                     <FrameLayout
@@ -94,7 +96,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:digits="0123456789."
-                            android:enabled="@{model.shouldShowCryptoInput ? true : false}"
+                            android:enabled="@{model.shouldShowCryptoInput}"
                             android:inputType="numberDecimal"
                             android:maxLines="1"
                             android:minLines="1"
@@ -103,9 +105,9 @@
                             android:paddingEnd="96dp"
                             android:paddingBottom="10dp"
                             android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}"
-                            app:focus="@={model.buyCryptoAmountFocused}"
-                            app:input="@={model.buyCryptoAmount}"
-                            app:showSoftInputOnFocus="@{model.dataLoaded ? true : false}"
+                            app:input="@={model.amount.cryptoAmount}"
+                            app:onFocused="@{() -> model.amount.setInputMode(InputMode.CRYPTO)}"
+                            app:showSoftInputOnFocus="@{model.dataLoaded}"
                             app:tradeInputFilter="@{model.cryptoInputFilter}" />
 
                         <TextView
@@ -118,7 +120,7 @@
                             android:onClick="@{() -> model.changeBaseCurrency()}"
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
-                            android:text="@{model.selectedCryptoCurrency}"
+                            android:text="@{model.amount.selectedCryptoCurrency}"
                             tools:text="BTC" />
                     </FrameLayout>
 
@@ -137,6 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:digits="0123456789."
+                        android:enabled="@{model.dataLoaded}"
                         android:inputType="number"
                         android:maxLines="1"
                         android:minLines="1"
@@ -144,11 +147,10 @@
                         android:paddingTop="10dp"
                         android:paddingEnd="96dp"
                         android:paddingBottom="10dp"
-                        app:focus="@={model.buyAmountFocused}"
-                        app:input="@={model.buyAmount}"
-                        app:isActivated="@{model.boundaryMessage.isEmpty() ? false : true}"
-                        app:isEnabled="@{model.dataLoaded ? true : false}"
-                        app:showSoftInputOnFocus="@{model.dataLoaded ? true : false}"
+                        app:input="@={model.amount.fiatAmount}"
+                        app:isActivated="@{model.amount.boundaryMessage.isEmpty() ? false : true}"
+                        app:onFocused="@{() -> model.amount.setInputMode(InputMode.FIAT)}"
+                        app:showSoftInputOnFocus="@{model.dataLoaded}"
                         app:tradeInputFilter="@{model.fiatInputFilter}" />
 
                     <TextView
@@ -161,7 +163,7 @@
                         android:onClick="@{() -> model.changeQuoteCurrency()}"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:text="@{model.selectedFiatCurrency}"
+                        android:text="@{model.amount.selectedFiatCurrency}"
                         tools:text="USD" />
                 </FrameLayout>
 
@@ -171,8 +173,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="@{model.boundaryMessage}"
-                    android:visibility="@{model.boundaryMessage.isEmpty()? View.GONE : View.VISIBLE}"
+                    android:text="@{model.amount.boundaryMessage}"
+                    android:visibility="@{model.amount.boundaryMessage.isEmpty()? View.GONE : View.VISIBLE}"
                     tools:text="Min amount is 250" />
 
                 <com.cexdirect.lib.views.PopularValuesView
@@ -181,8 +183,8 @@
                     android:layout_marginTop="16dp"
                     android:animateLayoutChanges="true"
                     app:clickEvent="@{model.popularClickEvent}"
-                    app:currency="@{model.selectedFiatCurrency}"
-                    app:popularValues="@{model.popularValues}" />
+                    app:currency="@{model.amount.selectedFiatCurrency}"
+                    app:popularValues="@{model.amount.popularValues}" />
 
                 <Button
                     style="@style/Direct.MainButton.Big"
@@ -190,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:elevation="8dp"
-                    android:enabled="@{model.dataLoaded &amp;&amp; model.boundaryMessage.isEmpty() &amp;&amp; !model.buyAmount.isEmpty()}"
+                    android:enabled="@{model.amount.boundaryMessage.isEmpty() &amp;&amp; !model.amount.fiatAmount.isEmpty()}"
                     android:onClick="@{() -> model.buyCrypto()}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_buy_label" />

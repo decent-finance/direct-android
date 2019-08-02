@@ -65,10 +65,12 @@ class BuyActivity : BaseActivity() {
             buyCryptoEvent.observe(this@BuyActivity, Observer { model.sendBuyEvent.execute() })
             sendBuyEvent.observe(this@BuyActivity, Observer {
                 if (it !is Loading) {
-                    Direct.setPendingAmounts(
-                        MonetaryData(model.buyAmount.get()!!, model.selectedFiatCurrency.get()!!),
-                        MonetaryData(model.buyCryptoAmount.get()!!, model.selectedCryptoCurrency.get()!!)
-                    )
+                    model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
+                        Direct.setPendingAmounts(
+                                crypto = MonetaryData(cryptoAmount, cryptoCurrency),
+                                fiat = MonetaryData(fiatAmount, fiatCurrency)
+                        )
+                    }
                     val intent = with(Intent(this@BuyActivity, VerificationActivity::class.java)) {
                         model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
                             putExtra("cryptoAmount", cryptoAmount)
@@ -99,7 +101,7 @@ class BuyActivity : BaseActivity() {
             })
             popularClickEvent.observe(this@BuyActivity, Observer {
                 binding.abAmount.requestFocus()
-                model.buyAmount.set(it)
+                model.amount.fiatAmount = it
             })
             switchBaseCurrencyEvent.observe(this@BuyActivity, Observer {
                 model.filterBaseCurrencies { showCurrencySelectionDialog(PairSelectionBottomSheetDialog.TYPE_BASE) }
@@ -110,6 +112,7 @@ class BuyActivity : BaseActivity() {
         }.let {
             binding.model = it
             it.sendOpenEvent()
+            it.loadData()
         }
     }
 
