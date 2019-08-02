@@ -140,7 +140,7 @@ fun EditText.applyTextWatcher(listener: InverseBindingListener) {
 fun EditText.setCurrentText(text: String?) {
     if (this.text.toString() != text) {
         this.setText(text)
-        this.setSelection(text?.length ?: 0)
+        this.setSelection(this.text.length)
     }
 }
 
