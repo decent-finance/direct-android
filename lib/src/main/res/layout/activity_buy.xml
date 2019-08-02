@@ -17,189 +17,188 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".buy.BuyActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".buy.BuyActivity">
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.buy.BuyActivityViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.buy.BuyActivityViewModel" />
     </data>
 
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:scrollbars="none">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:scrollbars="none">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <include layout="@layout/layout_title"/>
+            <include layout="@layout/layout_title" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="36dp">
+
+                <TextView
+                    android:id="@+id/abCexdPurchase"
+                    style="@style/Direct.Textfield.L"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="@{@string/cexd_purchase(model.selectedCryptoCurrency, model.selectedFiatCurrency)}" />
+
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="36dp">
-
-                <TextView
-                        android:id="@+id/abCexdPurchase"
-                        style="@style/Direct.Textfield.L"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginBottom="32dp"
-                        android:text="@{@string/cexd_purchase(model.selectedCryptoCurrency, model.selectedFiatCurrency)}"/>
-
-                <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:clipChildren="false">
+                    android:clipChildren="false">
 
                     <TextView
-                            android:id="@+id/abGetCrypto"
-                            style="@style/Direct.Textfield.M.Crypto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:elevation="8dp"
-                            android:onClick="@{() -> model.enableCryptoInput()}"
-                            android:text="@{@string/cexd_get(model.buyCryptoAmount, model.selectedCryptoCurrency)}"
-                            android:visibility="@{model.shouldShowCryptoInput ? View.GONE : View.VISIBLE}"/>
-
-                    <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_bg_input_normal"
-                            android:elevation="8dp"
-                            android:outlineProvider="background"
-                            android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}">
-
-                        <EditText
-                                android:id="@+id/abCryptoAmount"
-                                style="@style/Direct.Input"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:digits="0123456789."
-                                android:enabled="@{model.shouldShowCryptoInput ? true : false}"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:minLines="1"
-                                android:paddingStart="8dp"
-                                android:paddingTop="10dp"
-                                android:paddingEnd="96dp"
-                                android:paddingBottom="10dp"
-                                android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}"
-                                app:focus="@={model.buyCryptoAmountFocused}"
-                                app:input="@={model.buyCryptoAmount}"
-                                app:showSoftInputOnFocus="@{model.dataLoaded ? true : false}"
-                                app:tradeInputFilter="@{model.cryptoInputFilter}"/>
-
-                        <TextView
-                                android:id="@+id/abCryptoCurrency"
-                                style="@style/Direct.Textfield.M"
-                                android:layout_width="80dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end|center_vertical"
-                                android:layout_marginEnd="8dp"
-                                android:onClick="@{() -> model.changeBaseCurrency()}"
-                                android:paddingLeft="16dp"
-                                android:paddingRight="16dp"
-                                android:text="@{model.selectedCryptoCurrency}"
-                                tools:text="BTC"/>
-                    </FrameLayout>
-
-                </FrameLayout>
-
-                <FrameLayout
+                        android:id="@+id/abGetCrypto"
+                        style="@style/Direct.Textfield.M.Crypto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/shape_bg_input_normal"
-                        android:elevation="6dp">
+                        android:elevation="8dp"
+                        android:onClick="@{() -> model.enableCryptoInput()}"
+                        android:text="@{@string/cexd_get(model.buyCryptoAmount, model.selectedCryptoCurrency)}"
+                        android:visibility="@{model.shouldShowCryptoInput ? View.GONE : View.VISIBLE}" />
 
-                    <EditText
-                            android:id="@+id/abAmount"
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_bg_input_normal"
+                        android:elevation="8dp"
+                        android:outlineProvider="background"
+                        android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}">
+
+                        <EditText
+                            android:id="@+id/abCryptoAmount"
                             style="@style/Direct.Input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:digits="0123456789."
-                            android:inputType="number"
+                            android:enabled="@{model.shouldShowCryptoInput ? true : false}"
+                            android:inputType="numberDecimal"
                             android:maxLines="1"
                             android:minLines="1"
                             android:paddingStart="8dp"
                             android:paddingTop="10dp"
                             android:paddingEnd="96dp"
                             android:paddingBottom="10dp"
-                            app:focus="@={model.buyAmountFocused}"
-                            app:input="@={model.buyAmount}"
-                            app:isActivated="@{model.boundaryMessage.isEmpty() ? false : true}"
-                            app:isEnabled="@{model.dataLoaded ? true : false}"
+                            android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}"
+                            app:focus="@={model.buyCryptoAmountFocused}"
+                            app:input="@={model.buyCryptoAmount}"
                             app:showSoftInputOnFocus="@{model.dataLoaded ? true : false}"
-                            app:tradeInputFilter="@{model.fiatInputFilter}"/>
+                            app:tradeInputFilter="@{model.cryptoInputFilter}" />
 
-                    <TextView
-                            android:id="@+id/abFiatCurrency"
+                        <TextView
+                            android:id="@+id/abCryptoCurrency"
                             style="@style/Direct.Textfield.M"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end|center_vertical"
                             android:layout_marginEnd="8dp"
-                            android:onClick="@{() -> model.changeQuoteCurrency()}"
+                            android:onClick="@{() -> model.changeBaseCurrency()}"
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
-                            android:text="@{model.selectedFiatCurrency}"
-                            tools:text="USD"/>
+                            android:text="@{model.selectedCryptoCurrency}"
+                            tools:text="BTC" />
+                    </FrameLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/shape_bg_input_normal"
+                    android:elevation="6dp">
+
+                    <EditText
+                        android:id="@+id/abAmount"
+                        style="@style/Direct.Input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="0123456789."
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="96dp"
+                        android:paddingBottom="10dp"
+                        app:focus="@={model.buyAmountFocused}"
+                        app:input="@={model.buyAmount}"
+                        app:isActivated="@{model.boundaryMessage.isEmpty() ? false : true}"
+                        app:isEnabled="@{model.dataLoaded ? true : false}"
+                        app:showSoftInputOnFocus="@{model.dataLoaded ? true : false}"
+                        app:tradeInputFilter="@{model.fiatInputFilter}" />
+
+                    <TextView
+                        android:id="@+id/abFiatCurrency"
+                        style="@style/Direct.Textfield.M"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:onClick="@{() -> model.changeQuoteCurrency()}"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="@{model.selectedFiatCurrency}"
+                        tools:text="USD" />
                 </FrameLayout>
 
                 <TextView
-                        android:id="@+id/abMinAmountErr"
-                        style="@style/Direct.Textfield.Error"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:text="@{model.boundaryMessage}"
-                        android:visibility="@{model.boundaryMessage.isEmpty()? View.GONE : View.VISIBLE}"
-                        tools:text="Min amount is 250"/>
+                    android:id="@+id/abMinAmountErr"
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="@{model.boundaryMessage}"
+                    android:visibility="@{model.boundaryMessage.isEmpty()? View.GONE : View.VISIBLE}"
+                    tools:text="Min amount is 250" />
 
                 <com.cexdirect.lib.views.PopularValuesView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:layout_marginTop="16dp"
-                        app:clickEvent="@{model.popularClickEvent}"
-                        app:currency="@{model.selectedFiatCurrency}"
-                        app:popularValues="@{model.popularValues}"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:animateLayoutChanges="true"
+                    app:clickEvent="@{model.popularClickEvent}"
+                    app:currency="@{model.selectedFiatCurrency}"
+                    app:popularValues="@{model.popularValues}" />
 
                 <Button
-                        style="@style/Direct.MainButton.Big"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:elevation="8dp"
-                        android:enabled="@{model.boundaryMessage.isEmpty() ? true : false}"
-                        android:onClick="@{() -> model.buyCrypto()}"
-                        android:outlineProvider="background"
-                        android:text="@string/cexd_buy_label"
-                        app:isEnabled="@{model.dataLoaded ? true : false}"/>
+                    style="@style/Direct.MainButton.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:elevation="8dp"
+                    android:enabled="@{model.dataLoaded &amp;&amp; model.boundaryMessage.isEmpty() &amp;&amp; !model.buyAmount.isEmpty()}"
+                    android:onClick="@{() -> model.buyCrypto()}"
+                    android:outlineProvider="background"
+                    android:text="@string/cexd_buy_label" />
 
                 <include
-                        android:id="@+id/abLegal"
-                        layout="@layout/layout_legal"
-                        app:model="@{model}"/>
+                    android:id="@+id/abLegal"
+                    layout="@layout/layout_legal"
+                    app:model="@{model}" />
 
             </LinearLayout>
         </LinearLayout>
