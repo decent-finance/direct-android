@@ -40,12 +40,12 @@
 
         <provider
                 android:name="com.cexdirect.lib.DirectAppInitProvider"
-                android:authorities="direct"
+                android:authorities="${applicationId}.directinit"
                 android:enabled="true"
                 android:exported="false"/>
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}"
+                android:authorities="${applicationId}.directfile"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
