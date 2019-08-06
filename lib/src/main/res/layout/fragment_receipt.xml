@@ -150,7 +150,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="end"
                                 android:text="@{model.txId}"
-                                android:visibility="@{(model.txId != null &amp;&amp; !model.txId.isEmpty()) ? View.INVISIBLE: View.GONE}"
+                            android:visibility="@{(model.txId != null &amp;&amp; !model.txId.isEmpty()) ? View.VISIBLE: View.GONE}"
                                 tools:text="abc123"
                                 tools:visibility="gone"/>
                     </FrameLayout>
