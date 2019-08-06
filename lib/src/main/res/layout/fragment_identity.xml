@@ -93,6 +93,7 @@
                         style="@style/Direct.Input2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
                         android:inputType="textEmailAddress"
                         android:text="@={model.userEmail}"
                         tools:text="d.trump@whouse.gov" />
@@ -118,6 +119,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/shape_bg_input"
                 android:elevation="4dp"
+                android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
                 android:gravity="center"
                 android:onClick="@{() -> model.chooseCountry()}"
                 android:orientation="horizontal"
@@ -186,6 +188,7 @@
                         style="@style/Direct.Input2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
                         android:inputType="textCapWords"
                         android:text="@={model.userState}" />
 
