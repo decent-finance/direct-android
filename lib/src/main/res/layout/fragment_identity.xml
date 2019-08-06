@@ -306,6 +306,7 @@
                         tools:src="@drawable/ic_pic_passport" />
 
                     <Button
+                        android:id="@+id/fiDocumentUpl"
                         style="@style/Direct.MainButton.Big"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -332,6 +333,7 @@
                         tools:src="@drawable/ic_pic_passport" />
 
                     <Button
+                        android:id="@+id/fiDocumentBackUpl"
                         style="@style/Direct.MainButton.Big"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -372,6 +374,7 @@
                             android:src="@drawable/ic_pic_portrait" />
 
                         <Button
+                            android:id="@+id/fiSelfieUpl"
                             style="@style/Direct.MainButton.Big"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
