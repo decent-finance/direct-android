@@ -357,7 +357,7 @@ class IdentityFragment : BaseVerificationFragment() {
                 photoFile?.let {
                     val photoURI: Uri = FileProvider.getUriForFile(
                         context!!,
-                        Direct.context.packageName,
+                            "${Direct.context.packageName}.directfile",
                         it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
