@@ -15,373 +15,373 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep"/>
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
 
         <import
-                alias="type"
-                type="com.cexdirect.lib.verification.identity.PhotoType"/>
+            alias="type"
+            type="com.cexdirect.lib.verification.identity.PhotoType" />
 
-        <import type="com.cexdirect.lib._util.EmailStatus"/>
+        <import type="com.cexdirect.lib._util.EmailStatus" />
 
-        <import type="com.cexdirect.lib.views.CollapsibleLayout.ContentState"/>
+        <import type="com.cexdirect.lib.views.CollapsibleLayout.ContentState" />
 
-        <import type="com.cexdirect.lib.views.CollapsibleLayout.LayoutState"/>
+        <import type="com.cexdirect.lib.views.CollapsibleLayout.LayoutState" />
 
-        <import type="com.cexdirect.lib.views.CompleteSectionTitleLayout"/>
+        <import type="com.cexdirect.lib.views.CompleteSectionTitleLayout" />
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.verification.identity.IdentityFragmentViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.verification.identity.IdentityFragmentViewModel" />
     </data>
 
     <LinearLayout
-            android:id="@+id/fiContent"
+        android:id="@+id/fiContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <com.cexdirect.lib.views.CompleteSectionTitleLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="-1dp"
+            android:onClick="@{() -> model.toggleLocationEmail()}"
+            android:visibility="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? View.GONE : View.VISIBLE}"
+            app:arrowDirection="@{model.locationEmailContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
+            app:title="Email and Country" />
+
+        <com.cexdirect.lib.views.CollapsibleLayout
+            android:id="@+id/fiSectionLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
-
-        <com.cexdirect.lib.views.CompleteSectionTitleLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="-1dp"
-                android:onClick="@{() -> model.toggleLocationEmail()}"
-                android:visibility="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? View.GONE : View.VISIBLE}"
-                app:arrowDirection="@{model.locationEmailContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
-                app:title="Email and Country"/>
-
-        <com.cexdirect.lib.views.CollapsibleLayout
-                android:id="@+id/fiSectionLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                app:contentState="@{model.locationEmailContentState}"
-                app:layoutState="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
+            android:orientation="vertical"
+            app:contentState="@{model.locationEmailContentState}"
+            app:layoutState="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
 
             <LinearLayout
-                    style="@style/Direct.InputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    app:isActivated="@{model.emailStatus == EmailStatus.INVALID}">
+                style="@style/Direct.InputLayout"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:isActivated="@{model.emailStatus == EmailStatus.INVALID}">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:contentDescription="@string/cexd_email_icon"
-                        android:src="@drawable/ic_email"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_email_icon"
+                    android:src="@drawable/ic_email" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:hint="@string/cexd_email_address"
-                        app:hintTextAppearance="@style/Direct.TextHint">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/cexd_email_address"
+                    app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            style="@style/Direct.Input2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:text="@={model.userEmail}"
-                            tools:text="d.trump@whouse.gov"/>
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:text="@={model.userEmail}"
+                        tools:text="d.trump@whouse.gov" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <TextView
-                    style="@style/Direct.Textfield.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_invalid_email"
-                    android:visibility="@{model.emailStatus == EmailStatus.INVALID ? View.VISIBLE : View.GONE}"/>
+                style="@style/Direct.Textfield.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_invalid_email"
+                android:visibility="@{model.emailStatus == EmailStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/shape_bg_input"
-                    android:elevation="4dp"
-                    android:gravity="center"
-                    android:onClick="@{() -> model.chooseCountry()}"
-                    android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="6dp">
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_bg_input"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:onClick="@{() -> model.chooseCountry()}"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="6dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="6dp">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/ic_location"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_location" />
 
                 <LinearLayout
-                        android:layout_width="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Direct.Textfield.S"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:text="@string/cexd_country" />
 
                     <TextView
-                            style="@style/Direct.Textfield.S"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cexd_country"/>
-
-                    <TextView
-                            style="@style/Direct.Textfield.M2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{model.userCountry.name}"
-                            tools:text="United States"/>
+                        style="@style/Direct.Textfield.M2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{model.userCountry.name}"
+                        tools:text="United States" />
 
                 </LinearLayout>
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:src="@drawable/ic_dropdown"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_dropdown" />
             </LinearLayout>
 
             <LinearLayout
-                    style="@style/Direct.InputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="@{model.shouldShowState ? View.VISIBLE : View.GONE}">
+                style="@style/Direct.InputLayout"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="@{model.shouldShowState ? View.VISIBLE : View.GONE}">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/ic_location"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_location" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:hint="@string/cexd_state"
-                        app:hintTextAppearance="@style/Direct.TextHint">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/cexd_state"
+                    app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            style="@style/Direct.Input2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textCapWords"
-                            android:text="@={model.userState}"/>
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        android:text="@={model.userState}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.cexdirect.lib.views.CollapsibleLayout>
 
         <com.cexdirect.lib.views.CompleteSectionTitleLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="-1dp"
-                android:onClick="@{() -> model.togglePaymentBase()}"
-                android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}"
-                app:arrowDirection="@{model.paymentBaseContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
-                app:title="Identity and Payment Data"/>
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="-1dp"
+            android:onClick="@{() -> model.togglePaymentBase()}"
+            android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}"
+            app:arrowDirection="@{model.paymentBaseContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
+            app:title="Identity and Payment Data" />
 
         <com.cexdirect.lib.views.CollapsibleLayout
-                android:id="@+id/fiSectionDocs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                app:contentState="@{model.paymentBaseContentState}"
-                app:layoutState="@{model.verificationStep == VerificationStep.PAYMENT_BASE ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
+            android:id="@+id/fiSectionDocs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            app:contentState="@{model.paymentBaseContentState}"
+            app:layoutState="@{model.verificationStep == VerificationStep.PAYMENT_BASE ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="@{model.images.isIdentityDocumentsRequired ? View.VISIBLE : View.GONE}">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="@{model.images.isIdentityDocumentsRequired ? View.VISIBLE : View.GONE}">
 
                 <TextView
-                        style="@style/Direct.IdentityTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="@string/cexd_choose_document_type"/>
+                    style="@style/Direct.IdentityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/cexd_choose_document_type" />
 
                 <com.cexdirect.lib.views.SwitcherLayout
-                        android:id="@+id/fiDocumentSelector"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:animateLayoutChanges="true"
-                        android:clipChildren="false"
-                        android:paddingStart="10dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="4dp"
-                        app:selectedViewId="@={model.selectedViewId}">
+                    android:id="@+id/fiDocumentSelector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:animateLayoutChanges="true"
+                    android:clipChildren="false"
+                    android:paddingStart="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    app:selectedViewId="@={model.selectedViewId}">
 
                     <com.cexdirect.lib.views.DocumentTypeButton
-                            android:id="@+id/fiIdCard"
-                            android:layout_width="0dp"
-                            android:layout_height="60dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_weight="1"
-                            android:elevation="4dp"
-                            android:outlineProvider="paddedBounds"
-                            app:text="ID card"/>
+                        android:id="@+id/fiIdCard"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:elevation="4dp"
+                        android:outlineProvider="paddedBounds"
+                        app:text="ID card" />
 
                     <com.cexdirect.lib.views.DocumentTypeButton
-                            android:id="@+id/fiDriversLicence"
-                            android:layout_width="0dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_weight="1"
-                            android:elevation="4dp"
-                            android:outlineProvider="paddedBounds"
-                            app:text="Drivers Licence"/>
+                        android:id="@+id/fiDriversLicence"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:elevation="4dp"
+                        android:outlineProvider="paddedBounds"
+                        app:text="Drivers Licence" />
 
                     <com.cexdirect.lib.views.DocumentTypeButton
-                            android:id="@+id/fiPassport"
-                            android:layout_width="0dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_weight="1"
-                            android:elevation="4dp"
-                            android:outlineProvider="paddedBounds"
-                            app:text="Passport"/>
+                        android:id="@+id/fiPassport"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:elevation="4dp"
+                        android:outlineProvider="paddedBounds"
+                        app:text="Passport" />
 
                 </com.cexdirect.lib.views.SwitcherLayout>
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:clipChildren="false"
-                        android:orientation="vertical"
-                        android:visibility="@{model.documentTypeSelected ? View.VISIBLE : View.GONE}">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:clipChildren="false"
+                    android:orientation="vertical"
+                    android:visibility="@{model.documentTypeSelected ? View.VISIBLE : View.GONE}">
 
                     <TextView
+                        style="@style/Direct.IdentityTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@{model.documentTypeText}" />
+
+                    <ImageView
+                        android:id="@+id/fiDocument"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/ic_rectangle"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:scaleType="centerInside"
+                        app:pic="@{model.documentImage}"
+                        tools:src="@drawable/ic_pic_passport" />
+
+                    <Button
+                        style="@style/Direct.MainButton.Big"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:onClick="@{() -> model.uploadPhoto(type.ID)}"
+                        android:outlineProvider="background"
+                        android:text="@string/cexd_upload_photo" />
+
+                    <ImageView
+                        android:id="@+id/fiDocumentBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/ic_rectangle"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:scaleType="centerInside"
+                        android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"
+                        app:pic="@{model.documentImageBack}"
+                        tools:src="@drawable/ic_pic_passport" />
+
+                    <Button
+                        style="@style/Direct.MainButton.Big"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
+                        android:outlineProvider="background"
+                        android:text="@string/cexd_upload_photo"
+                        android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{model.images.isSelfieRequired ? View.VISIBLE : View.GONE}">
+
+                        <TextView
                             style="@style/Direct.IdentityTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@{model.documentTypeText}"/>
-
-                    <ImageView
-                            android:id="@+id/fiDocument"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="10dp"
-                            android:background="@drawable/ic_rectangle"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
-                            android:scaleType="centerInside"
-                            app:pic="@{model.documentImage}"
-                            tools:src="@drawable/ic_pic_passport"/>
-
-                    <Button
-                            style="@style/Direct.MainButton.Big"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="10dp"
-                            android:onClick="@{() -> model.uploadPhoto(type.ID)}"
-                            android:outlineProvider="background"
-                            android:text="@string/cexd_upload_photo"/>
-
-                    <ImageView
-                            android:id="@+id/fiDocumentBack"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="10dp"
-                            android:background="@drawable/ic_rectangle"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
-                            android:scaleType="centerInside"
-                            android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"
-                            app:pic="@{model.documentImageBack}"
-                            tools:src="@drawable/ic_pic_passport"/>
-
-                    <Button
-                            style="@style/Direct.MainButton.Big"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="10dp"
-                            android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
-                            android:outlineProvider="background"
-                            android:text="@string/cexd_upload_photo"
-                            android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"/>
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="@{model.images.isSelfieRequired ? View.VISIBLE : View.GONE}">
-
-                        <TextView
-                                style="@style/Direct.IdentityTitle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="10dp"
-                                android:text="@string/cexd_selfie_with_your_payment_card"/>
+                            android:text="@string/cexd_selfie_with_your_payment_card" />
 
                         <ImageView
-                                android:id="@+id/fiSelfie"
-                                android:layout_width="match_parent"
-                                android:layout_height="200dp"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="10dp"
-                                android:background="@drawable/ic_rectangle"
-                                android:paddingTop="20dp"
-                                android:paddingBottom="20dp"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_pic_portrait"/>
+                            android:id="@+id/fiSelfie"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/ic_rectangle"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_pic_portrait" />
 
                         <Button
-                                style="@style/Direct.MainButton.Big"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="10dp"
-                                android:elevation="8dp"
-                                android:onClick="@{() -> model.uploadPhoto(type.SELFIE)}"
-                                android:outlineProvider="background"
-                                android:text="@string/cexd_upload_photo"/>
+                            style="@style/Direct.MainButton.Big"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="10dp"
+                            android:elevation="8dp"
+                            android:onClick="@{() -> model.uploadPhoto(type.SELFIE)}"
+                            android:outlineProvider="background"
+                            android:text="@string/cexd_upload_photo" />
 
                     </LinearLayout>
 
@@ -390,137 +390,138 @@
             </LinearLayout>
 
             <TextView
-                    style="@style/Direct.IdentityTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_enter_your_payment_card"/>
+                style="@style/Direct.IdentityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_enter_your_payment_card" />
 
             <LinearLayout
-                    style="@style/Direct.InputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp">
+                style="@style/Direct.InputLayout"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:contentDescription="@string/cexd_card_icon"
-                        android:src="@drawable/ic_card"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_card_icon"
+                    android:src="@drawable/ic_card" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:clipChildren="false"
-                        android:hint="@string/cexd_card_number"
-                        app:hintTextAppearance="@style/Direct.TextHint">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:clipChildren="false"
+                    android:hint="@string/cexd_card_number"
+                    app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/fiInputCardNumber"
-                            style="@style/Direct.Input2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:text="@={model.cardNumber}"
-                            tools:text=""/>
+                        android:id="@+id/fiInputCardNumber"
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@={model.cardNumber}"
+                        tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipChildren="false"
-                    android:orientation="horizontal"
-                    android:paddingBottom="32dp"
-                    tools:ignore="DisableBaselineAlignment">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:orientation="horizontal"
+                android:paddingBottom="32dp"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
-                        style="@style/Direct.InputLayout"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1">
+                    style="@style/Direct.InputLayout"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1">
 
                     <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:src="@drawable/ic_calendar"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/ic_calendar" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:clipChildren="false"
-                            android:hint="@string/cexd_exp_date"
-                            app:hintTextAppearance="@style/Direct.TextHint">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:clipChildren="false"
+                        android:hint="@string/cexd_exp_date"
+                        app:hintTextAppearance="@style/Direct.TextHint">
 
                         <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/fiInputDate"
-                                style="@style/Direct.Input2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="number"
-                                android:text="@={model.cardExpiry}"
-                                tools:text=""/>
+                            android:id="@+id/fiInputDate"
+                            style="@style/Direct.Input2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="@={model.cardExpiry}"
+                            tools:text="" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                        style="@style/Direct.InputLayout"
-                        android:layout_width="0dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1">
+                    style="@style/Direct.InputLayout"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1">
 
                     <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:contentDescription="@string/cexd_cvv_icon"
-                            android:src="@drawable/ic_cvv"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:contentDescription="@string/cexd_cvv_icon"
+                        android:src="@drawable/ic_cvv" />
 
                     <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:clipChildren="false">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:addStatesFromChildren="true"
+                        android:clipChildren="false">
 
                         <com.google.android.material.textfield.TextInputLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:clipChildren="false"
-                                app:hintTextAppearance="@style/Direct.TextHint">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipChildren="false"
+                            app:hintTextAppearance="@style/Direct.TextHint">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/fiInputCvv"
-                                    style="@style/Direct.Input2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:hint="@string/cexd_cvv"
-                                    android:inputType="numberPassword"
-                                    android:text="@={model.cardCvv}"
-                                    tools:text=""/>
+                                android:id="@+id/fiInputCvv"
+                                style="@style/Direct.Input2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/cexd_cvv"
+                                android:inputType="numberPassword"
+                                android:text="@={model.cardCvv}"
+                                tools:text="" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <ImageButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical|end"
-                                android:background="@null"
-                                android:contentDescription="@string/cexd_show_cvv_info"
-                                android:onClick="@{() -> model.showCvvInfo()}"
-                                app:srcCompat="@drawable/ic_help"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@null"
+                            android:contentDescription="@string/cexd_show_cvv_info"
+                            android:onClick="@{() -> model.showCvvInfo()}"
+                            app:srcCompat="@drawable/ic_help" />
 
                     </FrameLayout>
                 </LinearLayout>
@@ -528,134 +529,134 @@
             </LinearLayout>
 
             <TextView
-                    style="@style/Direct.IdentityTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_send_crypto_to"/>
+                style="@style/Direct.IdentityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_send_crypto_to" />
 
             <LinearLayout
-                    style="@style/Direct.InputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    app:isActivated="@{safeUnbox(!model.isWalletValid)}">
+                style="@style/Direct.InputLayout"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                app:isActivated="@{safeUnbox(!model.isWalletValid)}">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:contentDescription="@string/cexd_wallet_icon"
-                        android:src="@drawable/ic_wallet"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_wallet_icon"
+                    android:src="@drawable/ic_wallet" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:clipChildren="false"
-                        app:hintTextAppearance="@style/Direct.TextHint">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:clipChildren="false"
+                    app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            style="@style/Direct.Input2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/cexd_wallet"
-                            android:inputType="text"
-                            android:text="@={model.walletAddress}"
-                            tools:text=""/>
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/cexd_wallet"
+                        android:inputType="text"
+                        android:text="@={model.walletAddress}"
+                        tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/shape_bg_input"
-                    android:elevation="4dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:outlineProvider="background"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_bg_input"
+                android:elevation="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:outlineProvider="background"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
 
                 <CheckBox
-                        style="@style/Direct.Checkbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="@={model.termsAccepted}"/>
+                    style="@style/Direct.Checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="@={model.termsAccepted}" />
 
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        app:legal="@{model.legal}"
-                        tools:text="I agree with Terms Of Use"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:legal="@{model.legal}"
+                    tools:text="I agree with Terms Of Use" />
 
             </LinearLayout>
 
         </com.cexdirect.lib.views.CollapsibleLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                style="@style/Direct.IdentityTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}">
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_verify_payment" />
 
             <TextView
-                    style="@style/Direct.IdentityTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_verify_payment"/>
-
-            <TextView
-                    style="@style/Direct.Textfield.M2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_verify_payment_desc"/>
-
-            <TextView
-                    style="@style/Direct.IdentityTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_please_fill_information"/>
-
-            <com.cexdirect.lib.views.ExtraFieldsLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical"
-                    app:additionalFields="@{model.additionalFields}"
-                    app:input="@={model.extras}"/>
-
-        </LinearLayout>
-
-        <Button
-                android:id="@+id/fiNext"
-                style="@style/Direct.MainButton.Big"
+                style="@style/Direct.Textfield.M2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                android:elevation="8dp"
-                android:onClick="@{() -> model.nextStep()}"
-                android:outlineProvider="background"
-                android:text="@string/cexd_next"/>
+                android:text="@string/cexd_verify_payment_desc" />
+
+            <TextView
+                style="@style/Direct.IdentityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_please_fill_information" />
+
+            <com.cexdirect.lib.views.ExtraFieldsLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:additionalFields="@{model.additionalFields}"
+                app:input="@={model.extras}" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/fiNext"
+            style="@style/Direct.MainButton.Big"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:elevation="8dp"
+            android:onClick="@{() -> model.nextStep()}"
+            android:outlineProvider="background"
+            android:text="@string/cexd_next" />
 
     </LinearLayout>
 </layout>
