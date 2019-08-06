@@ -101,6 +101,7 @@
                 android:text="@string/cexd_support"/>
 
         <TextView
+                android:id="@+id/llExitBtn"
                 style="@style/Direct.SecondaryButton"
                 android:layout_width="120dp"
                 android:layout_height="36dp"
