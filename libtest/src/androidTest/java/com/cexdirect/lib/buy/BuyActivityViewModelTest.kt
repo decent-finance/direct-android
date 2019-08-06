@@ -16,131 +16,98 @@
 
 package com.cexdirect.lib.buy
 
+import com.cexdirect.lib.MockCoroutineDispatcherProvider
+import com.cexdirect.lib._network.AnalyticsApi
+import com.cexdirect.lib._network.MerchantApi
+import com.cexdirect.lib._network.PaymentApi
 import com.cexdirect.lib._network.models.ExchangeRate
 import com.cexdirect.lib._network.models.Precision
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
+import com.cexdirect.lib._network.ws.Messenger
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.reset
 import org.assertj.core.api.Java6Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
-class BuyAmountTest {
+class BuyActivityViewModelTest {
 
-    lateinit var buyAmount: BuyAmount
+    @Mock
+    lateinit var merchantApi: MerchantApi
+
+    @Mock
+    lateinit var paymentApi: PaymentApi
+
+    @Mock
+    lateinit var analyticsApi: AnalyticsApi
+
+    @Mock
+    lateinit var messenger: Messenger
+
+    private lateinit var model: BuyActivityViewModel
 
     @Before
     fun setUp() {
-        buyAmount = BuyAmount()
+        MockitoAnnotations.initMocks(this)
+        model = BuyActivityViewModel(mock(), mock(), mock(), mock(), MockCoroutineDispatcherProvider())
+    }
+
+    @After
+    fun tearDown() {
+        reset(merchantApi, paymentApi, analyticsApi, messenger)
     }
 
     @Test
-    fun initData() {
-        val spy = spy(buyAmount)
-
-        spy.apply {
+    fun filterBaseCurrenciesForUsd() {
+        model.amount.apply {
             precisionList = givenPrecisions()
             rates = givenRates()
         }
 
-        verify(spy).updateConverter()
-        verify(spy).updateAmountBoundaries()
-        verify(spy).convertToCrypto()
+        model.filterBaseCurrencies { }
 
-        assertThat(spy.converter).isNotNull()
-        assertThat(spy.popularValues).containsOnlyElementsOf(listOf("100", "200", "500"))
-        assertThat(spy)
-                .hasFieldOrPropertyWithValue("minBoundary", "202.86")
-                .hasFieldOrPropertyWithValue("maxBoundary", "1000.00")
-                .hasFieldOrPropertyWithValue("fiatAmount", "")
-                .hasFieldOrPropertyWithValue("cryptoAmount", "0.0000")
+        assertThat(model.currencyAdapter.items).containsOnly("BTC", "BCH", "ETH")
     }
 
     @Test
-    fun convert200UsdToEth() {
-        buyAmount.apply {
+    fun filterBaseCurrenciesForEur() {
+        model.amount.apply {
             precisionList = givenPrecisions()
             rates = givenRates()
-            selectedCryptoCurrency = "ETH"
-            selectedFiatCurrency = "USD"
+            selectedFiatCurrency = "EUR"
         }
 
-        val spy = spy(buyAmount).apply {
-            fiatAmount = "200"
-        }
+        model.filterBaseCurrencies { }
 
-        verify(spy).convertToCrypto()
-        verify(spy, never()).convertToFiat()
-        assertThat(spy.cryptoAmount).isEqualTo("0.221019")
+        assertThat(model.currencyAdapter.items).containsOnly("BTC")
     }
 
     @Test
-    fun convert1EthToUsd() {
-        buyAmount.apply {
-            precisionList = givenPrecisions()
-            rates = givenRates()
-            selectedCryptoCurrency = "ETH"
-            selectedFiatCurrency = "USD"
-            inputMode = InputMode.CRYPTO
-        }
-
-        val spy = spy(buyAmount).apply {
-            cryptoAmount = "1.000000"
-        }
-
-        verify(spy).convertToFiat()
-        verify(spy, never()).convertToCrypto()
-        assertThat(spy.fiatAmount).isEqualTo("874.38")
-    }
-
-    @Test
-    fun hasCurrencies() {
-        buyAmount.apply {
+    fun filterQuoteCurrencies() {
+        model.amount.apply {
             precisionList = givenPrecisions()
             rates = givenRates()
         }
 
-        val actual = buyAmount.hasCurrencies()
+        model.filterQuoteCurrencies { }
 
-        assertThat(actual).isTrue()
+        assertThat(model.currencyAdapter.items).containsOnly("EUR", "USD")
     }
 
     @Test
-    fun hasNoCurrencies() {
-        buyAmount.apply {
+    fun initRatesAndSetFavoriteValue() {
+        model.amount.apply {
             precisionList = givenPrecisions()
-            rates = emptyList()
         }
 
-        val actual = buyAmount.hasCurrencies()
+        model.initRates(givenRates()) { }
 
-        assertThat(actual).isFalse()
-    }
-
-    @Test
-    fun returnPopularValuesForGivenPair() {
-        buyAmount.apply {
-            precisionList = givenPrecisions()
-            rates = givenRates()
-            selectedCryptoCurrency = "ETH"
-        }
-
-        val actual = buyAmount.currentPairPopularValues()
-
-        assertThat(actual).containsAll(listOf("100", "200", "500"))
-    }
-
-    @Test
-    fun returnEmptyPopularValuesForGivenPair() {
-        buyAmount.apply {
-            precisionList = givenPrecisions()
-            rates = givenRates()
-            selectedCryptoCurrency = "BCH"
-        }
-
-        val actual = buyAmount.currentPairPopularValues()
-
-        assertThat(actual).isEmpty()
+        assertThat(model.amount.rates).containsOnlyElementsOf(givenRates())
+        assertThat(model.amount.fiatAmount).isEqualTo("100")
+        assertThat(model.amount.inputMode).isEqualTo(InputMode.FIAT)
+        assertThat(model.dataLoaded.get()).isTrue()
     }
 
     private fun givenPrecisions() = listOf(
@@ -217,6 +184,15 @@ class BuyAmountTest {
                     0.0005,
                     1.0,
                     listOf("100", "200", "500"),
+                    listOf("0.01", "0.05", "0.1")
+            ),
+            ExchangeRate(
+                    "EUR",
+                    "BTC",
+                    0.00010585050029429076,
+                    0.0005,
+                    1.0,
+                    listOf("50", "100", "200"),
                     listOf("0.01", "0.05", "0.1")
             )
     )

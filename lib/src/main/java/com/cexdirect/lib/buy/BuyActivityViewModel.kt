@@ -50,14 +50,15 @@ class BuyActivityViewModel(
     val switchBaseCurrencyEvent = SwitchCurrencyEvent()
     val switchQuoteCurrencyEvent = SwitchCurrencyEvent()
     val closeSelectorEvent = CloseSelectorEvent()
-    final val currencyClickEvent = ClickEvent()
 
     val cryptoInputFilter = ObservableField<TradeInputFilter>()
     val fiatInputFilter = ObservableField<TradeInputFilter>()
 
+    final val currencyClickEvent = ClickEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
-    private val precisions = merchantApi.getCurrencyPrecisions(this, Direct.credentials.placementId)
+    private val precisions =
+            merchantApi.getCurrencyPrecisions(this, Direct.credentials.placementId)
 
     @Suppress("NestedLambdaShadowedImplicitParameter")
     val currencies = Transformations.switchMap(precisions) {
