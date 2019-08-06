@@ -106,6 +106,7 @@
                             android:paddingBottom="10dp"
                             android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}"
                             app:input="@={model.amount.cryptoAmount}"
+                            app:isActivated="@{model.amount.boundaryMessage.isEmpty() ? false : true}"
                             app:onFocused="@{() -> model.amount.setInputMode(InputMode.CRYPTO)}"
                             app:showSoftInputOnFocus="@{model.dataLoaded}"
                             app:tradeInputFilter="@{model.cryptoInputFilter}" />
