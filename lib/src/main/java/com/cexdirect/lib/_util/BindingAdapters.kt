@@ -35,38 +35,18 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.cexdirect.lib.R
 import com.cexdirect.lib._network.models.MonetaryData
+import com.cexdirect.lib.buy.TradeInputFilter
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.showTerms
 import com.cexdirect.lib.verification.confirmation._3dsData
 import com.cexdirect.lib.views.SuperDuperViewPager
-import com.google.android.material.textfield.TextInputLayout
 import ru.noties.markwon.Markwon
 import java.net.URLEncoder
-
-@BindingAdapter("isEnabled")
-fun View.makeEnabled(enabled: Boolean) {
-    isEnabled = enabled
-}
 
 @BindingAdapter("showSoftInputOnFocus")
 fun EditText.makeShowSoftInput(show: Boolean) {
     requestFocus()
     showSoftInputOnFocus = show
-}
-
-@InverseBindingAdapter(attribute = "focus", event = "focusAttrChanged")
-fun EditText.getCurrentFocus(): Boolean = isFocused
-
-@BindingAdapter("focusAttrChanged")
-fun EditText.applyFocusListener(listener: InverseBindingListener) {
-    setOnFocusChangeListener { _, _ ->
-        listener.onChange()
-    }
-}
-
-@BindingAdapter("focus")
-fun EditText.setFocused(focused: Boolean) {
-    if (focused) requestFocus()
 }
 
 @BindingAdapter("onFocused", "onUnfocused", requireAll = false)
@@ -109,11 +89,6 @@ fun ImageView.applyPic(id: Int) {
     setImageDrawable(drawable)
 }
 
-@BindingAdapter("tradeInputFilter")
-fun EditText.applyInputFilter(filter: InputFilter?) {
-    filter?.let { filters = arrayOf(it) }
-}
-
 @BindingAdapter("adapter")
 fun RecyclerView.applyAdapter(adapter: RecyclerView.Adapter<*>) {
     this.adapter = adapter
@@ -122,11 +97,6 @@ fun RecyclerView.applyAdapter(adapter: RecyclerView.Adapter<*>) {
 @BindingAdapter("isActivated")
 fun View.applyActivation(activated: Boolean) {
     this.isActivated = activated
-}
-
-@BindingAdapter("errorText")
-fun TextInputLayout.applyErrorText(text: String?) {
-    this.error = text
 }
 
 @InverseBindingAdapter(attribute = "input", event = "inputAttrChanged")
@@ -147,8 +117,9 @@ fun EditText.applyTextWatcher(listener: InverseBindingListener) {
     })
 }
 
-@BindingAdapter("input")
-fun EditText.setCurrentText(text: String?) {
+@BindingAdapter("input", "tradeInputFilter")
+fun EditText.setCurrentText(text: String?, filter: TradeInputFilter?) {
+    filter?.let { filters = arrayOf(it) }
     if (this.text.toString() != text) {
         this.setText(text)
         this.setSelection(this.text.length)

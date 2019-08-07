@@ -17,7 +17,6 @@
 package com.cexdirect.lib.buy
 
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -51,9 +50,6 @@ class BuyActivityViewModel(
     val switchQuoteCurrencyEvent = SwitchCurrencyEvent()
     val closeSelectorEvent = CloseSelectorEvent()
 
-    val cryptoInputFilter = ObservableField<TradeInputFilter>()
-    val fiatInputFilter = ObservableField<TradeInputFilter>()
-
     final val currencyClickEvent = ClickEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
@@ -66,10 +62,10 @@ class BuyActivityViewModel(
             it.data.let {
                 amount.precisionList = it!!
                 amount.precisionList.find { it.currency == amount.selectedFiatCurrency }?.let {
-                    fiatInputFilter.set(TradeInputFilter(it.visiblePrecision))
+                    amount.fiatInputFilter = TradeInputFilter(it.visiblePrecision)
                 }
                 amount.precisionList.findLast { it.currency == amount.selectedCryptoCurrency }?.let {
-                    cryptoInputFilter.set(TradeInputFilter(it.visiblePrecision))
+                    amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
                 }
 
             }

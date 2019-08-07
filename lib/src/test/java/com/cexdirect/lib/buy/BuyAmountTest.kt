@@ -62,7 +62,6 @@ class BuyAmountTest {
             precisionList = givenPrecisions()
             rates = givenRates()
             selectedCryptoCurrency = "ETH"
-            selectedFiatCurrency = "USD"
         }
 
         val spy = spy(buyAmount).apply {
@@ -141,6 +140,44 @@ class BuyAmountTest {
         val actual = buyAmount.currentPairPopularValues()
 
         assertThat(actual).isEmpty()
+    }
+
+    @Test
+    fun changeFiatCurrency() {
+        buyAmount.apply {
+            precisionList = givenPrecisions()
+            rates = givenRates()
+        }
+
+        val spy = spy(buyAmount)
+
+        spy.apply {
+            selectedFiatCurrency = "EUR"
+        }
+
+        verify(spy).updateFiatInputFilter()
+        verify(spy).updateConverter()
+        verify(spy).updateAmountBoundaries()
+        verify(spy).convertToCrypto()
+    }
+
+    @Test
+    fun changeCryptoCurrency() {
+        buyAmount.apply {
+            precisionList = givenPrecisions()
+            rates = givenRates()
+        }
+
+        val spy = spy(buyAmount)
+
+        spy.apply {
+            selectedCryptoCurrency = "ETH"
+        }
+
+        verify(spy).updateCryptoInputFilter()
+        verify(spy).updateConverter()
+        verify(spy).updateAmountBoundaries()
+        verify(spy).convertToCrypto()
     }
 
     private fun givenPrecisions() = listOf(

@@ -39,6 +39,7 @@ class BuyAmount : BaseObservable() {
             if (value != field) {
                 field = value
                 notifyPropertyChanged(BR.selectedFiatCurrency)
+                updateFiatInputFilter()
                 updateConverter()
                 popularValues = currentPairPopularValues()
                 updateAmountBoundaries()
@@ -52,6 +53,7 @@ class BuyAmount : BaseObservable() {
             if (value != field) {
                 field = value
                 notifyPropertyChanged(BR.selectedCryptoCurrency)
+                updateCryptoInputFilter()
                 updateConverter()
                 popularValues = currentPairPopularValues()
                 updateAmountBoundaries()
@@ -103,6 +105,20 @@ class BuyAmount : BaseObservable() {
             notifyPropertyChanged(BR.popularValues)
         }
 
+    @get:Bindable
+    var cryptoInputFilter: TradeInputFilter? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.cryptoInputFilter)
+        }
+
+    @get:Bindable
+    var fiatInputFilter: TradeInputFilter? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.fiatInputFilter)
+        }
+
     @VisibleForTesting
     internal var minBoundary = ""
     @VisibleForTesting
@@ -147,6 +163,20 @@ class BuyAmount : BaseObservable() {
                 convertedAmount.formatAmount(precision)
             }
             fiatAmount = formattedAmount
+        }
+    }
+
+    @VisibleForTesting
+    internal fun updateFiatInputFilter() {
+        findPrecision(selectedFiatCurrency)!!.let {
+            fiatInputFilter = TradeInputFilter(it.visiblePrecision)
+        }
+    }
+
+    @VisibleForTesting
+    internal fun updateCryptoInputFilter() {
+        findPrecision(selectedCryptoCurrency)!!.let {
+            cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
         }
     }
 
