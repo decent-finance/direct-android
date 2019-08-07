@@ -80,6 +80,33 @@ jobs:
           path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
           destination: direct-dev.apk
 
+  assemble_uat:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Assemble uat
+          command: ./gradlew assembleUatDebug
+      - store_artifacts:
+          path: app/build/outputs/apk/uat/debug/app-uat-debug.apk
+          destination: direct-uat.apk
+
   publish:
     executor: android
     environment:
@@ -114,6 +141,9 @@ workflows:
           requires:
             - prepare
       - assemble_debug:
+          requires:
+            - test
+      - assemble_uat:
           requires:
             - test
       - approve_publish:
