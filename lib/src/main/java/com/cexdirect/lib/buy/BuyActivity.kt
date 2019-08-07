@@ -45,10 +45,9 @@ class BuyActivity : BaseActivity() {
     private val model: BuyActivityViewModel by viewModelProvider { modelFactory }
 
     private val ratesObserver = Observer<Resource<List<ExchangeRate>?>> {
-        if (it is Success) {
-            model.updateRates(it.data!!)
-        } else if (it is Failure) {
-            purchaseFailed(it.message)
+        when (it) {
+            is Success -> model.updateRates(it.data!!)
+            is Failure -> purchaseFailed(it.message)
         }
     }
 
@@ -93,10 +92,7 @@ class BuyActivity : BaseActivity() {
                         hideLoader()
                         subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
                     }
-                    is Failure -> {
-                        purchaseFailed(it.message)
-                        finish()
-                    }
+                    is Failure -> purchaseFailed(it.message)
                 }
             })
             popularClickEvent.observe(this@BuyActivity, Observer {

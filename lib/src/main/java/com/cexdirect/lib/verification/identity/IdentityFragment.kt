@@ -93,7 +93,7 @@ class IdentityFragment : BaseVerificationFragment() {
             is Success -> hideLoader()
             is Failure -> {
                 hideLoader()
-                showPurchaseErrorScreen(resource)
+                purchaseFailed(resource.message)
             }
         }
     }
@@ -152,7 +152,7 @@ class IdentityFragment : BaseVerificationFragment() {
                             context!!.locationNotSupported()
                             finish()
                         } else {
-                            showPurchaseErrorScreen(it)
+                            purchaseFailed(it.message)
                         }
                     }
                     is Success -> {
@@ -207,7 +207,7 @@ class IdentityFragment : BaseVerificationFragment() {
             })
             orderInfo.observe(this@IdentityFragment, Observer {
                 when (it) {
-                    is Failure -> showPurchaseErrorScreen(it)
+                    is Failure -> purchaseFailed(it.message)
                     is Success -> fragmentModel.setRequiredImages(it.data!!.basic.images)
                 }
             })
@@ -323,11 +323,6 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
             }
         })
-    }
-
-    private fun showPurchaseErrorScreen(resource: Failure<*>) {
-        context!!.purchaseFailed(resource.message)
-        finish()
     }
 
     private fun requestNextStep() {

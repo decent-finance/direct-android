@@ -16,10 +16,12 @@
 
 package com.cexdirect.lib.error
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseActivity
@@ -28,6 +30,7 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.ErrorActivityFactory
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityErrorBinding
+import com.mcxiaoke.koi.ext.finish
 import javax.inject.Inject
 
 class ErrorActivity : BaseActivity() {
@@ -85,7 +88,17 @@ fun Context.verificationError(reason: String?) {
     }.let { startActivity(it) }
 }
 
-fun Context.purchaseFailed(reason: String?) {
+fun Fragment.purchaseFailed(reason: String?) {
+    this.context!!.showPurchaseFailedScreen(reason)
+    finish()
+}
+
+fun Activity.purchaseFailed(reason: String?) {
+    showPurchaseFailedScreen(reason)
+    finish()
+}
+
+internal fun Context.showPurchaseFailedScreen(reason: String?) {
     Intent(this, ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.PURCHASE_FAILED.name)
         putExtra("reason", reason)

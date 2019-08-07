@@ -108,7 +108,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                         }
                     }
                     is Failure -> {
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                 }
             })
@@ -124,7 +124,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                         if (it.code == 400) {
                             toast(R.string.cexd_wrong_code)
                         } else {
-                            context!!.purchaseFailed(it.message)
+                            purchaseFailed(it.message)
                         }
                     }
                 }
@@ -141,7 +141,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                     is Failure -> {
                         hideLoader()
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                 }
             })
@@ -155,7 +155,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                     is Failure -> {
                         hideLoader()
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                     is Success -> {
                         hideLoader()
