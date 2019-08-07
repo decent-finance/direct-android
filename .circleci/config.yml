@@ -120,6 +120,12 @@ workflows:
           type: approval
           requires:
             - test
+          filters:
+            branches:
+              only: master
       - publish:
           requires:
             - approve_publish
+          filters:
+            branches:
+              only: master

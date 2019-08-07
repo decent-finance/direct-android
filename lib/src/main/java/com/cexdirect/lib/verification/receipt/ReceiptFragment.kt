@@ -16,6 +16,9 @@
 
 package com.cexdirect.lib.verification.receipt
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +35,7 @@ import com.cexdirect.lib.databinding.FragmentReceiptBinding
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
+import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
 class ReceiptFragment : BaseVerificationFragment() {
@@ -47,35 +51,43 @@ class ReceiptFragment : BaseVerificationFragment() {
     private lateinit var binding: FragmentReceiptBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentReceiptBinding.inflate(inflater, container, false).apply { binding = this }.root
+            FragmentReceiptBinding.inflate(inflater, container, false).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding.model = fragmentModel
 
-        fragmentModel.subscribeToOrderInfo().observe(this, Observer {
-            if (it is Success) {
-                val data = it.data!!
-                when (data.orderStatus) {
-                    OrderStatus.COMPLETE -> {
-                        fragmentModel.updatePaymentInfo(data.paymentInfo!!)
-                    }
-                    OrderStatus.FINISHED -> {
-                        fragmentModel.updatePaymentInfo(data.paymentInfo!!)
-                        Direct.directComponent.socket().stop()
-                    }
-                    else -> {
-                        // do nothing
+        fragmentModel.apply {
+            subscribeToOrderInfo().observe(this@ReceiptFragment, Observer {
+                if (it is Success) {
+                    val data = it.data!!
+                    when (data.orderStatus) {
+                        OrderStatus.COMPLETE -> {
+                            fragmentModel.updatePaymentInfo(data.paymentInfo!!)
+                        }
+                        OrderStatus.FINISHED -> {
+                            fragmentModel.updatePaymentInfo(data.paymentInfo!!)
+                            Direct.directComponent.socket().stop()
+                        }
+                        else -> {
+                            // do nothing
+                        }
                     }
                 }
-            }
-        })
-
-        fragmentModel.buyMoreEvent.observe(this, Observer {
-            context!!.startBuyActivity()
-            finish()
-        })
+            })
+            buyMoreEvent.observe(this@ReceiptFragment, Observer {
+                context!!.startBuyActivity()
+                finish()
+            })
+            txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
+                if (!txId.isNullOrBlank()) {
+                    (context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
+                            ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
+                    toast(getString(R.string.cexd_order_id_copied))
+                }
+            })
+        }
 
         stickyViewEvent.value = R.id.ffBuyMore
     }

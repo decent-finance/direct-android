@@ -32,8 +32,10 @@ import com.cexdirect.lib._network.models.OrderStatus
 import com.cexdirect.lib._network.webview.Client
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
+import com.cexdirect.lib.error.verificationError
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.StickyViewEvent
+import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -57,9 +59,9 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
     private val fragmentModel by fragmentViewModelProvider<PaymentConfirmationFragmentViewModel> { fragmentFactory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
-            binding = this
-        }.root
+            FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
+                binding = this
+            }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,13 +95,20 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                                     fragmentModel.confirmOrder { model.nextStep() }
                                 }
                             }
+                            OrderStatus.REJECTED -> {
+                                if (currentOrderStatus.get() != OrderStatus.REJECTED) {
+                                    currentOrderStatus.set(OrderStatus.REJECTED)
+                                    context!!.verificationError("Rejected")
+                                    finish()
+                                }
+                            }
                             else -> {
                                 // do nothing
                             }
                         }
                     }
                     is Failure -> {
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                 }
             })
@@ -113,26 +122,26 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     is Failure -> {
                         hideLoader()
                         if (it.code == 400) {
-                            toast("Wrong code")
+                            toast(R.string.cexd_wrong_code)
                         } else {
-                            context!!.purchaseFailed(it.message)
+                            purchaseFailed(it.message)
                         }
                     }
                 }
             })
-            resendCodeEvent.observe(
-                this@PaymentConfirmationFragment,
-                Observer { requestCheckCode() })
+            resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
+                requestCheckCode()
+            })
             resendCheckCode.observe(this@PaymentConfirmationFragment, Observer {
                 when (it) {
                     is Loading -> showLoader()
                     is Success -> {
                         hideLoader()
-                        toast("Check your e-mail for code")
+                        toast(R.string.cexd_check_mail)
                     }
                     is Failure -> {
                         hideLoader()
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                 }
             })
@@ -146,12 +155,13 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                     is Failure -> {
                         hideLoader()
-                        context!!.purchaseFailed(it.message)
+                        purchaseFailed(it.message)
                     }
                     is Success -> {
                         hideLoader()
-                        fragmentModel.updateUserEmail(it.data!!)
-                        toast("Email updated")
+                        fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value
+                                ?: it.data!!)
+                        toast(R.string.cexd_email_updated)
                     }
                 }
             })

@@ -15,144 +15,145 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
     </data>
 
     <FrameLayout
-            android:id="@+id/coordinatorLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <ImageView
-                android:id="@+id/ffCoinIcon"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:layout_gravity="top|center_horizontal"
-                android:contentDescription="@string/cexd_currency_icon"
-                android:elevation="10dp"
-                android:scaleType="fitXY"
-                app:coinIcon="@{model.paymentInfo.crypto}"
-                tools:srcCompat="@drawable/ic_btc"/>
+            android:id="@+id/ffCoinIcon"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_gravity="top|center_horizontal"
+            android:contentDescription="@string/cexd_currency_icon"
+            android:elevation="10dp"
+            android:scaleType="fitXY"
+            app:coinIcon="@{model.paymentInfo.crypto}"
+            tools:srcCompat="@drawable/ic_btc" />
 
         <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="44dp"
-                    android:background="@color/cexd_finish_bg"
-                    android:elevation="4dp"
-                    android:orientation="vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="72dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
+                android:background="@color/cexd_finish_bg"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="72dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
-                        style="@style/Direct.Receipt.Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/cexd_order_completed"/>
+                    style="@style/Direct.Receipt.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/cexd_order_completed" />
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Direct.Receipt.Field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cexd_bought" />
+
+                    <TextView
+                        style="@style/Direct.Receipt.Field"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-
-                    <TextView
-                            style="@style/Direct.Receipt.Field"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cexd_bought"/>
-
-                    <TextView
-                            style="@style/Direct.Receipt.Field"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@{@string/cexd_amount_template(model.paymentInfo.crypto.amount, model.paymentInfo.crypto.currency)}"
-                            tools:text="0.005"/>
+                        android:gravity="end"
+                        android:text="@{@string/cexd_amount_template(model.paymentInfo.crypto.amount, model.paymentInfo.crypto.currency)}"
+                        tools:text="0.005" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Direct.Receipt.Field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cexd_for" />
+
+                    <TextView
+                        style="@style/Direct.Receipt.Field"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                    <TextView
-                            style="@style/Direct.Receipt.Field"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cexd_for"/>
-
-                    <TextView
-                            style="@style/Direct.Receipt.Field"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@{@string/cexd_amount_template(model.paymentInfo.fiat.amount, model.paymentInfo.fiat.currency)}"
-                            tools:text="500.10"/>
+                        android:gravity="end"
+                        android:text="@{@string/cexd_amount_template(model.paymentInfo.fiat.amount, model.paymentInfo.fiat.currency)}"
+                        tools:text="500.10" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
 
                     <TextView
-                            style="@style/Direct.Receipt.Field"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cexd_tx_id"/>
+                        style="@style/Direct.Receipt.Field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cexd_tx_id" />
 
                     <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="36dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36dp">
 
                         <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="72dp"
-                                android:indeterminate="true"
-                                android:indeterminateOnly="true"
-                                android:indeterminateTint="@color/cexd_indicator_active"
-                                android:indeterminateTintMode="src_atop"
-                                android:visibility="@{(model.txId == null || model.txId.isEmpty()) ? View.VISIBLE: View.GONE}"
-                                tools:visibility="visible"/>
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="72dp"
+                            android:indeterminate="true"
+                            android:indeterminateOnly="true"
+                            android:indeterminateTint="@color/cexd_indicator_active"
+                            android:indeterminateTintMode="src_atop"
+                            android:visibility="@{(model.txId == null || model.txId.isEmpty()) ? View.VISIBLE: View.GONE}"
+                            tools:visibility="visible" />
 
                         <com.cexdirect.lib.views.UnderlinedTextView
-                                style="@style/Direct.Receipt.Tx"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="end"
-                                android:text="@{model.txId}"
-                                android:visibility="@{(model.txId != null &amp;&amp; !model.txId.isEmpty()) ? View.INVISIBLE: View.GONE}"
-                                tools:text="abc123"
-                                tools:visibility="gone"/>
+                            style="@style/Direct.Receipt.Tx"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:onClick="@{() -> model.copyTxId(model.txId)}"
+                            android:text="@{model.txId}"
+                            android:visibility="@{(model.txId != null &amp;&amp; !model.txId.isEmpty()) ? View.VISIBLE: View.GONE}"
+                            tools:text="abc123"
+                            tools:visibility="gone" />
                     </FrameLayout>
 
                 </LinearLayout>
@@ -160,21 +161,21 @@
             </LinearLayout>
 
             <TextView
-                    style="@style/Direct.Receipt.Title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:gravity="center"
-                    android:text="@string/cexd_thank_you"/>
+                style="@style/Direct.Receipt.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="@string/cexd_thank_you" />
 
             <Button
-                    android:id="@+id/ffBuyMore"
-                    style="@style/Direct.MainButton.Big"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:onClick="@{() -> model.buyMore()}"
-                    android:text="@string/cexd_buy_more_crypto"/>
+                android:id="@+id/ffBuyMore"
+                style="@style/Direct.MainButton.Big"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:onClick="@{() -> model.buyMore()}"
+                android:text="@string/cexd_buy_more_crypto" />
 
         </LinearLayout>
 

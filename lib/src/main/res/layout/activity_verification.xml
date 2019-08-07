@@ -55,6 +55,7 @@
                     android:paddingTop="16dp">
 
                 <TextView
+                        android:id="@+id/avCexdPurchase"
                         style="@style/Direct.Textfield.L"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

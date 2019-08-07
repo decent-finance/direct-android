@@ -23,7 +23,7 @@ class ExchangeRatesResponse(val data: ExchangeData) : ApiResponse<List<ExchangeR
 
 class ExchangeData(val currencies: List<ExchangeRate>)
 
-class ExchangeRate(
+data class ExchangeRate(
     val fiat: String,
     val crypto: String,
     val a: Double,

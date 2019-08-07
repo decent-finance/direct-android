@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,15 +14,8 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.buy
 
-class RateConverter(
-        val a: Double,
-        val b: Double,
-        val c: Double
-) {
-
-    fun convertToCrypto(fiat: Double): Double = (a * fiat - b) / c
-
-    fun convertToFiat(crypto: Double): Double = (crypto * c + b) / a
+enum class InputMode {
+    FIAT, CRYPTO
 }

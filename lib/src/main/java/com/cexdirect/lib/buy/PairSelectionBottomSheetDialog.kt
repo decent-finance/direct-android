@@ -66,14 +66,8 @@ class PairSelectionBottomSheetDialog : BottomSheetDialogFragment() {
 
         viewModel.currencyClickEvent.observe(this, Observer {
             when (type) {
-                TYPE_BASE -> {
-                    viewModel.selectedCryptoCurrency.set(it)
-                    viewModel.updateCurrencySelection { viewModel.buyCryptoAmountFocused }
-                }
-                TYPE_QUOTE -> {
-                    viewModel.selectedFiatCurrency.set(it)
-                    viewModel.updateCurrencySelection { viewModel.buyAmountFocused }
-                }
+                TYPE_BASE -> viewModel.setSelectedCryptoCurrency(it)
+                TYPE_QUOTE -> viewModel.setSelectedFiatCurrency(it)
             }
             dismiss()
         })

@@ -24,6 +24,7 @@ import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.SingleLiveEvent
 import com.cexdirect.lib._network.models.PaymentInfo
 import com.cexdirect.lib._network.ws.Messenger
+import com.cexdirect.lib.verification.CopyEvent
 
 class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
@@ -32,6 +33,7 @@ class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvi
     val txId = ObservableField("")
 
     val buyMoreEvent = BuyMoreEvent()
+    val txIdCopyEvent = CopyEvent()
 
     fun buyMore() {
         buyMoreEvent.call()
@@ -40,6 +42,10 @@ class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvi
     fun updatePaymentInfo(info: PaymentInfo) {
         paymentInfo.set(info)
         info.txId?.let { txId.set(it) }
+    }
+
+    fun copyTxId(txId: String) {
+        txIdCopyEvent.postValue(txId)
     }
 
     fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
