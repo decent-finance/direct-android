@@ -21,6 +21,8 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.R
+import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._network.models.ExchangeRate
 import com.cexdirect.lib._network.models.Precision
 import com.cexdirect.lib._util.RateConverter
@@ -29,7 +31,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @OpenForTesting
-class BuyAmount : BaseObservable() {
+class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
 
     var inputMode: InputMode = InputMode.FIAT
 
@@ -66,7 +68,7 @@ class BuyAmount : BaseObservable() {
         set(value) {
             field = value
             notifyPropertyChanged(BR.fiatAmount)
-            updateBoundaryMessage()
+            updateFiatBoundaryMessage()
             if (inputMode == InputMode.FIAT) convertToCrypto()
         }
 
@@ -75,15 +77,25 @@ class BuyAmount : BaseObservable() {
         set(value) {
             field = value
             notifyPropertyChanged(BR.cryptoAmount)
+            updateCryptoBoundaryMessage()
             if (inputMode == InputMode.CRYPTO) convertToFiat()
         }
 
     @get:Bindable
-    var boundaryMessage: String = ""
+    var fiatBoundaryMessage: String = ""
         set(value) {
             if (value != field) {
                 field = value
-                notifyPropertyChanged(BR.boundaryMessage)
+                notifyPropertyChanged(BR.fiatBoundaryMessage)
+            }
+        }
+
+    @get:Bindable
+    var cryptoBoundaryMessage: String = ""
+        set(value) {
+            if (value != field) {
+                field = value
+                notifyPropertyChanged(BR.cryptoBoundaryMessage)
             }
         }
 
@@ -201,14 +213,21 @@ class BuyAmount : BaseObservable() {
         }
     }
 
-    private fun updateBoundaryMessage() {
-        boundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
+    @VisibleForTesting
+    internal fun updateFiatBoundaryMessage() {
+        fiatBoundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
             when {
-                value < minBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> return@let "Min amount $minBoundary"
-                value > maxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> return@let "Max amount $maxBoundary"
+                value < minBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_amount, minBoundary)
+                value > maxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_amount, maxBoundary)
                 else -> ""
             }
         } ?: ""
+    }
+
+    @VisibleForTesting
+    internal fun updateCryptoBoundaryMessage() {
+        cryptoBoundaryMessage = cryptoAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { "" }
+                ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
     }
 
     fun currentPairPopularValues() = findCurrentPair()?.fiatPopularValues ?: emptyList()

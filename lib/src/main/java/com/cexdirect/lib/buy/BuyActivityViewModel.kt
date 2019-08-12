@@ -36,10 +36,11 @@ class BuyActivityViewModel(
         paymentApi: PaymentApi,
         private val analyticsApi: AnalyticsApi,
         private val messenger: Messenger,
-        dispatcherProvider: CoroutineDispatcherProvider
+        dispatcherProvider: CoroutineDispatcherProvider,
+        stringProvider: StringProvider
 ) : LegalViewModel(dispatcherProvider) {
 
-    val amount = BuyAmount()
+    val amount = BuyAmount(stringProvider)
 
     val shouldShowCryptoInput = ObservableBoolean(false)
     val dataLoaded = ObservableBoolean(false)
@@ -159,12 +160,13 @@ class BuyActivityViewModel(
             private val paymentApi: PaymentApi,
             private val analyticsApi: AnalyticsApi,
             private val messenger: Messenger,
-            private val dispatcherProvider: CoroutineDispatcherProvider
+            private val dispatcherProvider: CoroutineDispatcherProvider,
+            private val stringProvider: StringProvider
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                BuyActivityViewModel(merchantApi, paymentApi, analyticsApi, messenger, dispatcherProvider) as T
+                BuyActivityViewModel(merchantApi, paymentApi, analyticsApi, messenger, dispatcherProvider, stringProvider) as T
     }
 }
 

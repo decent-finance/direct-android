@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.ExitDialogViewModel
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._di.annotation.BuyActivityFactory
 import com.cexdirect.lib._di.annotation.CheckActivityFactory
 import com.cexdirect.lib._di.annotation.ErrorActivityFactory
@@ -50,13 +51,14 @@ class VmModule {
     @BuyActivityFactory
     @Singleton
     fun provideBuyActivityViewModel(
-        merchantApi: MerchantApi,
-        paymentApi: PaymentApi,
-        analyticsApi: AnalyticsApi,
-        messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
+            merchantApi: MerchantApi,
+            paymentApi: PaymentApi,
+            analyticsApi: AnalyticsApi,
+            messenger: Messenger,
+            coroutineDispatcherProvider: CoroutineDispatcherProvider,
+            stringProvider: StringProvider
     ): ViewModelProvider.Factory =
-        BuyActivityViewModel.Factory(merchantApi, paymentApi, analyticsApi, messenger, coroutineDispatcherProvider)
+            BuyActivityViewModel.Factory(merchantApi, paymentApi, analyticsApi, messenger, coroutineDispatcherProvider, stringProvider)
 
     @Provides
     @ErrorActivityFactory

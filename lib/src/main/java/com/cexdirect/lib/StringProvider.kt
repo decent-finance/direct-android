@@ -18,7 +18,10 @@ package com.cexdirect.lib
 
 import android.content.Context
 
+@OpenForTesting
 class StringProvider(private val context: Context) {
 
     fun provideString(id: Int) = context.getString(id)
+
+    fun provideString(id: Int, vararg args: String) = context.getString(id, *args)
 }

@@ -16,22 +16,34 @@
 
 package com.cexdirect.lib.buy
 
+import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._network.models.ExchangeRate
 import com.cexdirect.lib._network.models.Precision
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 class BuyAmountTest {
+
+    @Mock
+    lateinit var stringProvider: StringProvider
 
     lateinit var buyAmount: BuyAmount
 
     @Before
     fun setUp() {
-        buyAmount = BuyAmount()
+        MockitoAnnotations.initMocks(this)
+
+        whenever(stringProvider.provideString(anyInt())).thenReturn("")
+
+        buyAmount = BuyAmount(stringProvider)
     }
 
     @Test
@@ -69,6 +81,7 @@ class BuyAmountTest {
         }
 
         verify(spy).convertToCrypto()
+        verify(spy).updateCryptoBoundaryMessage()
         verify(spy, never()).convertToFiat()
         assertThat(spy.cryptoAmount).isEqualTo("0.221019")
     }
@@ -88,6 +101,7 @@ class BuyAmountTest {
         }
 
         verify(spy).convertToFiat()
+        verify(spy).updateFiatBoundaryMessage()
         verify(spy, never()).convertToCrypto()
         assertThat(spy.fiatAmount).isEqualTo("874.38")
     }

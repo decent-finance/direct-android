@@ -111,4 +111,7 @@
     <string name="cexd_email_updated">Email updated</string>
     <string name="cexd_check_mail">Check your e-mail for code</string>
     <string name="cexd_wrong_code">Wrong code</string>
+    <string name="cexd_please_enter_amount">Please, enter an amount</string>
+    <string name="cexd_min_amount">Min amount %s</string>
+    <string name="cexd_max_amount">Max amount %s</string>
 </resources>
