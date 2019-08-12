@@ -81,6 +81,7 @@
     </string>
     <string name="cexd_please_fill_information">Please Fill Information</string>
     <string name="cexd_wallet_icon">Wallet icon</string>
+    <string name="cexd_user_icon">User icon</string>
     <string name="cexd_show_cvv_info">Show CVV info</string>
     <string name="cexd_cvv_icon">CVV icon</string>
     <string name="cexd_exp_date">Exp Date</string>
@@ -111,6 +112,7 @@
     <string name="cexd_email_updated">Email updated</string>
     <string name="cexd_check_mail">Check your e-mail for code</string>
     <string name="cexd_wrong_code">Wrong code</string>
+    <string name="cexd_ssn">SSN</string>
     <string name="cexd_please_enter_amount">Please, enter an amount</string>
     <string name="cexd_min_amount">Minimal purchase is %s</string>
     <string name="cexd_max_amount">You can spend up to %s</string>

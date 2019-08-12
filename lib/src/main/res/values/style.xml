@@ -122,6 +122,7 @@
         <item name="android:paddingBottom">8dp</item>
         <item name="android:maxLines">1</item>
         <item name="fontFamily">@font/open_sans</item>
+        <item name="android:imeOptions">actionNext</item>
     </style>
 
     <style name="Direct.MainButton">

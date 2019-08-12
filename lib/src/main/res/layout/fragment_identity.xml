@@ -36,6 +36,8 @@
 
         <import type="com.cexdirect.lib.views.CompleteSectionTitleLayout" />
 
+        <import type="android.view.inputmethod.EditorInfo" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.verification.identity.IdentityFragmentViewModel" />
@@ -169,7 +171,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                android:visibility="@{model.shouldShowState ? View.VISIBLE : View.GONE}">
+                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -569,8 +571,54 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/cexd_wallet"
+                        android:imeOptions="@{model.shouldShowUsInputs ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
                         android:inputType="text"
                         android:text="@={model.walletAddress}"
+                        tools:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/Direct.IdentityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_ssn"
+                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}" />
+
+            <LinearLayout
+                style="@style/Direct.InputLayout"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_user_icon"
+                    android:src="@drawable/ic_user" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:clipChildren="false"
+                    app:hintTextAppearance="@style/Direct.TextHint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/cexd_ssn"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:text="@={model.extras[`billingSsn`]}"
                         tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>

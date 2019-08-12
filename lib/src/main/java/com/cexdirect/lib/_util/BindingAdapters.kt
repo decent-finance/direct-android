@@ -181,3 +181,8 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
         text = it
     }
 }
+
+@BindingAdapter("android:imeOptions")
+fun EditText.applyImeOption(options: Int) {
+    imeOptions = options
+}

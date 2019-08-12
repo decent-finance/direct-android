@@ -61,7 +61,7 @@ class IdentityFragmentViewModel private constructor(
     val userEmail = ObservableField("")
     val emailStatus = userEmail.map { checkEmailStatus(it) }
     val userCountry = ObservableField<Country>()
-    val shouldShowState = userCountry.map {
+    val shouldShowUsInputs = userCountry.map {
         "United States" == userCountry.get()?.name
     }
     val userState = ObservableField("")
@@ -247,6 +247,9 @@ class IdentityFragmentViewModel private constructor(
             && cardExpiry.get()!!.isNotBlank()
             && cardCvv.get()!!.isNotBlank()
             && walletAddress.get()!!.isNotBlank()
+            && ssnPresent()
+
+    private fun ssnPresent() = if (shouldShowUsInputs.get()!!) !extras["billingSsn"].isNullOrBlank() else true
 
     val paymentData = orderApi.sendPaymentData(this) {
         val payment =
@@ -255,7 +258,9 @@ class IdentityFragmentViewModel private constructor(
                 cardExpiry.get()!!,
                 Wallet(walletAddress.get()!!, walletTag.get())
             )
-        PaymentData(payment, emptyMap())
+
+        val additional = if (shouldShowUsInputs.get()!!) mapOf("billingSsn" to extras["billingSsn"]!!) else emptyMap()
+        PaymentData(payment, additional)
     }
 
     val updatePaymentData = orderApi.updatePaymentData(this) {
@@ -263,7 +268,7 @@ class IdentityFragmentViewModel private constructor(
     }
 
     fun isCountrySelected(): Boolean {
-        return if (shouldShowState.get() == true) {
+        return if (shouldShowUsInputs.get() == true) {
             userCountry.get() != null && userState.get() != null
         } else {
             userCountry.get() != null
