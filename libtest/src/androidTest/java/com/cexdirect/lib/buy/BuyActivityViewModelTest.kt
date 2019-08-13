@@ -16,7 +16,9 @@
 
 package com.cexdirect.lib.buy
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.MockCoroutineDispatcherProvider
+import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._network.AnalyticsApi
 import com.cexdirect.lib._network.MerchantApi
 import com.cexdirect.lib._network.PaymentApi
@@ -51,7 +53,8 @@ class BuyActivityViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        model = BuyActivityViewModel(mock(), mock(), mock(), mock(), MockCoroutineDispatcherProvider())
+        val stringProvider = StringProvider(InstrumentationRegistry.getInstrumentation().targetContext)
+        model = BuyActivityViewModel(mock(), mock(), mock(), mock(), MockCoroutineDispatcherProvider(), stringProvider)
     }
 
     @After
@@ -105,7 +108,7 @@ class BuyActivityViewModelTest {
         model.initRates(givenRates()) { }
 
         assertThat(model.amount.rates).containsOnlyElementsOf(givenRates())
-        assertThat(model.amount.fiatAmount).isEqualTo("100")
+        assertThat(model.amount.fiatAmount).isEqualTo("250")
         assertThat(model.amount.inputMode).isEqualTo(InputMode.FIAT)
         assertThat(model.dataLoaded.get()).isTrue()
     }

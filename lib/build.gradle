@@ -191,6 +191,8 @@ dependencies {
     androidTestUtil 'androidx.test:orchestrator:1.2.0'
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
     kaptAndroidTest 'androidx.databinding:databinding-compiler:3.4.2'
+
+    detektPlugins 'io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0'
 }
 
 apply from: 'publish.gradle'

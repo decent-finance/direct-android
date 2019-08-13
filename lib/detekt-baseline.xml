@@ -1,0 +1,269 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+    <Blacklist></Blacklist>
+    <Whitelist>
+        <ID>ChainWrapping:</ID>
+        <ID>ClassNaming:OrderInfoResponse.kt$_3Ds</ID>
+        <ID>ClassNaming:OrderInfoResponse.kt$_3DsExtras : HashMap</ID>
+        <ID>ClassNaming:_3dsData.kt$_3dsData : BaseObservable</ID>
+        <ID>CommentSpacing:</ID>
+        <ID>ComplexMethod:CheckActivity.kt$CheckActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
+        <ID>ComplexMethod:DateWatcher.kt$DateWatcher$override fun afterTextChanged(p0: Editable?)</ID>
+        <ID>ComplexMethod:IdentityFragment.kt$IdentityFragment$override fun onViewCreated(view: View,
+            savedInstanceState: Bundle?)
+        </ID>
+        <ID>ComplexMethod:IdentityFragment.kt$IdentityFragment$private fun subscribeToOrderInfoUpdates()</ID>
+        <ID>ComplexMethod:PaymentConfirmationFragment.kt$PaymentConfirmationFragment$override fun onViewCreated(view:
+            View, savedInstanceState: Bundle?)
+        </ID>
+        <ID>EmptyFunctionBlock:BindingAdapters.kt$&lt;no name provided&gt;${ }</ID>
+        <ID>EmptyFunctionBlock:CexdSocket.kt$CexdSocket.&lt;no name provided&gt;${ }</ID>
+        <ID>EmptyFunctionBlock:DateWatcher.kt$DateWatcher${ }</ID>
+        <ID>ForbiddenComment:PaymentApi.kt$PaymentApi$// todo: move this part to dev flavor</ID>
+        <ID>FunctionParameterNaming:BindingAdapters.kt$_3dsData: _3dsData?</ID>
+        <ID>LongParameterList:IdentityVmModule.kt$IdentityVmModule$( paymentApi: PaymentApi, orderApi: OrderApi,
+            stringProvider: StringProvider, messenger: Messenger, dh: DH, coroutineDispatcherProvider:
+            CoroutineDispatcherProvider )
+        </ID>
+        <ID>LongParameterList:VmModule.kt$VmModule$( merchantApi: MerchantApi, paymentApi: PaymentApi, analyticsApi:
+            AnalyticsApi, messenger: Messenger, coroutineDispatcherProvider: CoroutineDispatcherProvider,
+            stringProvider: StringProvider )
+        </ID>
+        <ID>MagicNumber:BindingAdapters.kt$&lt;no name provided&gt;$200</ID>
+        <ID>MagicNumber:CexdSocket.kt$CexdSocket$1000</ID>
+        <ID>MagicNumber:CexdSocket.kt$CexdSocket$10_000</ID>
+        <ID>MagicNumber:CollapsibleLayout.kt$CollapsibleLayout$10</ID>
+        <ID>MagicNumber:CompleteSectionTitleLayout.kt$CompleteSectionTitleLayout$180f</ID>
+        <ID>MagicNumber:CountryPicker.kt$CCountryPicker$72</ID>
+        <ID>MagicNumber:DH2.kt$DH2$10</ID>
+        <ID>MagicNumber:DH2.kt$DH2$5</ID>
+        <ID>MagicNumber:DH2.kt$DH2$9</ID>
+        <ID>MagicNumber:DateWatcher.kt$DateWatcher$3</ID>
+        <ID>MagicNumber:DateWatcher.kt$DateWatcher$4</ID>
+        <ID>MagicNumber:DateWatcher.kt$DateWatcher$9</ID>
+        <ID>MagicNumber:FormatUtils.kt$4</ID>
+        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$0.25f</ID>
+        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$16</ID>
+        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$4</ID>
+        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$5</ID>
+        <ID>MagicNumber:IdentityFragmentViewModel.kt$IdentityFragmentViewModel$16</ID>
+        <ID>MagicNumber:IdentityFragmentViewModel.kt$IdentityFragmentViewModel$5</ID>
+        <ID>MagicNumber:Mapper.kt$400</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$16</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$18</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$4</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$5</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$8</ID>
+        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$9</ID>
+        <ID>MagicNumber:PaymentConfirmationFragment.kt$PaymentConfirmationFragment$400</ID>
+        <ID>MagicNumber:VerificationActivity.kt$VerificationActivity$10</ID>
+        <ID>MagicNumber:VerificationActivityViewModel.kt$VerificationActivityViewModel$3</ID>
+        <ID>MagicNumber:VerificationActivityViewModel.kt$VerificationActivityViewModel$4</ID>
+        <ID>MatchingDeclarationName:BaseResponse.kt$com.cexdirect.lib._network.models.BaseResponse.kt</ID>
+        <ID>MatchingDeclarationName:CustomLiveData.kt$com.cexdirect.lib.CustomLiveData.kt</ID>
+        <ID>MatchingDeclarationName:EmailValidator.kt$com.cexdirect.lib._util.EmailValidator.kt</ID>
+        <ID>MatchingDeclarationName:SymbolMapping.kt$com.cexdirect.lib._util.SymbolMapping.kt</ID>
+        <ID>MatchingDeclarationName:WalletAddressBody.kt$com.cexdirect.lib._network.models.WalletAddressBody.kt</ID>
+        <ID>MaxLineLength:BuyActivityViewModel.kt$BuyActivityViewModel.Factory$BuyActivityViewModel(merchantApi,
+            paymentApi, analyticsApi, messenger, dispatcherProvider, stringProvider) as T
+        </ID>
+        <ID>MaxLineLength:BuyAmount.kt$BuyAmount$value &lt; cryptoMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?:
+            0.0 -&gt; stringProvider.provideString(R.string.cexd_min_sale, cryptoMinBoundary)
+        </ID>
+        <ID>MaxLineLength:BuyAmount.kt$BuyAmount$value &lt; fiatMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?:
+            0.0 -&gt; stringProvider.provideString(R.string.cexd_min_amount, fiatMinBoundary)
+        </ID>
+        <ID>MaxLineLength:BuyAmount.kt$BuyAmount$value &gt; cryptoMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?:
+            0.0 -&gt; stringProvider.provideString(R.string.cexd_max_sale, cryptoMaxBoundary)
+        </ID>
+        <ID>MaxLineLength:BuyAmount.kt$BuyAmount$value &gt; fiatMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?:
+            0.0 -&gt; stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
+        </ID>
+        <ID>
+            MaxLineLength:CountryPicker.kt$CCountryPicker${ private val countriesList = ArrayList&lt;Country&gt;() private var selectedCountriesList: MutableList&lt;Country&gt; = ArrayList() private var countryListAdapter: CountryListAdapter? = null private var listener: CCountryPickerListener? = null init { // setCountriesList(Country.getAllCountries()) }
+            override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+            inflater.inflate(R.layout.fragment_country_picker, container, false)!! // override fun onViewCreated(view:
+            View, savedInstanceState: Bundle?) { // super.onViewCreated(view, savedInstanceState) //
+            selectedCountriesList.addAll(this.countriesList) // countryListAdapter = CountryListAdapter(context!!,
+            this.selectedCountriesList) // // fcpList.apply { // this.adapter = countryListAdapter //
+            onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -&gt; // if
+            (this@CCountryPicker.listener != null) { // val country =
+            this@CCountryPicker.selectedCountriesList[position] //
+            this@CCountryPicker.listener!!.onSelectCountry(country.name, country.code, country.dialCode, country.flag)
+            // } // } // } // // fcpSearch.setOnClickListener { // fcpTitleLayout.visibility = View.GONE //
+            fcpSearchLayout.visibility = View.VISIBLE // } // // fcpCloseSearch.setOnClickListener { //
+            fcpSearchLayout.visibility = View.GONE // fcpTitleLayout.visibility = View.VISIBLE // search("") // } // //
+            fcpQuery.addTextChangedListener(object : TextWatcher { // override fun afterTextChanged(s: Editable?) { //
+            // } // // override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { // } // //
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { // search(s.toString())
+            // } // }) // // fcpCancel.setOnClickListener { // dismiss() // } // } override fun onStart() {
+            super.onStart() view?.apply { post { val parent = parent as View val params = parent.layoutParams as
+            androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams val height = this.measuredHeight - (72 *
+            resources.displayMetrics.density).toInt() (params.behavior as
+            com.google.android.material.bottomsheet.BottomSheetBehavior).peekHeight = height params.height = height
+            parent.layoutParams = params } } } fun setListener(listener: CCountryPickerListener) { this.listener =
+            listener } private fun search(text: String) { this.selectedCountriesList.clear() val var2 =
+            this.countriesList.iterator() while (var2.hasNext()) { val country = var2.next() if
+            (country.name.toLowerCase(Locale.ENGLISH).contains(text.toLowerCase())) {
+            this.selectedCountriesList.add(country) } } this.countryListAdapter!!.notifyDataSetChanged() } private fun
+            getCoordinatorLayoutWrapper(view: View): androidx.coordinatorlayout.widget.CoordinatorLayout {
+            view.parent.takeIf { it is androidx.coordinatorlayout.widget.CoordinatorLayout }?.let { return it as
+            androidx.coordinatorlayout.widget.CoordinatorLayout } return getCoordinatorLayoutWrapper(view.parent as
+            View) } fun setCountriesList(newCountries: List&lt;Country&gt;) { this.countriesList.clear()
+            this.countriesList.addAll(newCountries) } }
+        </ID>
+        <ID>MaxLineLength:IdentityFragmentViewModel.kt$IdentityFragmentViewModel$CollapsibleLayout.ContentState.EXPANDED
+            -&gt; paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
+        </ID>
+        <ID>MaxLineLength:IdentityVmModule.kt$IdentityVmModule$@Provides @PhotoSourceDialogFactory @IdentityScope fun
+            providePhotoSourceDialogFactory(coroutineDispatcherProvider: CoroutineDispatcherProvider):
+            ViewModelProvider.Factory
+        </ID>
+        <ID>MaxLineLength:IdentityVmModule.kt$IdentityVmModule$@Provides @VerificationActivityFactory @IdentityScope fun
+            provideVerificationActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider):
+            ViewModelProvider.Factory
+        </ID>
+        <ID>MaxLineLength:Messenger.kt$Messenger$fun subscribeToExchangeRates(placementId: String =
+            Direct.credentials.placementId): LiveData&lt;Resource&lt;List&lt;ExchangeRate&gt;?&gt;&gt;
+        </ID>
+        <ID>MaxLineLength:OrderApi.kt$OrderApi$ExecutableLiveData(scope) {
+            service.resendCheckCode(ResendCheckCodeBody(ResendCheckCodeData(orderId = orderId))) }
+        </ID>
+        <ID>MaxLineLength:PaymentService.kt$PaymentService$@GET("v1/payments/wallet/{wallet}/{currency}/verify") fun
+            verifyWalletAddressAsync(@Path("wallet") wallet: String, @Path("currency") currency: String): Deferred&lt;ApiResponse&lt;Void&gt;&gt;
+        </ID>
+        <ID>MaxLineLength:VmModule.kt$VmModule$@Provides @ErrorActivityFactory @Singleton fun
+            provideErrorActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider):
+            ViewModelProvider.Factory
+        </ID>
+        <ID>MaxLineLength:VmModule.kt$VmModule$@Provides @TermsActivityFactory @Singleton fun
+            provideTermsActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider):
+            ViewModelProvider.Factory
+        </ID>
+        <ID>MaxLineLength:VmModule.kt$VmModule$BuyActivityViewModel.Factory(merchantApi, paymentApi, analyticsApi,
+            messenger, coroutineDispatcherProvider, stringProvider)
+        </ID>
+        <ID>MaximumLineLength:</ID>
+        <ID>MultiLineIfElse:</ID>
+        <ID>NestedBlockDepth:ExtraFieldsLayout.kt$ExtraFieldsLayout$private fun updateLayout()</ID>
+        <ID>NoBlankLineBeforeRbrace:</ID>
+        <ID>NoConsecutiveBlankLines:</ID>
+        <ID>NoWildcardImports:</ID>
+        <ID>PackageName:</ID>
+        <ID>PackageNaming:AnalyticsApi.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:AnalyticsService.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:BaseBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:BaseData.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:BaseResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:BindingAdapters.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:BuyActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:CexdSocket.kt$package com.cexdirect.lib._network.ws</ID>
+        <ID>PackageNaming:ChangeEmailBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ChangeEmailResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:CheckActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:CheckCodeBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:CheckCodeResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:CoreModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:CountriesResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:DH2.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:DateDeserializer.kt$package com.cexdirect.lib._network.serializers</ID>
+        <ID>PackageNaming:DateWatcher.kt$package com.cexdirect.lib.verification.identity._util</ID>
+        <ID>PackageNaming:DefaultEvent.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:DirectComponent.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:EmailValidator.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:EncryptionKeysResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ErrorActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:ExchangeRatesResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:Extractable.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:FileUtils.kt$package com.cexdirect.lib.verification.identity._util</ID>
+        <ID>PackageNaming:FormatUtils.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:HeaderInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentityFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentityScope.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentitySubcomponent.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:IdentityVmModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:ImageBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:LoggingInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:Mapper.kt$package com.cexdirect.lib._network.ws</ID>
+        <ID>PackageNaming:MerchantApi.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:MerchantService.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:Messenger.kt$package com.cexdirect.lib._network.ws</ID>
+        <ID>PackageNaming:MonetaryData.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:NetworkModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:NewOrderBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ObservavleExtensions.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:OrderApi.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:OrderDataResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:OrderInfoBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:OrderInfoResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:OrderService.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:OrderStatus.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:OrderStatusDeserializer.kt$package com.cexdirect.lib._network.deserializers</ID>
+        <ID>PackageNaming:PaymentApi.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:PaymentBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:PaymentConfirmationFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:PaymentService.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:PhotoSourceDialogFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:PlacementInfoResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:PlacementValidator.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:PrecisionsResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ProcessingBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ProcessingResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:PublicKeyBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:PublicKeyResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:RateConverter.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:RawCardData.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:ReceiptFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:ResendCheckCodeBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:Resource.kt$package com.cexdirect.lib._network</ID>
+        <ID>PackageNaming:ShaUtil.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:SharedStateModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:SocketModels.kt$package com.cexdirect.lib._network.ws</ID>
+        <ID>PackageNaming:SymbolMapping.kt$package com.cexdirect.lib._util</ID>
+        <ID>PackageNaming:TermsActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:UploadImageResponse.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:VerificationActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:VerificationBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:VmModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:Wallet.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:WalletAddressBody.kt$package com.cexdirect.lib._network.models</ID>
+        <ID>PackageNaming:WsUrlProvider.kt$package com.cexdirect.lib._network.ws</ID>
+        <ID>ParameterListWrapping:</ID>
+        <ID>SpreadOperator:StringProvider.kt$StringProvider$(id, *args)</ID>
+        <ID>TooGenericExceptionCaught:CustomLiveData.kt$ExecutableLiveData$e: Exception</ID>
+        <ID>TooManyFunctions:BindingAdapters.kt$com.cexdirect.lib._util.BindingAdapters.kt</ID>
+        <ID>TooManyFunctions:BuyActivityViewModel.kt$BuyActivityViewModel : LegalViewModel</ID>
+        <ID>TooManyFunctions:BuyAmount.kt$BuyAmount : BaseObservable</ID>
+        <ID>TooManyFunctions:DocumentTypeButton.kt$DocumentTypeButton : FrameLayoutRadioCheckable</ID>
+        <ID>TooManyFunctions:FooterScrollView.kt$FooterScrollView : ScrollView</ID>
+        <ID>TooManyFunctions:IdentityFragmentViewModel.kt$IdentityFragmentViewModel : BaseObservableViewModel</ID>
+        <ID>TooManyFunctions:OrderApi.kt$OrderApi</ID>
+        <ID>TooManyFunctions:OrderService.kt$OrderService</ID>
+        <ID>VariableNaming:PaymentConfirmationFragmentViewModel.kt$PaymentConfirmationFragmentViewModel$val _3dsData =
+            _3dsData()
+        </ID>
+        <ID>VariableNaming:_3dsData.kt$_3dsData$@get:Bindable var _3dsExtras: _3DsExtras? = null set(value) { field =
+            value notifyPropertyChanged(BR._3dsExtras) }
+        </ID>
+        <ID>VariableNaming:_3dsData.kt$_3dsData$@get:Bindable var _3dsUrl: String? = null set(value) { field = value
+            notifyPropertyChanged(BR._3dsUrl) }
+        </ID>
+        <ID>WildcardImport:BindingAdapters.kt$import android.text.*</ID>
+        <ID>WildcardImport:BuyActivityViewModel.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:CexdSocket.kt$import okhttp3.*</ID>
+        <ID>WildcardImport:CustomLiveData.kt$import kotlinx.coroutines.*</ID>
+        <ID>WildcardImport:CvvInfoDialog.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:DH2.kt$import java.security.*</ID>
+        <ID>WildcardImport:DocumentPhotos.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:ExtraFieldsLayout.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib._network.models.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib._util.*</ID>
+        <ID>WildcardImport:IdentityVmModule.kt$import com.cexdirect.lib._di.annotation.*</ID>
+        <ID>WildcardImport:NetworkModule.kt$import com.cexdirect.lib._network.*</ID>
+        <ID>WildcardImport:OrderApi.kt$import com.cexdirect.lib._network.models.*</ID>
+        <ID>WildcardImport:OrderService.kt$import com.cexdirect.lib._network.models.*</ID>
+        <ID>WildcardImport:PhotoSourceDialog.kt$import com.cexdirect.lib.*</ID>
+    </Whitelist>
+</SmellBaseline>
