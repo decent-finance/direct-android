@@ -62,8 +62,8 @@ class BuyAmountTest {
         assertThat(spy.converter).isNotNull()
         assertThat(spy.popularValues).containsOnlyElementsOf(listOf("100", "200", "500"))
         assertThat(spy)
-                .hasFieldOrPropertyWithValue("minBoundary", "202.86")
-                .hasFieldOrPropertyWithValue("maxBoundary", "1000.00")
+                .hasFieldOrPropertyWithValue("fiatMinBoundary", "50")
+                .hasFieldOrPropertyWithValue("fiatMaxBoundary", "1000")
                 .hasFieldOrPropertyWithValue("fiatAmount", "")
                 .hasFieldOrPropertyWithValue("cryptoAmount", "0.0000")
     }

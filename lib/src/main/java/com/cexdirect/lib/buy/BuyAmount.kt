@@ -27,8 +27,6 @@ import com.cexdirect.lib._network.models.ExchangeRate
 import com.cexdirect.lib._network.models.Precision
 import com.cexdirect.lib._util.RateConverter
 import com.cexdirect.lib._util.formatAmount
-import kotlin.math.max
-import kotlin.math.min
 
 @OpenForTesting
 class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
@@ -132,9 +130,13 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @VisibleForTesting
-    internal var minBoundary = ""
+    internal var fiatMinBoundary = ""
     @VisibleForTesting
-    internal var maxBoundary = ""
+    internal var fiatMaxBoundary = ""
+    @VisibleForTesting
+    internal var cryptoMinBoundary = ""
+    @VisibleForTesting
+    internal var cryptoMaxBoundary = ""
 
     @VisibleForTesting
     internal var converter: RateConverter? = null
@@ -199,17 +201,21 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
     @VisibleForTesting
     internal fun updateAmountBoundaries() {
         findCurrentPair()?.let { rate ->
-            val converter = RateConverter(rate.a, rate.b, rate.c)
+            precisionList.find { it.currency == selectedFiatCurrency }!!
+                    .let { fiatPrecision ->
+                        fiatMinBoundary = fiatPrecision.minLimit
+                        fiatMaxBoundary = fiatPrecision.maxLimit
+                    }
 
-            val fiatPrecision = precisionList.find { it.currency == selectedFiatCurrency }!!
-            val cryptoPrecision = precisionList.find { it.currency == selectedCryptoCurrency }!!
-
-            val minLimit = converter.convertToFiat(cryptoPrecision.minLimit.toDouble())
-            minBoundary = max(minLimit, fiatPrecision.minLimit.toDouble()).formatAmount(fiatPrecision)
-
-            val cryptoMaxLimit = cryptoPrecision.maxLimit.toDouble()
-            val maxLimit = if (cryptoMaxLimit > 0) converter.convertToFiat(cryptoMaxLimit) else Double.POSITIVE_INFINITY
-            maxBoundary = min(maxLimit, fiatPrecision.maxLimit.toDouble()).formatAmount(fiatPrecision)
+            precisionList.find { it.currency == selectedCryptoCurrency }!!
+                    .let { cryptoPrecision ->
+                        cryptoMinBoundary = cryptoPrecision.minLimit
+                        cryptoMaxBoundary = if (cryptoPrecision.maxLimit.toDouble() <= 0.0) {
+                            Double.MAX_VALUE.toString()
+                        } else {
+                            cryptoPrecision.maxLimit
+                        }
+                    }
         }
     }
 
@@ -217,8 +223,8 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
     internal fun updateFiatBoundaryMessage() {
         fiatBoundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
             when {
-                value < minBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_amount, minBoundary)
-                value > maxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_amount, maxBoundary)
+                value < fiatMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_amount, fiatMinBoundary)
+                value > fiatMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
                 else -> ""
             }
         } ?: ""
@@ -226,8 +232,13 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
 
     @VisibleForTesting
     internal fun updateCryptoBoundaryMessage() {
-        cryptoBoundaryMessage = cryptoAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { "" }
-                ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
+        cryptoBoundaryMessage = cryptoAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
+            when {
+                value < cryptoMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_sale, cryptoMinBoundary)
+                value > cryptoMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_sale, cryptoMaxBoundary)
+                else -> ""
+            }
+        } ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
     }
 
     fun currentPairPopularValues() = findCurrentPair()?.fiatPopularValues ?: emptyList()
