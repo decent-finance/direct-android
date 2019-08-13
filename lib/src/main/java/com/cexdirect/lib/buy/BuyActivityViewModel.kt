@@ -139,9 +139,7 @@ class BuyActivityViewModel(
 
     fun initRates(data: List<ExchangeRate>, action: () -> Unit) {
         amount.rates = data
-        amount.currentPairPopularValues()
-                .takeIf { it.size > 1 }
-                ?.let { amount.fiatAmount = it.first() }
+        amount.fiatAmount = "250" // for now, this value is hardcoded
         amount.inputMode = InputMode.FIAT
         dataLoaded.set(true)
         action.invoke()
