@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -15,6 +16,5 @@
   -->
 
 <resources>
-    <string name="app_name">CEX Direct</string>
-    <string name="launch_direct">Launch Direct</string>
+    <string name="app_name">CEX Direct DEV</string>
 </resources>

@@ -61,18 +61,20 @@ android {
         dev {
             buildConfigField('String', 'PLACEMENT_ID', "\"${project.ext.configProperties['devPlacementId']}\"")
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['devSecret']}\"")
+
+            applicationIdSuffix '.dev'
         }
 
         uat {
             buildConfigField('String', 'PLACEMENT_ID', "\"${project.ext.configProperties['uatPlacementId']}\"")
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['uatSecret']}\"")
 
+            applicationIdSuffix '.uat'
         }
 
         prod {
             buildConfigField('String', 'PLACEMENT_ID', "\"${project.ext.configProperties['prodPlacementId']}\"")
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['prodSecret']}\"")
-
         }
     }
 
