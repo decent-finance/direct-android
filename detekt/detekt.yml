@@ -53,7 +53,7 @@ complexity:
     threshold: 10
     includeStaticDeclarations: false
   ComplexMethod:
-    active: true
+    active: false
     threshold: 10
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
@@ -67,7 +67,7 @@ complexity:
     active: false
     threshold: 60
   LongParameterList:
-    active: true
+    active: false
     threshold: 6
     ignoreDefaultParameters: false
   MethodOverloading:
@@ -158,7 +158,7 @@ exceptions:
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
-    active: true
+    active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
     exceptionNames:
       - ArrayIndexOutOfBoundsException
@@ -200,13 +200,13 @@ formatting:
     active: false
     autoCorrect: true
   Indentation:
-    active: false
+    active: true
     autoCorrect: true
     indentSize: 4
     continuationIndentSize: 4
   MaximumLineLength:
-    active: true
-    maxLineLength: 120
+    active: false
+    maxLineLength: 200
   ModifierOrdering:
     active: true
     autoCorrect: true
@@ -353,7 +353,7 @@ naming:
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
     minimumVariableNameLength: 1
   VariableNaming:
-    active: true
+    active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
@@ -430,7 +430,7 @@ style:
     active: false
     includeLineWrapping: false
   ForbiddenComment:
-    active: true
+    active: false
     values: 'TODO:,FIXME:,STOPSHIP:'
   ForbiddenImport:
     active: false

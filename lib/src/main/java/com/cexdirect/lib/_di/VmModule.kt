@@ -51,19 +51,28 @@ class VmModule {
     @BuyActivityFactory
     @Singleton
     fun provideBuyActivityViewModel(
-            merchantApi: MerchantApi,
-            paymentApi: PaymentApi,
-            analyticsApi: AnalyticsApi,
-            messenger: Messenger,
-            coroutineDispatcherProvider: CoroutineDispatcherProvider,
-            stringProvider: StringProvider
+        merchantApi: MerchantApi,
+        paymentApi: PaymentApi,
+        analyticsApi: AnalyticsApi,
+        messenger: Messenger,
+        coroutineDispatcherProvider: CoroutineDispatcherProvider,
+        stringProvider: StringProvider
     ): ViewModelProvider.Factory =
-            BuyActivityViewModel.Factory(merchantApi, paymentApi, analyticsApi, messenger, coroutineDispatcherProvider, stringProvider)
+        BuyActivityViewModel.Factory(
+            merchantApi,
+            paymentApi,
+            analyticsApi,
+            messenger,
+            coroutineDispatcherProvider,
+            stringProvider
+        )
 
     @Provides
     @ErrorActivityFactory
     @Singleton
-    fun provideErrorActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider): ViewModelProvider.Factory =
+    fun provideErrorActivityViewModel(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ): ViewModelProvider.Factory =
         ErrorActivityViewModel.Factory(coroutineDispatcherProvider)
 
     @Provides
@@ -79,11 +88,15 @@ class VmModule {
     @Provides
     @TermsActivityFactory
     @Singleton
-    fun provideTermsActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider): ViewModelProvider.Factory =
+    fun provideTermsActivityViewModel(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ): ViewModelProvider.Factory =
         TermsActivityViewModel.Factory(coroutineDispatcherProvider)
 
     @Provides
     @Singleton
-    fun provideExitDialogViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider) =
+    fun provideExitDialogViewModel(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ) =
         ExitDialogViewModel.Factory(coroutineDispatcherProvider)
 }

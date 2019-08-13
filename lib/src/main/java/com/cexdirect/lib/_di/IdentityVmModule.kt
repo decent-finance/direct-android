@@ -43,7 +43,9 @@ class IdentityVmModule {
     @Provides
     @VerificationActivityFactory
     @IdentityScope
-    fun provideVerificationActivityViewModel(coroutineDispatcherProvider: CoroutineDispatcherProvider): ViewModelProvider.Factory =
+    fun provideVerificationActivityViewModel(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ): ViewModelProvider.Factory =
         VerificationActivityViewModel.Factory(coroutineDispatcherProvider)
 
     @Provides
@@ -95,16 +97,22 @@ class IdentityVmModule {
     @Provides
     @PhotoSourceDialogFactory
     @IdentityScope
-    fun providePhotoSourceDialogFactory(coroutineDispatcherProvider: CoroutineDispatcherProvider): ViewModelProvider.Factory =
+    fun providePhotoSourceDialogFactory(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ): ViewModelProvider.Factory =
         PhotoSourceDialogViewModel.Factory(coroutineDispatcherProvider)
 
     @Provides
     @IdentityScope
-    fun provideCvvInfoDialogViewModelFactory(coroutineDispatcherProvider: CoroutineDispatcherProvider) =
+    fun provideCvvInfoDialogViewModelFactory(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ) =
         CvvInfoDialogViewModel.Factory(coroutineDispatcherProvider)
 
     @Provides
     @IdentityScope
-    fun provideChangeEmailDialogViewModelFactory(coroutineDispatcherProvider: CoroutineDispatcherProvider) =
+    fun provideChangeEmailDialogViewModelFactory(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ) =
         ChangeEmailDialogViewModel.Factory(coroutineDispatcherProvider)
 }

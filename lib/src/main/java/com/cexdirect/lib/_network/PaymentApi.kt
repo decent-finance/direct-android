@@ -40,7 +40,7 @@ class PaymentApi(private val service: PaymentService) {
                 scope.async {
                     @Suppress("RemoveExplicitTypeArguments") // won't compile if type is removed
                     ApiResponse<Void>()
-                    // todo: move this part to dev flavor
+                    // TODO: move this part to dev flavor
                 }
             }
         }

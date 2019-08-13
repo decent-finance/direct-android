@@ -223,8 +223,10 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
     internal fun updateFiatBoundaryMessage() {
         fiatBoundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
             when {
-                value < fiatMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_amount, fiatMinBoundary)
-                value > fiatMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
+                value < fiatMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_min_amount, fiatMinBoundary)
+                value > fiatMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
                 else -> ""
             }
         } ?: ""
@@ -234,8 +236,10 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
     internal fun updateCryptoBoundaryMessage() {
         cryptoBoundaryMessage = cryptoAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
             when {
-                value < cryptoMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_min_sale, cryptoMinBoundary)
-                value > cryptoMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> stringProvider.provideString(R.string.cexd_max_sale, cryptoMaxBoundary)
+                value < cryptoMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_min_sale, cryptoMinBoundary)
+                value > cryptoMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_max_sale, cryptoMaxBoundary)
                 else -> ""
             }
         } ?: stringProvider.provideString(R.string.cexd_please_enter_amount)

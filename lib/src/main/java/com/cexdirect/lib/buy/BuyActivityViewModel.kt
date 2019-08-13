@@ -32,12 +32,12 @@ import com.cexdirect.lib._network.ws.Messenger
 
 @OpenForTesting
 class BuyActivityViewModel(
-        merchantApi: MerchantApi,
-        paymentApi: PaymentApi,
-        private val analyticsApi: AnalyticsApi,
-        private val messenger: Messenger,
-        dispatcherProvider: CoroutineDispatcherProvider,
-        stringProvider: StringProvider
+    merchantApi: MerchantApi,
+    paymentApi: PaymentApi,
+    private val analyticsApi: AnalyticsApi,
+    private val messenger: Messenger,
+    dispatcherProvider: CoroutineDispatcherProvider,
+    stringProvider: StringProvider
 ) : LegalViewModel(dispatcherProvider) {
 
     val amount = BuyAmount(stringProvider)
@@ -55,7 +55,7 @@ class BuyActivityViewModel(
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
     private val precisions =
-            merchantApi.getCurrencyPrecisions(this, Direct.credentials.placementId)
+        merchantApi.getCurrencyPrecisions(this, Direct.credentials.placementId)
 
     @Suppress("NestedLambdaShadowedImplicitParameter")
     val currencies = Transformations.switchMap(precisions) {
@@ -76,8 +76,8 @@ class BuyActivityViewModel(
 
     val sendBuyEvent = analyticsApi.sendBuyEvent(this) {
         EventData(
-                fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
-                crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
+            fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
+            crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
         )
     }
 
@@ -119,22 +119,34 @@ class BuyActivityViewModel(
 
     fun subscribeToExchangeRates() = messenger.subscribeToExchangeRates()
 
-    fun extractMonetaryData(block: (cryptoAmount: String, cryptoCurrency: String, fiatAmount: String, fiatCurrency: String) -> Unit) {
-        block.invoke(amount.cryptoAmount, amount.selectedCryptoCurrency, amount.fiatAmount, amount.selectedFiatCurrency)
+    fun extractMonetaryData(
+        block: (
+            cryptoAmount: String,
+            cryptoCurrency: String,
+            fiatAmount: String,
+            fiatCurrency: String
+        ) -> Unit
+    ) {
+        block.invoke(
+            amount.cryptoAmount,
+            amount.selectedCryptoCurrency,
+            amount.fiatAmount,
+            amount.selectedFiatCurrency
+        )
     }
 
     fun filterBaseCurrencies(action: () -> Unit) {
         currencyAdapter.items = amount.rates
-                .filter { it.fiat == amount.selectedFiatCurrency }
-                .distinctBy { it.crypto }
-                .map { it.crypto }
+            .filter { it.fiat == amount.selectedFiatCurrency }
+            .distinctBy { it.crypto }
+            .map { it.crypto }
         action.invoke()
     }
 
     fun filterQuoteCurrencies(action: () -> Unit) {
         currencyAdapter.items = amount.rates
-                .distinctBy { it.fiat }
-                .map { it.fiat }
+            .distinctBy { it.fiat }
+            .map { it.fiat }
         action.invoke()
     }
 
@@ -156,17 +168,24 @@ class BuyActivityViewModel(
     }
 
     class Factory(
-            private val merchantApi: MerchantApi,
-            private val paymentApi: PaymentApi,
-            private val analyticsApi: AnalyticsApi,
-            private val messenger: Messenger,
-            private val dispatcherProvider: CoroutineDispatcherProvider,
-            private val stringProvider: StringProvider
+        private val merchantApi: MerchantApi,
+        private val paymentApi: PaymentApi,
+        private val analyticsApi: AnalyticsApi,
+        private val messenger: Messenger,
+        private val dispatcherProvider: CoroutineDispatcherProvider,
+        private val stringProvider: StringProvider
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                BuyActivityViewModel(merchantApi, paymentApi, analyticsApi, messenger, dispatcherProvider, stringProvider) as T
+            BuyActivityViewModel(
+                merchantApi,
+                paymentApi,
+                analyticsApi,
+                messenger,
+                dispatcherProvider,
+                stringProvider
+            ) as T
     }
 }
 

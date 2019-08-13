@@ -17,9 +17,9 @@
 package com.cexdirect.lib._util
 
 class RateConverter(
-        val a: Double,
-        val b: Double,
-        val c: Double
+    val a: Double,
+    val b: Double,
+    val c: Double
 ) {
 
     fun convertToCrypto(fiat: Double): Double = (a * fiat - b) / c

@@ -32,10 +32,10 @@ import com.cexdirect.lib._network.ws.Messenger
 import com.cexdirect.lib.verification.EmailChangedEvent
 
 class PaymentConfirmationFragmentViewModel(
-        private val orderApi: OrderApi,
-        val emailChangedEvent: EmailChangedEvent,
-        private val messenger: Messenger,
-        dispatcherProvider: CoroutineDispatcherProvider
+    private val orderApi: OrderApi,
+    val emailChangedEvent: EmailChangedEvent,
+    private val messenger: Messenger,
+    dispatcherProvider: CoroutineDispatcherProvider
 ) : BaseObservableViewModel(dispatcherProvider) {
 
     val confirmationCode = ObservableField("")

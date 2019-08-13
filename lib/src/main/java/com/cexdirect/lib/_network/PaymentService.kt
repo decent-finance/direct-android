@@ -28,5 +28,8 @@ interface PaymentService {
     fun getExchangeRatesAsync(@Path("placementId") placementId: String): Deferred<ExchangeRatesResponse>
 
     @GET("v1/payments/wallet/{wallet}/{currency}/verify")
-    fun verifyWalletAddressAsync(@Path("wallet") wallet: String, @Path("currency") currency: String): Deferred<ApiResponse<Void>>
+    fun verifyWalletAddressAsync(
+        @Path("wallet") wallet: String,
+        @Path("currency") currency: String
+    ): Deferred<ApiResponse<Void>>
 }

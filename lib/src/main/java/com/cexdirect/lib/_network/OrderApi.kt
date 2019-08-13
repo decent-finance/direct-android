@@ -32,35 +32,57 @@ class OrderApi(private val service: OrderService) {
     }
 
     fun checkCode(scope: CoroutineScope, block: () -> CheckCodeData) =
-        ExecutableLiveData(scope) { service.checkCode(CheckCodeBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.checkCode(CheckCodeBody(block.invoke()))
+        }
 
     fun resendCheckCode(scope: CoroutineScope, orderId: String) =
-        ExecutableLiveData(scope) { service.resendCheckCode(ResendCheckCodeBody(ResendCheckCodeData(orderId = orderId))) }
+        ExecutableLiveData(scope) {
+            service.resendCheckCode(ResendCheckCodeBody(ResendCheckCodeData(orderId = orderId)))
+        }
 
     fun checkOrderInfo(scope: CoroutineScope) =
-        ExecutableLiveData(scope) { service.checkOrderInfo(OrderInfoBody()) }
+        ExecutableLiveData(scope) {
+            service.checkOrderInfo(OrderInfoBody())
+        }
 
     fun sendPaymentData(scope: CoroutineScope, block: () -> PaymentData) =
-        ExecutableLiveData(scope) { service.sendPaymentData(PaymentBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.sendPaymentData(PaymentBody(block.invoke()))
+        }
 
     fun updatePaymentData(scope: CoroutineScope, block: () -> PaymentData) =
-        ExecutableLiveData(scope) { service.updatePaymentData(PaymentBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.updatePaymentData(PaymentBody(block.invoke()))
+        }
 
     fun uploadImage(scope: CoroutineScope, block: () -> ImageBody) =
-        ExecutableLiveData(scope) { service.uploadImage(block.invoke()) }
+        ExecutableLiveData(scope) {
+            service.uploadImage(block.invoke())
+        }
 
     fun getVerificationKey(scope: CoroutineScope, block: () -> PublicKeyData) =
-        ExecutableLiveData(scope) { service.getVerificationPublicKey(PublicKeyBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.getVerificationPublicKey(PublicKeyBody(block.invoke()))
+        }
 
     fun getProcessingKey(scope: CoroutineScope, block: () -> PublicKeyData) =
-        ExecutableLiveData(scope) { service.getProcessingPublicKey(PublicKeyBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.getProcessingPublicKey(PublicKeyBody(block.invoke()))
+        }
 
     fun changeEmail(scope: CoroutineScope, block: () -> ChangeEmailRequest) =
-        ExecutableLiveData(scope) { service.changeEmail(ChangeEmailBody(block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.changeEmail(ChangeEmailBody(block.invoke()))
+        }
 
     fun sendToVerification(scope: CoroutineScope, block: () -> VerificationData) =
-        ExecutableLiveData(scope) { service.sendToVerification(VerificationBody(data = block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.sendToVerification(VerificationBody(data = block.invoke()))
+        }
 
     fun sendToProcessing(scope: CoroutineScope, block: () -> VerificationData) =
-        ExecutableLiveData(scope) { service.sendToProcessing(VerificationBody(data = block.invoke())) }
+        ExecutableLiveData(scope) {
+            service.sendToProcessing(VerificationBody(data = block.invoke()))
+        }
 }

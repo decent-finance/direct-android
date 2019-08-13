@@ -315,7 +315,9 @@ class IdentityFragmentViewModel private constructor(
             CollapsibleLayout.ContentState.COLLAPSED -> paymentBaseContentState.set(
                 CollapsibleLayout.ContentState.EXPANDED
             )
-            CollapsibleLayout.ContentState.EXPANDED -> paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
+            CollapsibleLayout.ContentState.EXPANDED -> paymentBaseContentState.set(
+                CollapsibleLayout.ContentState.COLLAPSED
+            )
         }
     }
 
