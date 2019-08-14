@@ -59,8 +59,8 @@ class CompleteSectionTitleLayout @JvmOverloads constructor(
             pivotY = measuredHeight / 2f
 
             rotation = when (direction) {
-                DIRECTION_DOWN -> 0f
-                DIRECTION_UP -> 180f
+                DIRECTION_DOWN -> DIRECTION_DOWN_DEGREES
+                DIRECTION_UP -> DIRECTION_UP_DEGREES
                 else -> error("Illegal value passed")
             }
         }
@@ -69,6 +69,8 @@ class CompleteSectionTitleLayout @JvmOverloads constructor(
     companion object {
         const val DIRECTION_DOWN = -1
         const val DIRECTION_UP = -2
+        const val DIRECTION_DOWN_DEGREES = 0f
+        const val DIRECTION_UP_DEGREES = 180f
     }
 }
 

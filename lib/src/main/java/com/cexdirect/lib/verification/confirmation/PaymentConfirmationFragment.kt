@@ -30,6 +30,7 @@ import com.cexdirect.lib._network.Loading
 import com.cexdirect.lib._network.Success
 import com.cexdirect.lib._network.models.OrderStatus
 import com.cexdirect.lib._network.webview.Client
+import com.cexdirect.lib._network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
@@ -121,7 +122,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                     is Failure -> {
                         hideLoader()
-                        if (it.code == 400) {
+                        if (it.code == CODE_BAD_REQUEST) {
                             toast(R.string.cexd_wrong_code)
                         } else {
                             purchaseFailed(it.message)

@@ -52,7 +52,7 @@ class VerificationActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_verification)
-        binding.avStepsViewPager.pageMargin = 10
+        binding.avStepsViewPager.pageMargin = VIEWPAGER_ELEMENT_MARGIN
 
         model.apply {
             intent.let {
@@ -94,5 +94,9 @@ class VerificationActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Direct.releaseIdentitySubcomponent()
+    }
+
+    companion object {
+        const val VIEWPAGER_ELEMENT_MARGIN = 10
     }
 }

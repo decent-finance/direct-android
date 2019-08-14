@@ -116,14 +116,14 @@ class IdentityFragmentViewModel private constructor(
     val verificationResult = Transformations.switchMap(verificationKey) {
         it.enqueueWith({
             it.data.let {
-                val vector = dh.byteGenerator(16)
+                val vector = dh.byteGenerator(GENERATOR_BYTES)
                 val expiry = cardExpiry.get()!!
                 val cardData = Gson().toJson(
                     IvsCardData(cardNumber.get()!!.replace(" ", ""), expiry)
                 )
 
                 val chash = dh.encrypt(
-                    dh.stringGenerator(5),
+                    dh.stringGenerator(GENERATOR_OFFSET),
                     cardData,
                     android.util.Base64.decode(it!!.publicKey, android.util.Base64.NO_WRAP),
                     vector
@@ -146,13 +146,13 @@ class IdentityFragmentViewModel private constructor(
     val processingResult = Transformations.switchMap(processingKey) {
         it.enqueueWith({
             it.data.let {
-                val vector = dh.byteGenerator(16)
+                val vector = dh.byteGenerator(GENERATOR_BYTES)
                 val cardData = Gson().toJson(
                     PssCardData(cardNumber.get()!!.replace(" ", ""), cardCvv.get()!!)
                 )
 
                 val chash = dh.encrypt(
-                    dh.stringGenerator(5),
+                    dh.stringGenerator(GENERATOR_OFFSET),
                     cardData,
                     android.util.Base64.decode(it!!.publicKey, android.util.Base64.NO_WRAP),
                     vector
@@ -355,6 +355,11 @@ class IdentityFragmentViewModel private constructor(
 
     fun showCvvInfo() {
         cvvInfoEvent.call()
+    }
+
+    companion object {
+        const val GENERATOR_BYTES = 16
+        const val GENERATOR_OFFSET = 5
     }
 
     @Suppress("UNCHECKED_CAST")

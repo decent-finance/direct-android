@@ -21,8 +21,10 @@ import com.cexdirect.lib._network.Resource
 import com.cexdirect.lib._network.Success
 import com.cexdirect.lib._network.models.ApiResponse
 
+const val CODE_BAD_REQUEST = 400
+
 fun <T : ApiResponse<V>, V> mapResponse(response: T): Resource<V> =
-    if (response.code < 400) {
+    if (response.code < CODE_BAD_REQUEST) {
         Success<V>(response.extract()!!)
     } else {
         Failure<V>(response.code, response.message ?: "")

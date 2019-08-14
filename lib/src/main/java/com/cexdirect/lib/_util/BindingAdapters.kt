@@ -43,6 +43,8 @@ import com.cexdirect.lib.views.SuperDuperViewPager
 import ru.noties.markwon.Markwon
 import java.net.URLEncoder
 
+const val FIRE_ON_EXIT_DELAY = 200L
+
 @BindingAdapter("showSoftInputOnFocus")
 fun EditText.makeShowSoftInput(show: Boolean) {
     requestFocus()
@@ -72,7 +74,7 @@ fun SuperDuperViewPager.applyPageListener(r: Runnable) {
     addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
             if (position == 0) {
-                Handler(Looper.getMainLooper()).postDelayed(r, 200)
+                Handler(Looper.getMainLooper()).postDelayed(r, FIRE_ON_EXIT_DELAY)
             }
             if (position > currentPos) {
                 setCurrentItem(currentPos, true)

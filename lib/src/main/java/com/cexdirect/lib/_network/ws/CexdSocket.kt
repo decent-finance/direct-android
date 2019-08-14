@@ -42,7 +42,7 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
 
     private val pingPongObserver = Observer<Pair<String, String>> { data ->
         if (data.first == "pong") {
-            handler.postDelayed(sendPingRunnable, 10_000)
+            handler.postDelayed(sendPingRunnable, PING_PONG_DELAY)
         }
     }
 
@@ -94,7 +94,7 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
     fun stop() {
         handler.removeCallbacks(sendPingRunnable)
         handler.post { parsedMessage.removeObserver(pingPongObserver) }
-        webSocket?.close(1000, "Stopped")
+        webSocket?.close(CLOSE_STATUS, "Stopped")
     }
 
     private fun sendRawMessage(msg: String) {
@@ -114,6 +114,11 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
 
     fun removeSubscriptionByKey(key: String) {
         subscriptions.remove(key)
+    }
+
+    companion object {
+        const val PING_PONG_DELAY = 10_000L
+        const val CLOSE_STATUS = 1000
     }
 }
 

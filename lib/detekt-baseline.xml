@@ -11,35 +11,6 @@
         <ID>EmptyFunctionBlock:CexdSocket.kt$CexdSocket.&lt;no name provided&gt;${ }</ID>
         <ID>EmptyFunctionBlock:DateWatcher.kt$DateWatcher${ }</ID>
         <ID>FunctionParameterNaming:BindingAdapters.kt$_3dsData: _3dsData?</ID>
-        <ID>MagicNumber:BindingAdapters.kt$&lt;no name provided&gt;$200</ID>
-        <ID>MagicNumber:CexdSocket.kt$CexdSocket$1000</ID>
-        <ID>MagicNumber:CexdSocket.kt$CexdSocket$10_000</ID>
-        <ID>MagicNumber:CollapsibleLayout.kt$CollapsibleLayout$10</ID>
-        <ID>MagicNumber:CompleteSectionTitleLayout.kt$CompleteSectionTitleLayout$180f</ID>
-        <ID>MagicNumber:DH2.kt$DH2$10</ID>
-        <ID>MagicNumber:DH2.kt$DH2$5</ID>
-        <ID>MagicNumber:DH2.kt$DH2$9</ID>
-        <ID>MagicNumber:DateWatcher.kt$DateWatcher$3</ID>
-        <ID>MagicNumber:DateWatcher.kt$DateWatcher$4</ID>
-        <ID>MagicNumber:DateWatcher.kt$DateWatcher$9</ID>
-        <ID>MagicNumber:FormatUtils.kt$4</ID>
-        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$0.25f</ID>
-        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$16</ID>
-        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$4</ID>
-        <ID>MagicNumber:IdentityFragment.kt$IdentityFragment$5</ID>
-        <ID>MagicNumber:IdentityFragmentViewModel.kt$IdentityFragmentViewModel$16</ID>
-        <ID>MagicNumber:IdentityFragmentViewModel.kt$IdentityFragmentViewModel$5</ID>
-        <ID>MagicNumber:Mapper.kt$400</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$16</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$18</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$4</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$5</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$8</ID>
-        <ID>MagicNumber:PageIndicatorView.kt$PageIndicatorView$9</ID>
-        <ID>MagicNumber:PaymentConfirmationFragment.kt$PaymentConfirmationFragment$400</ID>
-        <ID>MagicNumber:VerificationActivity.kt$VerificationActivity$10</ID>
-        <ID>MagicNumber:VerificationActivityViewModel.kt$VerificationActivityViewModel$3</ID>
-        <ID>MagicNumber:VerificationActivityViewModel.kt$VerificationActivityViewModel$4</ID>
         <ID>MatchingDeclarationName:BaseResponse.kt$com.cexdirect.lib._network.models.BaseResponse.kt</ID>
         <ID>MatchingDeclarationName:CustomLiveData.kt$com.cexdirect.lib.CustomLiveData.kt</ID>
         <ID>MatchingDeclarationName:EmailValidator.kt$com.cexdirect.lib._util.EmailValidator.kt</ID>

@@ -16,7 +16,6 @@
 
 package com.cexdirect.lib.verification
 
-import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.ViewModel
@@ -27,6 +26,7 @@ import com.cexdirect.lib.Direct
 import com.cexdirect.lib.LegalViewModel
 import com.cexdirect.lib.SingleLiveEvent
 
+@Suppress("MagicNumber")
 class VerificationActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     LegalViewModel(dispatcherProvider) {
 
@@ -38,25 +38,12 @@ class VerificationActivityViewModel(dispatcherProvider: CoroutineDispatcherProvi
     val orderId = ObservableField("")
 
     val currentStep = ObservableInt(1)
-    val nextButtonText = ObservableField("Next")
 
     val pagerAdapter = ObservableField<PagerAdapter>(StepsPagerAdapter())
 
     val nextClickEvent = NextClickEvent()
     val returnEvent = ReturnEvent()
     val copyEvent = CopyEvent()
-
-    init {
-        currentStep.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (currentStep.get() > 2) {
-                    nextButtonText.set("Buy more")
-                } else {
-                    nextButtonText.set("Next")
-                }
-            }
-        })
-    }
 
     fun returnToStart() {
         returnEvent.call()

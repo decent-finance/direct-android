@@ -112,13 +112,13 @@ class IdentityFragment : BaseVerificationFragment() {
         binding.apply {
             fiInputCardNumber.apply {
                 addTextChangedListener(CreditCardFormatTextWatcher(this))
-                filters = arrayOf(InputFilter.LengthFilter(16))
+                filters = arrayOf(InputFilter.LengthFilter(MAX_CARD_LENGTH))
             }
             fiInputCvv.apply {
-                filters = arrayOf(InputFilter.LengthFilter(4))
+                filters = arrayOf(InputFilter.LengthFilter(MAX_CVV_LENGTH))
             }
             fiInputDate.apply {
-                filters = arrayOf(InputFilter.LengthFilter(5))
+                filters = arrayOf(InputFilter.LengthFilter(MAX_EXP_DATE_LENGTH))
                 addTextChangedListener(DateWatcher(this))
             }
             fiContent.layoutTransition = LayoutTransition().apply {
@@ -403,7 +403,7 @@ class IdentityFragment : BaseVerificationFragment() {
 
                         Glide.with(this)
                             .load(it)
-                            .thumbnail(0.25f)
+                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
                             .into(targetView)
                     }
                 }
@@ -412,7 +412,7 @@ class IdentityFragment : BaseVerificationFragment() {
 
                     Glide.with(this)
                         .load(File(currentPhotoPath))
-                        .thumbnail(0.25f)
+                        .thumbnail(THUMBNAIL_SCALE_FACTOR)
                         .into(targetView)
                 }
             }
@@ -425,6 +425,13 @@ class IdentityFragment : BaseVerificationFragment() {
             PhotoType.ID -> fragmentModel.documentPhotos.setFrontPhoto(imageBase64)
             PhotoType.ID_BACK -> fragmentModel.documentPhotos.setBackPhoto(imageBase64)
         }
+    }
+
+    companion object {
+        const val MAX_CARD_LENGTH = 16
+        const val MAX_CVV_LENGTH = 4
+        const val MAX_EXP_DATE_LENGTH = 5
+        const val THUMBNAIL_SCALE_FACTOR = 0.25f
     }
 }
 

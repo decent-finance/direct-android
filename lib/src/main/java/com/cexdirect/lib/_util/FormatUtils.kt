@@ -16,10 +16,13 @@
 
 package com.cexdirect.lib._util
 
+import android.util.Base64
 import com.cexdirect.lib._network.models.Precision
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
+
+const val BIN_SYMBOLS = 4
 
 fun Double.formatAmount(precision: Precision) =
     NumberFormat.getNumberInstance(Locale.US).apply {
@@ -45,4 +48,6 @@ fun Double.formatAmount(precision: Precision) =
         }
     }.format(this).replace(",", "")
 
-fun String.binifyCardNumber() = this.takeLast(4)
+fun String.binifyCardNumber() = this.takeLast(BIN_SYMBOLS)
+
+fun ByteArray.encodeToString(): String = Base64.encodeToString(this, Base64.NO_WRAP)
