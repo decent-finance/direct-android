@@ -229,7 +229,7 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
                     stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
                 else -> ""
             }
-        } ?: ""
+        } ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
     }
 
     @VisibleForTesting
