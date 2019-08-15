@@ -6,7 +6,6 @@ executors:
       - image: circleci/android:api-29
     working_directory: ~/direct
 
-
 jobs:
   prepare:
     executor: android
@@ -52,6 +51,60 @@ jobs:
           destination: reports
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: lib/build/test-results
+
+  test_instrumented:
+    executor: android
+    environment:
+      #      JVM_OPTS: -Xmx3200m
+      GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Assemble APKs
+          command: |
+            ./gradlew :app:assembleDevDebug
+            ./gradlew :app:assembleDevDebugAndroidTest
+      - run:
+          name: Store Google Service Account
+          command: echo $GCLOUD_SERVICE_KEY | base64 -d > ${HOME}/gcloud-service-key.json
+      - run:
+          name: Authorize gcloud and set config defaults
+          command: |
+            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            sudo gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
+      - run:
+          name: Test with Firebase Test Lab
+          command: >
+            sudo gcloud firebase test android run \
+              --app app/build/outputs/apk/dev/debug/app-dev-debug.apk \
+              --test app/build/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk \
+              --device model=Pixel2,version=28,locale=en,orientation=portrait \
+              --use-orchestrator | tee -a ~/ftl.txt
+      - store_artifacts:
+          path: ~/ftl.txt
+          destination: ftl.txt
+  #      - run:
+  #          name: Export bucket name
+  #          command: source bucket.sh ~/ftl.txt
+  #      - run:
+  #          name: Install gsutil dependency and copy test results data
+  #          command: |
+  #            sudo pip install -U crcmod
+  #            sudo gsutil -m cp -r -U `sudo gsutil ls gs://${BUCKET} | tail -1` ${CIRCLE_ARTIFACTS}/ | true
 
   assemble_debug:
     executor: android
@@ -131,7 +184,6 @@ jobs:
           name: Publish artifact
           command: ./gradlew clean lib:assembleProdRelease lib:bintrayUpload
 
-
 workflows:
   version: 2.1
   build:
@@ -140,12 +192,22 @@ workflows:
       - test:
           requires:
             - prepare
+      - test_instrumented:
+          requires:
+            - prepare
+          filters:
+            branches:
+              only:
+                - master
+                - dev
       - assemble_debug:
           requires:
             - test
+            - test_instrumented
       - assemble_uat:
           requires:
             - test
+            - test_instrumented
       - approve_publish:
           type: approval
           requires:

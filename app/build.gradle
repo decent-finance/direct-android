@@ -124,7 +124,6 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation "org.assertj:assertj-core:$assertjVersion"
     androidTestImplementation "com.github.fabioCollini.DaggerMock:daggermock:$daggerMockVersion"
-    androidTestImplementation "com.github.fabioCollini.daggermock:daggermock-kotlin:$daggerMockVersion"
     androidTestImplementation 'org.mockito:mockito-android:3.0.0'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
