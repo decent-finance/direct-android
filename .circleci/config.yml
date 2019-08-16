@@ -129,9 +129,13 @@ jobs:
       - run:
           name: Assemble debug
           command: ./gradlew assembleDevDebug
+      - run:
+          name: Rename apk
+          command: |
+            mkdir ~/apk
+            mv app/build/outputs/apk/dev/debug/app-dev-debug.apk ~/apk/direct-dev-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.apk
       - store_artifacts:
-          path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
-          destination: direct-dev.apk
+          path: ~/apk
 
   assemble_uat:
     executor: android
@@ -156,9 +160,13 @@ jobs:
       - run:
           name: Assemble uat
           command: ./gradlew assembleUatDebug
+      - run:
+          name: Rename apk
+          command: |
+            mkdir ~/apk
+            mv app/build/outputs/apk/uat/debug/app-uat-debug.apk ~/apk/direct-uat-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.apk
       - store_artifacts:
-          path: app/build/outputs/apk/uat/debug/app-uat-debug.apk
-          destination: direct-uat.apk
+          path: ~/apk
 
   publish:
     executor: android
