@@ -92,7 +92,7 @@ class BuyActivity : BaseActivity() {
                         hideLoader()
                         subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
                     }
-                    is Failure -> purchaseFailed(it.message)
+                    is Failure -> showStubScreen()
                 }
             })
             popularClickEvent.observe(this@BuyActivity, Observer {

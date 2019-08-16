@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.cexdirect.lib.stub.StubActivity
 import com.cexdirect.lib.terms.showTerms
 import com.cexdirect.lib.views.LoaderView
 import com.mcxiaoke.koi.ext.toast
@@ -66,5 +67,10 @@ abstract class BaseActivity : AppCompatActivity() {
     fun hideLoader() {
         loader?.hide()
         loader = null
+    }
+
+    protected fun showStubScreen() {
+        startActivity(Intent(this, StubActivity::class.java))
+        finish()
     }
 }

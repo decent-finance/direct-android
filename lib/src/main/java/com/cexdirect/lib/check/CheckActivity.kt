@@ -30,7 +30,6 @@ import com.cexdirect.lib._network.Loading
 import com.cexdirect.lib._network.Success
 import com.cexdirect.lib.buy.BuyActivity
 import com.cexdirect.lib.databinding.ActivityCheckBinding
-import com.cexdirect.lib.stub.StubActivity
 import javax.inject.Inject
 
 class CheckActivity : BaseActivity() {
@@ -75,11 +74,6 @@ class CheckActivity : BaseActivity() {
             binding.model = it
             it.checkPlacement()
         }
-    }
-
-    private fun showStubScreen() {
-        startActivity(Intent(this, StubActivity::class.java))
-        finish()
     }
 
     private fun launchDirect() {
