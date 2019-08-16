@@ -1,6 +1,7 @@
 build:
   maxIssues: 10
   weights:
+    formatting: 0
   # complexity: 2
   # LongParameterList: 1
   # style: 1
