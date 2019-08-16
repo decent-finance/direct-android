@@ -23,19 +23,25 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.*
+import com.cexdirect.lib.R
 import com.cexdirect.lib._network.models.Additional
 import com.cexdirect.lib.databinding.LayoutExtraFieldBinding
 import com.google.android.material.textfield.TextInputEditText
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.LinkedHashMap
 
 class ExtraFieldsLayout @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     var additional: Map<String, Additional> = emptyMap()
         set(value) {
-            field = value
+            field = value.sortNameFields()
+
             removeAllViews()
             updateLayout()
         }
@@ -46,7 +52,9 @@ class ExtraFieldsLayout @JvmOverloads constructor(
         val inflater = LayoutInflater.from(context)
         additional.forEach { entry ->
             if (entry.value.req) {
-                val binding = LayoutExtraFieldBinding.inflate(inflater, this, false)
+                val binding: LayoutExtraFieldBinding = DataBindingUtil.inflate(
+                        inflater, R.layout.layout_extra_field, this, false
+                )
                 binding.apply {
                     entry.value.value?.takeIf { it.isNotBlank() }?.let { this@ExtraFieldsLayout.input[entry.key] = it }
                     editable = entry.value.editable
@@ -66,11 +74,11 @@ fun ExtraFieldsLayout.retrieveInput() = this.input
 @BindingAdapter("inputAttrChanged")
 fun ExtraFieldsLayout.applyInputChangeListener(listener: InverseBindingListener) {
     this.input.addOnMapChangedCallback(
-        object : ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
-            override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
-                listener.onChange()
+            object : ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
+                override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
+                    listener.onChange()
+                }
             }
-        }
     )
 }
 
@@ -106,9 +114,9 @@ val fieldRules = HashMap<String, ExtraFieldRule>().apply {
 }
 
 data class ExtraFieldRule(
-    val inputType: Int,
-    val inputFilter: InputFilter?,
-    val description: String
+        val inputType: Int,
+        val inputFilter: InputFilter?,
+        val description: String
 )
 
 @BindingAdapter("android:inputType")
@@ -122,3 +130,22 @@ fun TextInputEditText.applyInputFilter(filter: InputFilter?) {
         filters = arrayOf(filter)
     }
 }
+
+fun Map<String, Additional>.sortNameFields() =
+        if (this.containsKey("userLastName") && this.containsKey("userFirstName")) {
+            val keys = ArrayList<String>().apply { addAll(this@sortNameFields.keys) }
+            val lastNameIndex = keys.indexOf("userLastName")
+            val firstNameIndex = keys.indexOf("userFirstName")
+
+            if (lastNameIndex < firstNameIndex) {
+                Collections.swap(keys, lastNameIndex, firstNameIndex)
+            }
+
+            val sorted = LinkedHashMap<String, Additional>()
+            keys.forEach {
+                sorted[it] = this[it] ?: error("")
+            }
+            sorted
+        } else {
+            this
+        }
