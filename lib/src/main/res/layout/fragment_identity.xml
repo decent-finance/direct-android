@@ -97,6 +97,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
                         android:inputType="textEmailAddress"
+                        android:imeOptions="actionDone"
                         android:text="@={model.userEmail}"
                         tools:text="d.trump@whouse.gov" />
 
