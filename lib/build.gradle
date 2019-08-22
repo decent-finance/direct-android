@@ -119,15 +119,15 @@ ext {
     // lib deps versions
     lifecycleVersion = '2.0.0'
     coroutinesVersion = '1.2.2'
-    daggerVersion = '2.21'
+    daggerVersion = '2.24'
     permissionDispatcherVersion = '4.5.0'
-    okHttpVersion = '4.0.1'
-    retrofitVersion = '2.6.0'
+    okHttpVersion = '4.1.0'
+    retrofitVersion = '2.6.1'
     glideVersion = '4.9.0'
 
     // test deps versions
     junitVersion = '5.4.0'
-    espressoVersion = '3.1.1'
+    espressoVersion = '3.2.0'
     assertjVersion = '2.9.1'
     daggerMockVersion = '0.8.5'
     mockitoKotlinVersion = '2.1.0'
@@ -139,7 +139,7 @@ dependencies {
     api 'com.google.android.material:material:1.0.0'
     api 'androidx.recyclerview:recyclerview:1.0.0'
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
@@ -189,7 +189,7 @@ dependencies {
 //    androidTestImplementation 'com.github.fabric8io:mockwebserver:0.1.2'
     androidTestUtil 'androidx.test:orchestrator:1.2.0'
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
-    kaptAndroidTest 'androidx.databinding:databinding-compiler:3.4.2'
+    kaptAndroidTest 'androidx.databinding:databinding-compiler:3.5.0'
 
     detektPlugins 'io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0'
 }
