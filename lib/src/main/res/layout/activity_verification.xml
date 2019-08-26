@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:text="@{@string/cexd_purchase(model.selectedCryptoCurrency, model.selectedFiatCurrency)}"/>
+                    android:text="@{@string/cexd_purchase(model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatCurrency)}" />
 
                 <com.cexdirect.lib.views.SuperDuperViewPager
                         android:id="@+id/avStepsViewPager"

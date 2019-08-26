@@ -17,12 +17,12 @@
 package com.cexdirect.lib
 
 import androidx.lifecycle.MutableLiveData
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Resource
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.ApiResponse
-import com.cexdirect.lib._network.models.Extractable
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.ApiResponse
+import com.cexdirect.lib.network.models.Extractable
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import retrofit2.HttpException

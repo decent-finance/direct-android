@@ -18,8 +18,8 @@ package com.cexdirect.lib.buy
 
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.Precision
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.Precision
 import com.nhaarman.mockitokotlin2.*
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before

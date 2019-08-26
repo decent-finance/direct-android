@@ -23,10 +23,10 @@ import com.cexdirect.lib.BR
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.Precision
 import com.cexdirect.lib._util.RateConverter
 import com.cexdirect.lib._util.formatAmount
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.Precision
 
 @OpenForTesting
 class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {

@@ -25,7 +25,7 @@ import com.cexdirect.lib.BaseBottomSheetDialog
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.DialogChangeEmailBinding
-import com.cexdirect.lib.verification.EmailChangedEvent
+import com.cexdirect.lib.verification.events.EmailChangedEvent
 import javax.inject.Inject
 
 class ChangeEmailDialog : BaseBottomSheetDialog() {

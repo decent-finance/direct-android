@@ -24,12 +24,12 @@ import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.SingleLiveEvent
-import com.cexdirect.lib._network.OrderApi
-import com.cexdirect.lib._network.models.ChangeEmailRequest
-import com.cexdirect.lib._network.models.CheckCodeData
-import com.cexdirect.lib._network.models._3Ds
-import com.cexdirect.lib._network.ws.Messenger
-import com.cexdirect.lib.verification.EmailChangedEvent
+import com.cexdirect.lib.network.OrderApi
+import com.cexdirect.lib.network.models.ChangeEmailRequest
+import com.cexdirect.lib.network.models.CheckCodeData
+import com.cexdirect.lib.network.models._3Ds
+import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.verification.events.EmailChangedEvent
 
 class PaymentConfirmationFragmentViewModel(
     private val orderApi: OrderApi,

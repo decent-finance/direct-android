@@ -34,8 +34,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.cexdirect.lib.R
-import com.cexdirect.lib._network.models.MonetaryData
 import com.cexdirect.lib.buy.TradeInputFilter
+import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.showTerms
 import com.cexdirect.lib.verification.confirmation._3dsData

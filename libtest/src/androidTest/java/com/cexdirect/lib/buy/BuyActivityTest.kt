@@ -29,9 +29,9 @@ import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
-import com.cexdirect.lib._network.ws.CexdSocket
-import com.cexdirect.lib._network.ws.Messenger
 import com.cexdirect.lib.network.models.RuleData
+import com.cexdirect.lib.network.ws.CexdSocket
+import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.stub.StubActivity
 import com.cexdirect.lib.util.MockServerIdlingResource
 import com.cexdirect.lib.util.TEST_PLACEMENT

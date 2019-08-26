@@ -24,6 +24,7 @@ import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
 import com.cexdirect.lib.verification.identity.CvvInfoDialog
 import com.cexdirect.lib.verification.identity.IdentityFragment
 import com.cexdirect.lib.verification.identity.PhotoSourceDialog
+import com.cexdirect.lib.verification.identity.country.BaseCountryPickerDialog
 import com.cexdirect.lib.verification.receipt.ReceiptFragment
 import dagger.Subcomponent
 
@@ -46,4 +47,6 @@ interface IdentitySubcomponent {
     fun inject(changeEmailDialog: ChangeEmailDialog)
 
     fun inject(cvvInfoDialog: CvvInfoDialog)
+
+    fun inject(countryPickerDialog: BaseCountryPickerDialog)
 }

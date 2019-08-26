@@ -15,60 +15,56 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:onClick="@{() -> listener.select(symbol)}">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Direct.Picker.Pair.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:padding="0dp"
+                android:text="@{symbol}"
+                tools:text="USD" />
+
+            <TextView
+                style="@style/Direct.Picker.Pair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="10dp"
+                android:padding="0dp"
+                android:text="@{fullName}"
+                tools:text="United States Dollar" />
+
+        </LinearLayout>
+
+        <View style="@style/Direct.Divider" />
+
+    </FrameLayout>
 
     <data>
 
         <variable
-                name="listener"
-                type="com.cexdirect.lib.buy.ClickListener"/>
+            name="listener"
+            type="com.cexdirect.lib.ClickListener" />
 
         <variable
-                name="symbol"
-                type="String"/>
+            name="symbol"
+            type="String" />
 
         <variable
-                name="fullName"
-                type="String"/>
+            name="fullName"
+            type="String" />
     </data>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:onClick="@{() -> listener.select(symbol)}">
-
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:orientation="horizontal">
-
-            <TextView
-                    style="@style/Direct.Picker.Pair.Bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:padding="0dp"
-                    android:text="@{symbol}"
-                    tools:text="USD"/>
-
-            <TextView
-                    style="@style/Direct.Picker.Pair"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:layout_marginStart="10dp"
-                    android:padding="0dp"
-                    android:text="@{fullName}"
-                    tools:text="United States Dollar"/>
-
-        </LinearLayout>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#BDC8D9"/>
-
-    </FrameLayout>
 </layout>

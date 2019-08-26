@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib.di
 
-import com.cexdirect.lib._network.ws.WsUrlProvider
+import com.cexdirect.lib.network.ws.WsUrlProvider
 
 class MockWsUrlProvider : WsUrlProvider() {
 

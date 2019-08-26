@@ -21,14 +21,14 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
-import com.cexdirect.lib._network.AnalyticsApi
-import com.cexdirect.lib._network.MerchantApi
-import com.cexdirect.lib._network.PaymentApi
-import com.cexdirect.lib._network.enqueueWith
-import com.cexdirect.lib._network.models.EventData
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.MonetaryData
-import com.cexdirect.lib._network.ws.Messenger
+import com.cexdirect.lib.network.AnalyticsApi
+import com.cexdirect.lib.network.MerchantApi
+import com.cexdirect.lib.network.PaymentApi
+import com.cexdirect.lib.network.enqueueWith
+import com.cexdirect.lib.network.models.EventData
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.MonetaryData
+import com.cexdirect.lib.network.ws.Messenger
 
 @OpenForTesting
 class BuyActivityViewModel(

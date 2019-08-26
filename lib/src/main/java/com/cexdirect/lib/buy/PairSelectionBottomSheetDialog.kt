@@ -24,22 +24,20 @@ import androidx.annotation.StringDef
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.cexdirect.lib.BaseObservableViewModel
+import com.cexdirect.lib.BaseBottomSheetDialog
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.BuyActivityFactory
 import com.cexdirect.lib.databinding.DialogPairSelectorBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
-class PairSelectionBottomSheetDialog : BottomSheetDialogFragment() {
+class PairSelectionBottomSheetDialog : BaseBottomSheetDialog() {
 
     @field:[Inject BuyActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    private val viewModel by activityViewModelProvider<BuyActivityViewModel> { modelFactory }
+    private val viewModel by viewModelProvider<BuyActivityViewModel> { modelFactory }
 
     private lateinit var binding: DialogPairSelectorBinding
     private lateinit var type: String
@@ -78,9 +76,6 @@ class PairSelectionBottomSheetDialog : BottomSheetDialogFragment() {
         super.onResume()
         binding.root.requestLayout()
     }
-
-    private inline fun <reified VM : BaseObservableViewModel> activityViewModelProvider(crossinline factory: () -> ViewModelProvider.Factory) =
-        lazy { ViewModelProviders.of(activity!!, factory()).get(VM::class.java) }
 
     companion object {
         const val KEY_TYPE = "typ"

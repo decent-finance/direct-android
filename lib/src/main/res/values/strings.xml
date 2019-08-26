@@ -118,4 +118,7 @@
     <string name="cexd_max_amount">You can spend up to %s</string>
     <string name="cexd_min_sale">Minimal sale volume is %s</string>
     <string name="cexd_max_sale">Maximal sale volume is %s</string>
+    <string name="cexd_choose_country">Choose Country</string>
+    <string name="cexd_choose_state">Choose State</string>
+    <string name="cexd_file_not_found">File not found</string>
 </resources>

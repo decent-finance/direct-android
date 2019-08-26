@@ -26,7 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
 import com.cexdirect.lib._di.annotation.PhotoSourceDialogFactory
 import com.cexdirect.lib.databinding.DialogPhotoSourceBinding
-import com.cexdirect.lib.verification.SourceClickEvent
+import com.cexdirect.lib.verification.events.SourceClickEvent
 import javax.inject.Inject
 
 class PhotoSourceDialog : BaseBottomSheetDialog() {

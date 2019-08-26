@@ -25,17 +25,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.PaymentConfirmationFragmentFactory
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.OrderStatus
-import com.cexdirect.lib._network.webview.Client
-import com.cexdirect.lib._network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.OrderStatus
+import com.cexdirect.lib.network.webview.Client
+import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.StickyViewEvent
+import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import java.util.concurrent.atomic.AtomicReference
@@ -93,7 +93,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                             OrderStatus.COMPLETE -> {
                                 if (currentOrderStatus.get() != OrderStatus.COMPLETE) {
                                     currentOrderStatus.set(OrderStatus.COMPLETE)
-                                    fragmentModel.confirmOrder { model.nextStep() }
+                                    fragmentModel.confirmOrder { model.next() }
                                 }
                             }
                             OrderStatus.REJECTED -> {

@@ -57,7 +57,7 @@
                     style="@style/Direct.Textfield.S"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/cexd_buy(model.selectedCryptoAmount, model.selectedCryptoCurrency, model.selectedFiatAmount, model.selectedFiatCurrency)}"
+                android:text="@{@string/cexd_buy(model.orderAmounts.selectedCryptoAmount, model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatAmount, model.orderAmounts.selectedFiatCurrency)}"
                     tools:text="Buy 0.1235 BTC for 500 USD"/>
 
             <TextView

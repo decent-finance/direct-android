@@ -24,8 +24,8 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.*
 import com.cexdirect.lib.R
-import com.cexdirect.lib._network.models.Additional
 import com.cexdirect.lib.databinding.LayoutExtraFieldBinding
+import com.cexdirect.lib.network.models.Additional
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 import kotlin.collections.ArrayList

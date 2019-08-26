@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib._util
 
-import com.cexdirect.lib._network.models.Precision
+import com.cexdirect.lib.network.models.Precision
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith

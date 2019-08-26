@@ -22,9 +22,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.SingleLiveEvent
-import com.cexdirect.lib._network.models.PaymentInfo
-import com.cexdirect.lib._network.ws.Messenger
-import com.cexdirect.lib.verification.CopyEvent
+import com.cexdirect.lib.network.models.PaymentInfo
+import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.verification.events.CopyEvent
 
 class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {

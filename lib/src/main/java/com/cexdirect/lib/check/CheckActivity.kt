@@ -25,11 +25,11 @@ import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.CheckActivityFactory
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Success
 import com.cexdirect.lib.buy.BuyActivity
 import com.cexdirect.lib.databinding.ActivityCheckBinding
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Success
 import javax.inject.Inject
 
 class CheckActivity : BaseActivity() {
@@ -37,7 +37,7 @@ class CheckActivity : BaseActivity() {
     @field:[Inject CheckActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    private val viewModel: CheckActivityViewModel by viewModelProvider { modelFactory }
+    private val model: CheckActivityViewModel by viewModelProvider { modelFactory }
 
     private lateinit var binding: ActivityCheckBinding
 
@@ -46,18 +46,17 @@ class CheckActivity : BaseActivity() {
         Direct.directComponent.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_check)
 
-        viewModel.apply {
+        model.apply {
             checkResult.observe(this@CheckActivity, Observer {
                 when (it) {
                     is Loading -> showLoader()
-                    is Success -> {
-                        if (canLaunch(it.data!!.activityStatus, it.data.placementUris)) {
-                            updateIds(it.data.rulesIds)
-                            loadRules()
-                        } else {
-                            showStubScreen()
-                        }
-                    }
+                    is Success -> processPlacementInfo(it.data!!) { showStubScreen() }
+                    is Failure -> showStubScreen()
+                }
+            })
+            countryResult.observe(this@CheckActivity, Observer {
+                when (it) {
+                    is Success -> saveCountriesAndLoadRules(it.data!!)
                     is Failure -> showStubScreen()
                 }
             })

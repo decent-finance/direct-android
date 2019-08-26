@@ -31,7 +31,7 @@
 
         <variable
                 name="listener"
-                type="com.cexdirect.lib.buy.ClickListener"/>
+            type="com.cexdirect.lib.ClickListener" />
     </data>
 
     <TableLayout

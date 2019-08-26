@@ -34,6 +34,10 @@ android {
     testOptions {
         animationsDisabled true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        unitTests {
+            returnDefaultValues true
+            includeAndroidResources true
+        }
     }
 
     lintOptions {
@@ -84,7 +88,7 @@ android {
         }
 
         prod {
-            buildConfigField 'String', 'REST_URL', '\"https://api.cexdirect.com/api/\"'
+            buildConfigField 'String', 'REST_URL', '\"https://api.cexdirect.com/\"'
             buildConfigField 'String', 'WS_URL', '\"wss://wss.cexdirect.com\"'
         }
     }
@@ -172,6 +176,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation 'org.mockito:mockito-core:3.0.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
 
     androidTestImplementation 'junit:junit:4.12'

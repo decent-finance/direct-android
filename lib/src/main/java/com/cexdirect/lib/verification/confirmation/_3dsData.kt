@@ -22,7 +22,7 @@ import androidx.databinding.Observable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._network.models._3DsExtras
+import com.cexdirect.lib.network.models._3DsExtras
 
 class _3dsData : BaseObservable() {
 
@@ -55,7 +55,8 @@ class _3dsData : BaseObservable() {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 if (propertyId == BR.txId) {
-                    termUrl = "${BuildConfig.REST_URL}v1/orders/3ds-check/${Direct.pendingOrderId}/tx/$txId"
+                    termUrl =
+                        "${BuildConfig.REST_URL}api/v1/orders/3ds-check/${Direct.pendingOrderId}/tx/$txId"
                 }
             }
         })

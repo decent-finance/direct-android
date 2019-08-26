@@ -17,7 +17,7 @@
 package com.cexdirect.lib.buy
 
 import com.cexdirect.lib.BaseDispatcher
-import com.cexdirect.lib._network.models.*
+import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.util.TEST_PLACEMENT
 import com.cexdirect.lib.util.applyOkFields
 import okhttp3.mockwebserver.MockResponse

@@ -30,6 +30,7 @@ import com.cexdirect.lib._di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityVerificationBinding
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
+import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.IdentityFragment
 import com.cexdirect.lib.verification.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
@@ -44,7 +45,8 @@ class VerificationActivity : BaseActivity() {
     lateinit var stickyViewEvent: StickyViewEvent
 
     private val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
-    private val fragments = listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
+    private val fragments =
+        listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
     private lateinit var binding: ActivityVerificationBinding
 
@@ -56,10 +58,10 @@ class VerificationActivity : BaseActivity() {
 
         model.apply {
             intent.let {
-                selectedCryptoCurrency.set(it.getStringExtra("crypto"))
-                selectedCryptoAmount.set(it.getStringExtra("cryptoAmount"))
-                selectedFiatCurrency.set(it.getStringExtra("fiat"))
-                selectedFiatAmount.set(it.getStringExtra("fiatAmount"))
+                orderAmounts.selectedCryptoCurrency = it.getStringExtra("crypto")
+                orderAmounts.selectedCryptoAmount = it.getStringExtra("cryptoAmount")
+                orderAmounts.selectedFiatCurrency = it.getStringExtra("fiat")
+                orderAmounts.selectedFiatAmount = it.getStringExtra("fiatAmount")
             }
             applyLegalObservers()
             nextClickEvent.observe(this@VerificationActivity, Observer {

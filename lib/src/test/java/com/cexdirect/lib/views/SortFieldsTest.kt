@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib.views
 
-import com.cexdirect.lib._network.models.Additional
+import com.cexdirect.lib.network.models.Additional
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Test
 

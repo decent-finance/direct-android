@@ -22,9 +22,9 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import com.cexdirect.lib.ClickListener
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.ClickEvent
-import com.cexdirect.lib.buy.ClickListener
 import com.cexdirect.lib.databinding.LayoutPopularValuesBinding
 
 class PopularValuesView @JvmOverloads constructor(

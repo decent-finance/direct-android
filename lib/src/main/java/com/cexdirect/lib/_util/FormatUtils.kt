@@ -17,7 +17,7 @@
 package com.cexdirect.lib._util
 
 import android.util.Base64
-import com.cexdirect.lib._network.models.Precision
+import com.cexdirect.lib.network.models.Precision
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*

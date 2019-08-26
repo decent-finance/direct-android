@@ -40,7 +40,7 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.identity.IdentityFragmentViewModel" />
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
     </data>
 
     <LinearLayout
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                app:isActivated="@{model.emailStatus == EmailStatus.INVALID}">
+                app:isActivated="@{model.userEmail.emailStatus == EmailStatus.INVALID}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -96,9 +96,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
-                        android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
-                        android:text="@={model.userEmail}"
+                        android:inputType="textEmailAddress"
+                        android:text="@={model.userEmail.email}"
                         tools:text="d.trump@whouse.gov" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -112,7 +112,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/cexd_invalid_email"
-                android:visibility="@{model.emailStatus == EmailStatus.INVALID ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{model.userEmail.emailStatus == EmailStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                         style="@style/Direct.Textfield.M2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{model.userCountry.name}"
+                        android:text="@{model.userCountry.selectedCountry.name}"
                         tools:text="United States" />
 
                 </LinearLayout>
@@ -167,12 +167,22 @@
             </LinearLayout>
 
             <LinearLayout
-                style="@style/Direct.InputLayout"
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}">
+                android:background="@drawable/shape_bg_input"
+                android:elevation="4dp"
+                android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
+                android:gravity="center"
+                android:onClick="@{() -> model.chooseState()}"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="6dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="6dp"
+                android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -180,23 +190,35 @@
                     android:background="@null"
                     android:src="@drawable/ic_location" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:hint="@string/cexd_state"
-                    app:hintTextAppearance="@style/Direct.TextHint">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/Direct.Input2"
-                        android:layout_width="match_parent"
+                    <TextView
+                        style="@style/Direct.Textfield.S"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
-                        android:inputType="textCapWords"
-                        android:text="@={model.userState}" />
+                        android:text="@string/cexd_state" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        style="@style/Direct.Textfield.M2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{model.userCountry.selectedState.name}"
+                        tools:text="Oklahoma" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_dropdown" />
             </LinearLayout>
+
         </com.cexdirect.lib.views.CollapsibleLayout>
 
         <com.cexdirect.lib.views.CompleteSectionTitleLayout
@@ -245,7 +267,7 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="4dp"
-                    app:selectedViewId="@={model.selectedViewId}">
+                    app:selectedViewId="@={model.userDocs.selectedDocType}">
 
                     <com.cexdirect.lib.views.DocumentTypeButton
                         android:id="@+id/fiIdCard"
@@ -286,7 +308,7 @@
                     android:animateLayoutChanges="true"
                     android:clipChildren="false"
                     android:orientation="vertical"
-                    android:visibility="@{model.documentTypeSelected ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{model.userDocs.documentTypeSelected ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         style="@style/Direct.IdentityTitle"
@@ -295,7 +317,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@{model.documentTypeText}" />
+                        android:text="@{model.userDocs.documentTypeText}" />
 
                     <ImageView
                         android:id="@+id/fiDocument"
@@ -308,7 +330,7 @@
                         android:paddingTop="20dp"
                         android:paddingBottom="20dp"
                         android:scaleType="centerInside"
-                        app:pic="@{model.documentImage}"
+                        app:pic="@{model.userDocs.documentImage}"
                         tools:src="@drawable/ic_pic_passport" />
 
                     <Button
@@ -334,8 +356,8 @@
                         android:paddingTop="20dp"
                         android:paddingBottom="20dp"
                         android:scaleType="centerInside"
-                        android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"
-                        app:pic="@{model.documentImageBack}"
+                        android:visibility="@{model.userDocs.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"
+                        app:pic="@{model.userDocs.documentImageBack}"
                         tools:src="@drawable/ic_pic_passport" />
 
                     <Button
@@ -349,7 +371,7 @@
                         android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
                         android:outlineProvider="background"
                         android:text="@string/cexd_upload_photo"
-                        android:visibility="@{model.documentPhotos.requiredPhotos == 2 ? View.VISIBLE : View.GONE}" />
+                        android:visibility="@{model.userDocs.requiredPhotos == 2 ? View.VISIBLE : View.GONE}" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -435,7 +457,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:text="@={model.cardNumber}"
+                        android:text="@={model.userCardData.number}"
                         tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -477,7 +499,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:text="@={model.cardExpiry}"
+                            android:text="@={model.userCardData.expiry}"
                             tools:text="" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -518,7 +540,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/cexd_cvv"
                                 android:inputType="numberPassword"
-                                android:text="@={model.cardCvv}"
+                                android:text="@={model.userCardData.cvv}"
                                 tools:text="" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -551,7 +573,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                app:isActivated="@{safeUnbox(!model.isWalletValid)}">
+                app:isActivated="@{!model.userWallet.walletValid}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -572,9 +594,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/cexd_wallet"
-                        android:imeOptions="@{model.shouldShowUsInputs ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
+                        android:imeOptions="@{model.userCountry.shouldShowState ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
                         android:inputType="text"
-                        android:text="@={model.walletAddress}"
+                        android:text="@={model.userWallet.address}"
                         tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -588,7 +610,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/cexd_ssn"
-                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
                 style="@style/Direct.InputLayout"
@@ -596,7 +618,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                android:visibility="@{model.shouldShowUsInputs ? View.VISIBLE : View.GONE}">
+                android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                     android:layout_width="wrap_content"
