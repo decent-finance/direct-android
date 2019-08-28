@@ -25,7 +25,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
-import com.cexdirect.lib.buy.CloseSelectorEvent
 import com.cexdirect.lib.databinding.DialogCvvInfoBinding
 import javax.inject.Inject
 
@@ -61,7 +60,7 @@ class CvvInfoDialog : BaseBottomSheetDialog() {
 class CvvInfoDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
 
-    val closeEvent = CloseSelectorEvent()
+    val closeEvent = VoidLiveEvent()
 
     fun close() {
         closeEvent.call()

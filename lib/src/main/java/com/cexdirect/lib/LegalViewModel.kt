@@ -16,16 +16,16 @@
 
 package com.cexdirect.lib
 
-import com.cexdirect.lib.views.LegalClickEvent
+import com.cexdirect.lib.network.models.RuleData
 
 abstract class LegalViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
 
     val rules = Direct.rules
 
-    val supportClickEvent = SupportClickEvent()
     val legalClickEvent = LegalClickEvent()
-    val exitClickEvent = ExitClickEvent()
+    val supportClickEvent = VoidLiveEvent()
+    val exitClickEvent = VoidLiveEvent()
 
     fun openSupport() {
         supportClickEvent.call()
@@ -36,5 +36,4 @@ abstract class LegalViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     }
 }
 
-class SupportClickEvent : SingleLiveEvent<Void>()
-class ExitClickEvent : SingleLiveEvent<Void>()
+class LegalClickEvent : SingleLiveEvent<RuleData>()

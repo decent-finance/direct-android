@@ -45,13 +45,13 @@ class BuyActivityViewModel(
     val shouldShowCryptoInput = ObservableBoolean(false)
     val dataLoaded = ObservableBoolean(false)
 
-    val buyCryptoEvent = BuyCryptoEvent()
-    val popularClickEvent = ClickEvent()
-    val switchBaseCurrencyEvent = SwitchCurrencyEvent()
-    val switchQuoteCurrencyEvent = SwitchCurrencyEvent()
-    val closeSelectorEvent = CloseSelectorEvent()
+    val buyCryptoEvent = VoidLiveEvent()
+    val popularClickEvent = StringLiveEvent()
+    val switchBaseCurrencyEvent = VoidLiveEvent()
+    val switchQuoteCurrencyEvent = VoidLiveEvent()
+    val closeSelectorEvent = VoidLiveEvent()
 
-    final val currencyClickEvent = ClickEvent()
+    final val currencyClickEvent = StringLiveEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
     private val precisions =
@@ -188,8 +188,3 @@ class BuyActivityViewModel(
             ) as T
     }
 }
-
-
-class BuyCryptoEvent : SingleLiveEvent<Void>()
-class SwitchCurrencyEvent : SingleLiveEvent<Void>()
-class CloseSelectorEvent : SingleLiveEvent<Void>()

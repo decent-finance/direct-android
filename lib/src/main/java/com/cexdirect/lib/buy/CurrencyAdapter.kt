@@ -20,11 +20,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cexdirect.lib.ClickListener
+import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib._util.orDefault
 import com.cexdirect.lib._util.symbolMap
 import com.cexdirect.lib.databinding.ItemPairBinding
 
-class CurrencyAdapter(private val clickEvent: ClickEvent) : RecyclerView.Adapter<PairViewHolder>(),
+class CurrencyAdapter(private val clickEvent: StringLiveEvent) :
+    RecyclerView.Adapter<PairViewHolder>(),
     ClickListener {
 
     var items: List<String> = emptyList()

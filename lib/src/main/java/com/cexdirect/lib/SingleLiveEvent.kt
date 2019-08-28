@@ -90,3 +90,8 @@ abstract class SingleLiveEvent<T> : MutableLiveData<T>() {
         const val TAG = "SingleLiveEvent"
     }
 }
+
+class VoidLiveEvent : SingleLiveEvent<Void>()
+class StringLiveEvent : SingleLiveEvent<String>()
+class BooleanLiveEvent : SingleLiveEvent<Boolean>()
+class IntLiveEvent : SingleLiveEvent<Int>()

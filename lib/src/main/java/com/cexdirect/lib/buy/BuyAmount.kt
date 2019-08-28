@@ -201,13 +201,13 @@ class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
     @VisibleForTesting
     internal fun updateAmountBoundaries() {
         findCurrentPair()?.let { rate ->
-            precisionList.find { it.currency == selectedFiatCurrency }!!
+            precisionList.find { it.currency == rate.fiat }!!
                     .let { fiatPrecision ->
                         fiatMinBoundary = fiatPrecision.minLimit
                         fiatMaxBoundary = fiatPrecision.maxLimit
                     }
 
-            precisionList.find { it.currency == selectedCryptoCurrency }!!
+            precisionList.find { it.currency == rate.crypto }!!
                     .let { cryptoPrecision ->
                         cryptoMinBoundary = cryptoPrecision.minLimit
                         cryptoMaxBoundary = if (cryptoPrecision.maxLimit.toDouble() <= 0.0) {

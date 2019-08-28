@@ -28,11 +28,10 @@ import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.enqueueWith
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
-import com.cexdirect.lib.verification.events.*
+import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
 import com.cexdirect.lib.verification.identity.country.CountryClickEvent
-import com.cexdirect.lib.verification.identity.country.ToggleSearchEvent
 import com.cexdirect.lib.views.CollapsibleLayout
 
 @Suppress("MagicNumber")
@@ -46,16 +45,16 @@ class VerificationActivityViewModel(
 ) : LegalViewModel(dispatcherProvider) {
 
     // --- Events --- //
-    val nextClickEvent = NextClickEvent()
-    val returnEvent = ReturnEvent()
-    val copyEvent = CopyEvent()
-    val chooseCountryEvent = ChooseCountryEvent()
-    val chooseStateEvent = ChooseCountryEvent()
+    val nextClickEvent = VoidLiveEvent()
+    val returnEvent = VoidLiveEvent()
+    val copyEvent = StringLiveEvent()
+    val chooseCountryEvent = VoidLiveEvent()
+    val chooseStateEvent = VoidLiveEvent()
     val uploadPhotoEvent = UploadPhotoEvent()
-    val cvvInfoEvent = CvvInfoEvent()
+    val cvvInfoEvent = VoidLiveEvent()
     val countryClickEvent = CountryClickEvent()
-    val countryPickerExitEvent = ExitClickEvent()
-    val toggleSearchEvent = ToggleSearchEvent()
+    val countryPickerExitEvent = VoidLiveEvent()
+    val toggleSearchEvent = BooleanLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()

@@ -17,9 +17,9 @@
 package com.cexdirect.lib._di
 
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib._di.annotation.IdentityScope
 import com.cexdirect.lib.network.models.OrderStatus
-import com.cexdirect.lib.verification.events.EmailChangedEvent
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.events.StickyViewEvent
 import dagger.Module
@@ -40,7 +40,7 @@ class SharedStateModule {
 
     @Provides
     @IdentityScope
-    fun provideEmailChangedEvent() = EmailChangedEvent()
+    fun provideEmailChangedEvent() = StringLiveEvent()
 
     @Provides
     @IdentityScope

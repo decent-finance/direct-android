@@ -19,6 +19,7 @@ package com.cexdirect.lib._di
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._di.annotation.*
 import com.cexdirect.lib._util.DH
@@ -28,7 +29,6 @@ import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.verification.VerificationActivityViewModel
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragmentViewModel
-import com.cexdirect.lib.verification.events.EmailChangedEvent
 import com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel
 import com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel
 import com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel
@@ -73,7 +73,7 @@ class IdentityVmModule {
     @IdentityScope
     fun providePaymentConfirmationFragmentViewModel(
         orderApi: OrderApi,
-        emailChangedEvent: EmailChangedEvent,
+        emailChangedEvent: StringLiveEvent,
         messenger: Messenger,
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ): ViewModelProvider.Factory =

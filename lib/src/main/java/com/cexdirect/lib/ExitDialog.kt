@@ -24,7 +24,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.buy.CloseSelectorEvent
 import com.cexdirect.lib.databinding.DialogExitBinding
 import com.mcxiaoke.koi.ext.finish
 import javax.inject.Inject
@@ -59,8 +58,8 @@ class ExitDialog : BaseBottomSheetDialog() {
 class ExitDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
 
-    val closeEvent = CloseSelectorEvent()
-    val exitEvent = ExitClickEvent()
+    val closeEvent = VoidLiveEvent()
+    val exitEvent = VoidLiveEvent()
 
     fun close() {
         closeEvent.call()

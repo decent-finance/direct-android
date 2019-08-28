@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
-import com.cexdirect.lib.SingleLiveEvent
+import com.cexdirect.lib.VoidLiveEvent
 import com.cexdirect.lib._util.checkEmailStatus
 import com.cexdirect.lib._util.map
 
@@ -31,8 +31,8 @@ class ChangeEmailDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider
     val email = ObservableField("")
     val emailStatus = email.map { checkEmailStatus(it) }
 
-    val saveEvent = SaveEvent()
-    val cancelEvent = CancelEvent()
+    val saveEvent = VoidLiveEvent()
+    val cancelEvent = VoidLiveEvent()
 
     fun saveEmail() {
         saveEvent.call()
@@ -47,6 +47,3 @@ class ChangeEmailDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider
         override fun <T : ViewModel?> create(modelClass: Class<T>) = ChangeEmailDialogViewModel(dispatcherProvider) as T
     }
 }
-
-class SaveEvent : SingleLiveEvent<Void>()
-class CancelEvent : SingleLiveEvent<Void>()
