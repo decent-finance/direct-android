@@ -59,7 +59,7 @@ class CheckActivityViewModel(
         ruleResult.execute()
     }
 
-    fun loadNextRule(block: () -> Unit) {
+    private fun loadNextRule(block: () -> Unit) {
         if (ruleIds.shouldLoadNext()) {
             ruleResult.execute()
         } else {
@@ -67,9 +67,10 @@ class CheckActivityViewModel(
         }
     }
 
-    fun saveRule(ruleData: RuleData) {
+    fun saveRuleAndLoadNext(ruleData: RuleData, action: () -> Unit) {
         Direct.rules.add(ruleData)
         ruleIds.selectNextId()
+        loadNextRule(action)
     }
 
     fun processPlacementInfo(info: PlacementInfo, failAction: () -> Unit) {

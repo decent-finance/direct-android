@@ -62,10 +62,7 @@ class CheckActivity : BaseActivity() {
             })
             ruleResult.observe(this@CheckActivity, Observer {
                 when (it) {
-                    is Success -> {
-                        saveRule(it.data!!)
-                        loadNextRule { launchDirect() }
-                    }
+                    is Success -> saveRuleAndLoadNext(it.data!!) { launchDirect() }
                     is Failure -> showStubScreen()
                 }
             })
