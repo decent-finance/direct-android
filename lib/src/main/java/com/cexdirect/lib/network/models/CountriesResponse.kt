@@ -16,9 +16,9 @@
 
 package com.cexdirect.lib.network.models
 
-class CountriesResponse(val countries: List<CountryData>) : ApiResponse<List<CountryData>>() {
+class CountriesResponse(val data: List<CountryData>) : ApiResponse<List<CountryData>>() {
 
-    override fun extract() = countries
+    override fun extract() = data
 }
 
 data class CountryData(
