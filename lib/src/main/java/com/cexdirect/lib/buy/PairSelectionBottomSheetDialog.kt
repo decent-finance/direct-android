@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringDef
 import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -48,28 +49,49 @@ class PairSelectionBottomSheetDialog : BaseBottomSheetDialog() {
         type = arguments!!.getString(KEY_TYPE)!!
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = DialogPairSelectorBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = DataBindingUtil.inflate<DialogPairSelectorBinding>(
+        inflater,
+        R.layout.dialog_pair_selector,
+        container,
+        false
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.dpsPairs.apply {
-            val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            decoration.setDrawable(ResourcesCompat.getDrawable(resources, R.drawable.divider, context.theme)!!)
-            addItemDecoration(decoration)
-        }
-        binding.model = viewModel
-
-        viewModel.currencyClickEvent.observe(this, Observer {
-            when (type) {
-                TYPE_BASE -> viewModel.setSelectedCryptoCurrency(it)
-                TYPE_QUOTE -> viewModel.setSelectedFiatCurrency(it)
+        binding.apply {
+            dpsPairs.apply {
+                val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+                decoration.setDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.divider,
+                        context.theme
+                    )!!
+                )
+                addItemDecoration(decoration)
             }
-            dismiss()
-        })
-        viewModel.closeSelectorEvent.observe(this, Observer { dismiss() })
+            model = viewModel
+            title = when (type) {
+                TYPE_BASE -> getString(R.string.cexd_choose_crypto)
+                TYPE_QUOTE -> getString(R.string.cexd_choose_currency)
+                else -> error("Illegal type")
+            }
+        }
+
+        viewModel.apply {
+            currencyClickEvent.observe(this@PairSelectionBottomSheetDialog, Observer {
+                when (type) {
+                    TYPE_BASE -> viewModel.setSelectedCryptoCurrency(it)
+                    TYPE_QUOTE -> viewModel.setSelectedFiatCurrency(it)
+                }
+                dismiss()
+            })
+            closeSelectorEvent.observe(this@PairSelectionBottomSheetDialog, Observer { dismiss() })
+        }
     }
 
     override fun onResume() {

@@ -71,6 +71,7 @@
     <string name="cexd_cvv">CVV</string>
     <string name="cexd_cvv_desc">A 3-digit number in reverse italics on the back of your credit card</string>
     <string name="cexd_choose_currency">Choose Currency</string>
+    <string name="cexd_choose_crypto">Choose Cryptocurrency</string>
     <string name="cexd_find_a_shot_to_upload">Find a Shot to Upload</string>
     <string name="cexd_gallery">Gallery</string>
     <string name="cexd_camera">Camera</string>
