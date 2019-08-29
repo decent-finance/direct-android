@@ -80,10 +80,17 @@ class VmModule {
     @Singleton
     fun provideCheckActivityViewModel(
         merchantApi: MerchantApi,
+        paymentApi: PaymentApi,
         placementValidator: PlacementValidator,
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ): ViewModelProvider.Factory =
-        CheckActivityViewModel.Factory(merchantApi, placementValidator, RuleIds(), coroutineDispatcherProvider)
+        CheckActivityViewModel.Factory(
+            merchantApi,
+            paymentApi,
+            placementValidator,
+            RuleIds(),
+            coroutineDispatcherProvider
+        )
 
     @Provides
     @TermsActivityFactory

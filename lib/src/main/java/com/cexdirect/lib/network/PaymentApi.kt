@@ -44,4 +44,7 @@ class PaymentApi(private val service: PaymentService) {
                 }
             }
         }
+
+    fun getCountries(scope: CoroutineScope) =
+        ExecutableLiveData(scope) { service.getCountriesAsync() }
 }

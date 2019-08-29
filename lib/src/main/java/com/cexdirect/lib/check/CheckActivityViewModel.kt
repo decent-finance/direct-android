@@ -23,12 +23,14 @@ import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib._util.PlacementValidator
 import com.cexdirect.lib.network.MerchantApi
+import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.network.models.RuleData
 
 class CheckActivityViewModel(
     merchantApi: MerchantApi,
+    paymentApi: PaymentApi,
     private val placementValidator: PlacementValidator,
     private val ruleIds: RuleIds,
     dispatcherProvider: CoroutineDispatcherProvider
@@ -36,7 +38,7 @@ class CheckActivityViewModel(
 
     val checkResult = merchantApi.getPlacementInfo(this, Direct.credentials.placementId)
     val ruleResult = merchantApi.getRule(this) { ruleIds.getCurrentRuleId() }
-    val countryResult = merchantApi.getSupportedCountries(this)
+    val countryResult = paymentApi.getCountries(this)
 
     fun checkPlacement() {
         checkResult.execute()
@@ -92,6 +94,7 @@ class CheckActivityViewModel(
 
     class Factory(
         private val merchantApi: MerchantApi,
+        private val paymentApi: PaymentApi,
         private val placementValidator: PlacementValidator,
         private val ruleIds: RuleIds,
         private val dispatcherProvider: CoroutineDispatcherProvider
@@ -101,6 +104,7 @@ class CheckActivityViewModel(
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
             CheckActivityViewModel(
                 merchantApi,
+                paymentApi,
                 placementValidator,
                 ruleIds,
                 dispatcherProvider

@@ -17,6 +17,7 @@
 package com.cexdirect.lib.network
 
 import com.cexdirect.lib.network.models.ApiResponse
+import com.cexdirect.lib.network.models.CountriesResponse
 import com.cexdirect.lib.network.models.ExchangeRatesResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
@@ -32,4 +33,7 @@ interface PaymentService {
         @Path("wallet") wallet: String,
         @Path("currency") currency: String
     ): Deferred<ApiResponse<Void>>
+
+    @GET("api/v1/payments/countries")
+    fun getCountriesAsync(): Deferred<CountriesResponse>
 }

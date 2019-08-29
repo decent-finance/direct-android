@@ -31,7 +31,4 @@ class MerchantApi(private val service: MerchantService) {
 
     fun getRule(scope: CoroutineScope, block: () -> String) =
         ExecutableLiveData(scope) { service.getRuleAsync(block.invoke()) }
-
-    fun getSupportedCountries(scope: CoroutineScope) =
-        ExecutableLiveData(scope) { service.getSupportedCountriesAsync() }
 }

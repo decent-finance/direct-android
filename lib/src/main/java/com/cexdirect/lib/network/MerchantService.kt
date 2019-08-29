@@ -16,7 +16,6 @@
 
 package com.cexdirect.lib.network
 
-import com.cexdirect.lib.network.models.CountriesResponse
 import com.cexdirect.lib.network.models.PlacementInfoResponse
 import com.cexdirect.lib.network.models.PrecisionsResponse
 import com.cexdirect.lib.network.models.RuleResponse
@@ -34,7 +33,4 @@ interface MerchantService {
 
     @GET("api/v1/merchant/rules/{ruleId}")
     fun getRuleAsync(@Path("ruleId") ruleId: String): Deferred<RuleResponse>
-
-    @GET("assets/countries/countries.json")
-    fun getSupportedCountriesAsync(): Deferred<CountriesResponse>
 }
