@@ -41,10 +41,7 @@ import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.whenever
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import java.util.*
@@ -87,6 +84,7 @@ class BuyActivityTest {
         reset(messenger, cexdSocket)
     }
 
+    @Ignore
     @Test
     fun loadData() {
         mockServer.dispatcher = BuyActivityDispatcher()
@@ -104,6 +102,7 @@ class BuyActivityTest {
         assertThat(paths.find { it.endsWith("v1/payments/currencies/$TEST_PLACEMENT") }).isNotNull()
     }
 
+    @Ignore
     @Test
     fun displayPopularValues() {
         val activityIdlingRes = WaitForActivityResource(BuyActivity::class.java.name)
