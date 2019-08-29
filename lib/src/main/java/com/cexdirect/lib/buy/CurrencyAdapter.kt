@@ -18,8 +18,10 @@ package com.cexdirect.lib.buy
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cexdirect.lib.ClickListener
+import com.cexdirect.lib.R
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib._util.orDefault
 import com.cexdirect.lib._util.symbolMap
@@ -35,13 +37,23 @@ class CurrencyAdapter(private val clickEvent: StringLiveEvent) :
             notifyDataSetChanged()
         }
 
+    var selectedCurrency = ""
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        PairViewHolder(ItemPairBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        PairViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.item_pair,
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: PairViewHolder, position: Int) {
-        holder.bind(this, items[position])
+        val symbol = items[position]
+        holder.bind(this, symbol, symbol == selectedCurrency)
     }
 
     override fun select(text: String) {
@@ -51,9 +63,10 @@ class CurrencyAdapter(private val clickEvent: StringLiveEvent) :
 
 class PairViewHolder(private val binding: ItemPairBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(listener: ClickListener, symbol: String) {
+    fun bind(listener: ClickListener, symbol: String, selected: Boolean) {
         binding.listener = listener
         binding.symbol = symbol
         binding.fullName = symbolMap[symbol].orDefault().fullName
+        binding.selected = selected
     }
 }

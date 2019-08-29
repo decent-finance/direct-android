@@ -22,20 +22,33 @@
         android:layout_height="60dp"
         android:onClick="@{() -> listener.select(symbol)}">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|start"
-            android:orientation="horizontal">
+            android:layout_gravity="center_vertical">
 
             <TextView
+                android:id="@+id/ipSymbol"
                 style="@style/Direct.Picker.Pair.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:padding="0dp"
                 android:text="@{symbol}"
                 tools:text="USD" />
+
+            <ImageView
+                android:id="@+id/ipChecked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|end"
+                android:contentDescription="@string/cexd_currency_is_selected"
+                android:src="@drawable/ic_check"
+                android:visibility="@{selected ? View.VISIBLE : View.GONE}"
+                tools:visibility="visible" />
 
             <TextView
                 style="@style/Direct.Picker.Pair"
@@ -43,11 +56,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
                 android:layout_marginStart="10dp"
+                android:layout_toStartOf="@id/ipChecked"
+                android:layout_toEndOf="@id/ipSymbol"
                 android:padding="0dp"
                 android:text="@{fullName}"
                 tools:text="United States Dollar" />
 
-        </LinearLayout>
+
+        </RelativeLayout>
 
         <View style="@style/Direct.Divider" />
 
@@ -66,5 +82,11 @@
         <variable
             name="fullName"
             type="String" />
+
+        <variable
+            name="selected"
+            type="Boolean" />
+
+        <import type="android.view.View" />
     </data>
 </layout>

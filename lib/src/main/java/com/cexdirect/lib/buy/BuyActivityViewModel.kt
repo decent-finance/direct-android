@@ -140,6 +140,7 @@ class BuyActivityViewModel(
             .filter { it.fiat == amount.selectedFiatCurrency }
             .distinctBy { it.crypto }
             .map { it.crypto }
+        currencyAdapter.selectedCurrency = amount.selectedCryptoCurrency
         action.invoke()
     }
 
@@ -147,6 +148,7 @@ class BuyActivityViewModel(
         currencyAdapter.items = amount.rates
             .distinctBy { it.fiat }
             .map { it.fiat }
+        currencyAdapter.selectedCurrency = amount.selectedFiatCurrency
         action.invoke()
     }
 
