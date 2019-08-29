@@ -64,7 +64,7 @@ class VerificationActivity : BaseActivity() {
                 orderAmounts.selectedFiatAmount = it.getStringExtra("fiatAmount")
             }
             applyLegalObservers()
-            nextClickEvent.observe(this@VerificationActivity, Observer {
+            nextClickEvent2.observe(this@VerificationActivity, Observer {
                 model.proceed()
                 replaceFragment(model.currentStep.get() - 1)
             })

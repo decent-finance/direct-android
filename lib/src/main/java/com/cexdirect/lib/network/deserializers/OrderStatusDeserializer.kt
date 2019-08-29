@@ -28,5 +28,5 @@ class OrderStatusDeserializer : JsonDeserializer<OrderStatus> {
         json: JsonElement,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ) = OrderStatus.valueOf(json.asString)
+    ) = OrderStatus.values().find { it.raw == json.asString }
 }

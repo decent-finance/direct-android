@@ -46,6 +46,7 @@ class VerificationActivityViewModel(
 
     // --- Events --- //
     val nextClickEvent = VoidLiveEvent()
+    val nextClickEvent2 = VoidLiveEvent()
     val returnEvent = VoidLiveEvent()
     val copyEvent = StringLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
@@ -208,7 +209,7 @@ class VerificationActivityViewModel(
 
     fun next() {
         if (currentStep.get() < 3) {
-            nextClickEvent.call()
+            nextClickEvent2.call()
         } else {
             returnEvent.call()
         }
