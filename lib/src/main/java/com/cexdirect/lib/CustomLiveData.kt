@@ -33,7 +33,7 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
 ) : MutableLiveData<Resource<V>>() {
 
     open fun execute() {
-        value = Loading()
+        postValue(Loading())
         scope.launch {
             runCatching {
                 val response = block().await() as Extractable<V>

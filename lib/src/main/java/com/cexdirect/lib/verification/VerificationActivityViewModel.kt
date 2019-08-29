@@ -179,7 +179,7 @@ class VerificationActivityViewModel(
             Payment(
                 userCardData.getCardBin(),
                 userCardData.expiry,
-                Wallet(userWallet.address, userWallet.tag)
+                Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
             )
 
         val additional =

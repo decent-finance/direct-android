@@ -17,7 +17,9 @@
 package com.cexdirect.lib._util
 
 import android.content.Context
+import com.cexdirect.lib.OpenForTesting
 
+@OpenForTesting
 class PlacementValidator(private val context: Context) {
 
     fun isPlacementUriAllowed(uri: String) = uri.contains(context.packageName)
