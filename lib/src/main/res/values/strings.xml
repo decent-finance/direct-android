@@ -45,6 +45,7 @@
     <string name="cexd_receive_emails">I agree to receive notification email</string>
     <string name="cexd_inform_me">Inform Me!</string>
     <string name="cexd_email_address">Email Address</string>
+    <string name="cexd_email">Email</string>
     <string name="cexd_state">State</string>
     <string name="cexd_cancel">Cancel</string>
     <string name="cexd_country">Country</string>
@@ -84,7 +85,7 @@
     <string name="cexd_user_icon">User icon</string>
     <string name="cexd_show_cvv_info">Show CVV info</string>
     <string name="cexd_cvv_icon">CVV icon</string>
-    <string name="cexd_exp_date">Exp Date</string>
+    <string name="cexd_exp_date">Expiry Date</string>
     <string name="cexd_card_number">Card Number</string>
     <string name="cexd_card_icon">Card icon</string>
     <string name="cexd_enter_your_payment_card">Enter Your Payment Card</string>
