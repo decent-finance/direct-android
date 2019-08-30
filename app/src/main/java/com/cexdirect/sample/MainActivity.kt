@@ -18,6 +18,7 @@ package com.cexdirect.sample
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.cexdirect.lib.Direct
 
@@ -30,5 +31,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnLaunch).setOnClickListener {
             Direct.startDirect()
         }
+
+        findViewById<TextView>(R.id.tvBranchName).text = BuildConfig.BRANCH_NAME
+
+        findViewById<TextView>(R.id.tvBuild).text = getString(
+            R.string.build_date,
+            BuildConfig.BUILD_DATE
+        )
     }
 }

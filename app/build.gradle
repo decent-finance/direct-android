@@ -23,6 +23,7 @@ android {
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
 
         buildConfigField('String', 'BRANCH_NAME', "\"${grgit.branch.current().name}\"")
+        buildConfigField('String', 'BUILD_DATE', "\"${new Date().toString()}\"")
     }
 
     buildTypes {
