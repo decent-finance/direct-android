@@ -1,4 +1,4 @@
-package com.cexdirect.lib._network.webview
+package com.cexdirect.lib.network.webview
 
 import android.webkit.WebViewClient
 
