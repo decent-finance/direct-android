@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'io.fabric'
+apply plugin: 'org.ajoberstar.grgit'
 apply from: '../config.gradle'
 
 android {
@@ -20,6 +21,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
+
+        buildConfigField('String', 'BRANCH_NAME', "\"${grgit.branch.current().name}\"")
     }
 
     buildTypes {
@@ -113,7 +116,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     androidTestImplementation 'junit:junit:4.12'
