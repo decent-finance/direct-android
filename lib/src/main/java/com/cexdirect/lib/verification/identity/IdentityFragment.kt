@@ -103,14 +103,14 @@ class IdentityFragment : BaseVerificationFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            fiInputCardNumber.apply {
+            fiCard.fiInputCardNumber.apply {
                 addTextChangedListener(CreditCardFormatTextWatcher(this))
                 filters = arrayOf(InputFilter.LengthFilter(MAX_CARD_LENGTH))
             }
-            fiInputCvv.apply {
+            fiCard.fiInputCvv.apply {
                 filters = arrayOf(InputFilter.LengthFilter(MAX_CVV_LENGTH))
             }
-            fiInputDate.apply {
+            fiCard.fiInputDate.apply {
                 filters = arrayOf(InputFilter.LengthFilter(MAX_EXP_DATE_LENGTH))
                 addTextChangedListener(DateWatcher(this))
             }
@@ -379,9 +379,9 @@ class IdentityFragment : BaseVerificationFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             val targetView = when (model.userDocs.currentPhotoType) {
-                PhotoType.ID -> binding.fiDocument
-                PhotoType.ID_BACK -> binding.fiDocumentBack
-                PhotoType.SELFIE -> binding.fiSelfie
+                PhotoType.ID -> binding.fiDocs.fiDocument
+                PhotoType.ID_BACK -> binding.fiDocs.fiDocumentBack
+                PhotoType.SELFIE -> binding.fiDocs.fiSelfie
             }
 
             when (requestCode) {
