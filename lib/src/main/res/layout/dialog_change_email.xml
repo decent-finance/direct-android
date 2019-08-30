@@ -49,7 +49,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                app:isActivated="@{model.emailStatus == EmailStatus.INVALID}">
+            app:isActivated="@{model.userEmail.emailStatus == EmailStatus.INVALID}">
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:text="@={model.email}"
+                    android:text="@={model.userEmail.email}"
                         tools:text="d.trump@whouse.gov"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +99,7 @@
                     android:layout_height="60dp"
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
-                    android:enabled="@{model.emailStatus == EmailStatus.VALID}"
+                android:enabled="@{model.userEmail.emailStatus == EmailStatus.VALID}"
                     android:onClick="@{() -> model.saveEmail()}"
                     android:text="@string/cexd_save"/>
 
