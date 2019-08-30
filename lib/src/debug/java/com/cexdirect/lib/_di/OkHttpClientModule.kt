@@ -29,7 +29,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Module
-open class OkHttpClientModule {
+class OkHttpClientModule {
 
     @Provides
     @HeaderInterceptor

@@ -14,9 +14,26 @@ import javax.inject.Singleton
 class OkHttpClientModule {
 
     @Provides
+    @HeaderInterceptor
     @Singleton
-    fun provideOkHttp() =
+    fun provideHeaderInterceptor() = Interceptor { chain ->
+        var request = chain.request()
+
+        val headers = request.headers.newBuilder()
+            .add("contentType", "application/json")
+            .add("UserAgent", "cexdirect-android-app")
+            .build()
+
+        request = request.newBuilder().headers(headers).build()
+
+        chain.proceed(request)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttp(@HeaderInterceptor headerInterceptor: Interceptor) =
         OkHttpClient.Builder()
+            .addInterceptor(headerInterceptor)
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(300, TimeUnit.SECONDS)
             .build()
