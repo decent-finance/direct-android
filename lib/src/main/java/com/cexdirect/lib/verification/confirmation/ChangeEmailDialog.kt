@@ -57,7 +57,7 @@ class ChangeEmailDialog : BaseBottomSheetDialog() {
         binding.model = model
 
         model.saveEvent.observe(this, Observer {
-            emailChangedEvent.value = model.email.get()
+            emailChangedEvent.value = model.userEmail.email
             dismiss()
         })
         model.cancelEvent.observe(this, Observer {
