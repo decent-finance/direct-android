@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
 import com.mcxiaoke.koi.HASH.encodeHex
 import com.mcxiaoke.koi.HASH.getDigest

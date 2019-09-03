@@ -14,9 +14,8 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util;
+package com.cexdirect.lib.util;
 
-import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 
 public class Encryptor {
@@ -91,7 +90,6 @@ public class Encryptor {
     private Mode mode = Mode.CBC;
 
 
-    @Inject
     public Encryptor() {
     }
 

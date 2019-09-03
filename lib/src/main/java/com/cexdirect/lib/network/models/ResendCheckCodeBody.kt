@@ -17,7 +17,7 @@
 package com.cexdirect.lib.network.models
 
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._util.sha512
+import com.cexdirect.lib.util.sha512
 
 class ResendCheckCodeBody(data: ResendCheckCodeData) : BaseBody<ResendCheckCodeData>(data = data) {
 

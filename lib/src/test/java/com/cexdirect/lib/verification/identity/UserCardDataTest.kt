@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.verification.identity
 
+import com.cexdirect.lib.util.FieldStatus
 import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
@@ -31,20 +32,116 @@ class UserCardDataTest {
     }
 
     @Test
-    fun cardDataPresent() {
+    fun cardDataIsValid() {
         userCardData.number = "0000 0000 0000 0001"
         userCardData.cvv = "123"
         userCardData.expiry = "11/99"
 
-        assertThat(userCardData.isCardDataPresent()).isTrue()
+        assertThat(userCardData.isValid()).isTrue()
     }
 
     @Test
-    fun cardDataNotPresent() {
-        userCardData.number = ""
-        userCardData.cvv = ""
-        userCardData.expiry = ""
+    fun cardDataIsNotValid() {
+        userCardData.number = "4321"
+        userCardData.cvv = "1"
+        userCardData.expiry = "23/11"
 
-        assertThat(userCardData.isCardDataPresent()).isFalse()
+        assertThat(userCardData.isValid()).isFalse()
+    }
+
+    @Test
+    fun dataIsNotValidAfterForceValidate() {
+        userCardData.apply {
+            number = ""
+            cvv = ""
+            expiry = ""
+        }
+
+        userCardData.forceValidate()
+
+        assertThat(userCardData.isValid()).isFalse()
+    }
+
+    @Test
+    fun dataIsValidAfterForceValidate() {
+        userCardData.apply {
+            number = "0000 0000 0000 0001"
+            cvv = "123"
+            expiry = "11/99"
+        }
+
+        userCardData.forceValidate()
+
+        assertThat(userCardData.isValid()).isTrue()
+    }
+
+    @Test
+    fun cardNumberIsValid() {
+        userCardData.number = "0000 0000 0000 1234"
+
+        assertThat(userCardData.numberStatus).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun cardNumberIsNotValid() {
+        userCardData.number = "0000 0000 0000 123"
+
+        assertThat(userCardData.numberStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun cardNumberIsEmpty() {
+        userCardData.number = ""
+
+        assertThat(userCardData.numberStatus).isEqualTo(FieldStatus.EMPTY)
+    }
+
+    @Test
+    fun cvvIsValid() {
+        userCardData.cvv = "123"
+
+        assertThat(userCardData.cvvStatus).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun cvvIsNotValid() {
+        userCardData.cvv = "7"
+
+        assertThat(userCardData.cvvStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun cvvIsEmpty() {
+        userCardData.cvv = ""
+
+        assertThat(userCardData.cvvStatus).isEqualTo(FieldStatus.EMPTY)
+    }
+
+    @Test
+    fun expDateIsValid() {
+        userCardData.expiry = "01/26"
+
+        assertThat(userCardData.expiryStatus).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun expDateIsInvalidWithIllegalMonth() {
+        userCardData.expiry = "13/24"
+
+        assertThat(userCardData.expiryStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun expDateIsInvalidWithIllegalYear() {
+        userCardData.expiry = "04/08"
+
+        assertThat(userCardData.expiryStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun expDateIsInvalidWhenIncomplete() {
+        userCardData.expiry = "04/1"
+
+        assertThat(userCardData.expiryStatus).isEqualTo(FieldStatus.INVALID)
     }
 }

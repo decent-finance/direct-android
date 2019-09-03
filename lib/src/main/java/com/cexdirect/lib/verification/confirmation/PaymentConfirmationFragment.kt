@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.verification.confirmation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -64,12 +65,21 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 binding = this
             }.root
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding.model = fragmentModel
 
-        binding.fpc3ds.webViewClient = webViewClient
+        binding.fpc3ds.apply {
+            webViewClient = this@PaymentConfirmationFragment.webViewClient
+            settings.apply {
+                javaScriptEnabled = true
+                loadWithOverviewMode = true
+                useWideViewPort = false
+                domStorageEnabled = true
+            }
+        }
 
         fragmentModel.apply {
             userEmail.set(Direct.userEmail)

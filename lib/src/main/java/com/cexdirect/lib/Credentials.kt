@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib
 
-import com.cexdirect.lib._util.sha512
+import com.cexdirect.lib.util.sha512
 
 data class Credentials(
     val placementId: String,

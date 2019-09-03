@@ -21,39 +21,42 @@ import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.util.FieldStatus
-import com.cexdirect.lib.util.checkEmailStatus
 
-class UserEmail : BaseObservable() {
+class Terms : BaseObservable() {
 
     @get:Bindable
-    var email = ""
+    var termsAccepted = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR.email)
+            notifyPropertyChanged(BR.termsAccepted)
         }
 
     @get:Bindable
-    var emailStatus = FieldStatus.EMPTY
+    var termsStatus = FieldStatus.EMPTY
         set(value) {
             field = value
-            notifyPropertyChanged(BR.emailStatus)
+            notifyPropertyChanged(BR.termsStatus)
         }
 
     init {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (propertyId == BR.email) {
-                    emailStatus = checkEmailStatus(email)
+                if (propertyId == BR.termsAccepted) {
+                    termsStatus = if (termsAccepted) {
+                        FieldStatus.VALID
+                    } else {
+                        FieldStatus.EMPTY
+                    }
                 }
             }
         })
     }
 
     fun forceValidate() {
-        if (emailStatus == FieldStatus.EMPTY) {
-            emailStatus = FieldStatus.INVALID
+        if (termsStatus == FieldStatus.EMPTY) {
+            termsStatus = FieldStatus.INVALID
         }
     }
 
-    fun isValid() = emailStatus == FieldStatus.VALID
+    fun accepted() = termsStatus == FieldStatus.VALID
 }

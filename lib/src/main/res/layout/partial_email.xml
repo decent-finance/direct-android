@@ -22,7 +22,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib._util.EmailStatus" />
+        <import type="com.cexdirect.lib.util.FieldStatus" />
 
         <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
 
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            app:isActivated="@{model.userEmail.emailStatus == EmailStatus.INVALID}">
+            app:isActivated="@{model.userEmail.emailStatus == FieldStatus.INVALID}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/cexd_invalid_email"
-            android:visibility="@{model.userEmail.emailStatus == EmailStatus.INVALID ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{model.userEmail.emailStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
     </merge>
 

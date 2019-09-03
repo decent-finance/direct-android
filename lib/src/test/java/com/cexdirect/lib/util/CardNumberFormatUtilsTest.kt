@@ -14,15 +14,21 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
-class RateConverter(
-    val a: Double,
-    val b: Double,
-    val c: Double
-) {
+import org.assertj.core.api.Java6Assertions.assertThat
+import org.junit.Test
 
-    fun convertToCrypto(fiat: Double): Double = (a * fiat - b) / c
+class CardNumberFormatUtilsTest {
 
-    fun convertToFiat(crypto: Double): Double = (crypto * c + b) / a
+    @Test
+    fun extractCardNumberBin() {
+        val given = "1234567887654321"
+
+        val actual = given.binifyCardNumber()
+
+        assertThat(actual).isNotBlank().isEqualTo("4321")
+    }
+
+
 }

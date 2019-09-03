@@ -15,6 +15,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -22,6 +23,8 @@
         <import type="android.view.View" />
 
         <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
 
         <variable
             name="model"
@@ -45,7 +48,8 @@
             android:paddingLeft="16dp"
             android:paddingTop="6dp"
             android:paddingRight="16dp"
-            android:paddingBottom="6dp">
+            android:paddingBottom="6dp"
+            app:isActivated="@{model.userCountry.selectedCountryStatus == FieldStatus.INVALID}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -82,6 +86,16 @@
                 android:src="@drawable/ic_dropdown" />
         </LinearLayout>
 
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_select_country"
+            android:visibility="@{model.userCountry.selectedCountryStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -98,7 +112,8 @@
             android:paddingTop="6dp"
             android:paddingRight="16dp"
             android:paddingBottom="6dp"
-            android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}">
+            android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}"
+            app:isActivated="@{model.userCountry.selectedStateStatus == FieldStatus.INVALID}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -134,6 +149,16 @@
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_dropdown" />
         </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_select_state"
+            android:visibility="@{model.userCountry.selectedStateStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
     </merge>
 

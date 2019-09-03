@@ -20,6 +20,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
@@ -28,26 +32,22 @@
     <merge>
 
         <LinearLayout
+            style="@style/Direct.InputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_bg_input"
-            android:elevation="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
             android:outlineProvider="background"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp">
+            app:isActivated="@{model.userTerms.termsStatus == FieldStatus.INVALID}">
 
             <CheckBox
+                android:id="@+id/ptAcceptTerms"
                 style="@style/Direct.Checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@={model.termsAccepted}" />
+                android:checked="@={model.userTerms.termsAccepted}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,6 +57,16 @@
                 tools:text="I agree with Terms Of Use" />
 
         </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_accept_terms"
+            android:visibility="@{model.userTerms.termsStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
     </merge>
 

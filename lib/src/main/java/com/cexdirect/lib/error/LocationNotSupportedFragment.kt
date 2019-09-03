@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.R
-import com.cexdirect.lib._util.EmailStatus
 import com.cexdirect.lib.databinding.FragmentLocationNotSupportedBinding
+import com.cexdirect.lib.util.FieldStatus
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 
@@ -47,10 +47,10 @@ class LocationNotSupportedFragment : BaseErrorFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         model.informMeEvent.observe(this, Observer {
-            if (model.emailStatus == EmailStatus.EMPTY) {
+            if (model.emailStatus == FieldStatus.EMPTY) {
                 toast("Please, enter your e-mail address")
                 return@Observer
-            } else if (model.emailStatus == EmailStatus.INVALID) {
+            } else if (model.emailStatus == FieldStatus.INVALID) {
                 toast("Please, enter valid e-mail address")
                 return@Observer
             }
