@@ -14,14 +14,34 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util;
+package com.cexdirect.lib.util;
 
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.mcxiaoke.koi.HASH;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
+
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Locale;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
@@ -30,12 +50,6 @@ import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Locale;
-import java.util.Random;
 
 public class DH {
 

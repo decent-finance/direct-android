@@ -45,10 +45,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun LegalViewModel.applyLegalObservers() {
         supportClickEvent.observe(this@BaseActivity, Observer {
             Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:support@cex.io")
+                data = Uri.parse(SUPPORT_EMAIL)
             }.let {
                 it.resolveActivity(packageManager)?.run { startActivity(it) }
-                    ?: toast("No e-mail apps found")
+                        ?: toast(R.string.cexd_no_email_apps)
             }
         })
         legalClickEvent.observe(this@BaseActivity, Observer {
@@ -72,5 +72,9 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun showStubScreen() {
         startActivity(Intent(this, StubActivity::class.java))
         finish()
+    }
+
+    companion object {
+        const val SUPPORT_EMAIL = "mailto:support@cex.io"
     }
 }

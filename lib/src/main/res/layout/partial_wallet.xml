@@ -20,6 +20,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
@@ -43,7 +47,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="10dp"
-            app:isActivated="@{!model.userWallet.walletValid}">
+            app:isActivated="@{model.userWallet.walletStatus == FieldStatus.INVALID}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -71,6 +75,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_invalid_wallet"
+            android:visibility="@{model.userWallet.walletStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
     </merge>
 </layout>

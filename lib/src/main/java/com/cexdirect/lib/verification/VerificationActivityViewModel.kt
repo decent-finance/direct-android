@@ -22,12 +22,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.PagerAdapter
 import com.cexdirect.lib.*
-import com.cexdirect.lib._util.DH
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.enqueueWith
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.util.DH
+import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
@@ -36,12 +37,12 @@ import com.cexdirect.lib.views.CollapsibleLayout
 
 @Suppress("MagicNumber")
 class VerificationActivityViewModel(
-    paymentApi: PaymentApi,
-    private val orderApi: OrderApi,
-    stringProvider: StringProvider,
-    private val messenger: Messenger,
-    dh: DH,
-    dispatcherProvider: CoroutineDispatcherProvider
+        paymentApi: PaymentApi,
+        private val orderApi: OrderApi,
+        stringProvider: StringProvider,
+        private val messenger: Messenger,
+        dh: DH,
+        dispatcherProvider: CoroutineDispatcherProvider
 ) : LegalViewModel(dispatcherProvider) {
 
     // --- Events --- //
@@ -64,24 +65,18 @@ class VerificationActivityViewModel(
     val pagerAdapter = ObservableField<PagerAdapter>(StepsPagerAdapter())
 
     val additionalFields = ObservableField<Map<String, Additional>>(emptyMap())
-    val images = ObservableField(
-        Images(
-            isIdentityDocumentsRequired = false,
-            isSelfieRequired = false
-        )
-    )
 
     val userEmail = UserEmail()
     val userCountry = UserCountry()
     val userCardData = UserCardData(dh)
     val userWallet = UserWallet()
     val userDocs: UserDocs /* intentionally specified explicitly */ =
-        UserDocs(stringProvider).apply {
-            uploadAction = { uploadImage.execute() }
-        }
+            UserDocs(stringProvider).apply {
+                uploadAction = { uploadImage.execute() }
+            }
+    val userTerms = Terms()
     var extras = ObservableArrayMap<String, String>()
-
-    val termsAccepted = ObservableBoolean(false)
+    val validationMap = ObservableArrayMap<String, FieldStatus>()
 
     val verificationStep = ObservableField(VerificationStep.LOCATION_EMAIL)
     val locationEmailContentState = ObservableField(CollapsibleLayout.ContentState.EXPANDED)
@@ -98,53 +93,53 @@ class VerificationActivityViewModel(
     // --- Requests --- //
     val createOrder = orderApi.createNewOrder(this) {
         NewOrderData(
-            userEmail.email,
-            userCountry.selectedCountry.code,
-            MonetaryData(Direct.pendingFiatAmount.amount, Direct.pendingFiatAmount.currency),
-            MonetaryData(Direct.pendingCryptoAmount.amount, Direct.pendingCryptoAmount.currency)
+                userEmail.email,
+                userCountry.selectedCountry.code,
+                MonetaryData(Direct.pendingFiatAmount.amount, Direct.pendingFiatAmount.currency),
+                MonetaryData(Direct.pendingCryptoAmount.amount, Direct.pendingCryptoAmount.currency)
         )
     }
 
     private val walletVerification =
-        paymentApi.verifyWalletAddress(this) {
-            WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency)
-        }
+            paymentApi.verifyWalletAddress(this) {
+                WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency)
+            }
 
     private val verificationKey =
-        Transformations.switchMap(walletVerification) {
-            it.enqueueWith({
-                orderApi.getVerificationKey(this) {
-                    PublicKeyData(userCardData.getPublicKey())
-                }.apply { execute() }
-            })
-        }
+            Transformations.switchMap(walletVerification) {
+                it.enqueueWith({
+                    orderApi.getVerificationKey(this) {
+                        PublicKeyData(userCardData.getPublicKey())
+                    }.apply { execute() }
+                })
+            }
 
     val verificationResult =
-        Transformations.switchMap(verificationKey) { resource ->
-            resource.enqueueWith({
-                it.data.let {
-                    orderApi.sendToVerification(this) {
-                        VerificationData(
-                            secretId = it!!.secretId,
-                            cardData = userCardData.generateVerificationCardData(it.publicKey)
-                        )
-                    }.apply { execute() }
-                }
-            })
-        }!!
+            Transformations.switchMap(verificationKey) { resource ->
+                resource.enqueueWith({
+                    it.data.let {
+                        orderApi.sendToVerification(this) {
+                            VerificationData(
+                                    secretId = it!!.secretId,
+                                    cardData = userCardData.generateVerificationCardData(it.publicKey)
+                            )
+                        }.apply { execute() }
+                    }
+                })
+            }!!
 
     val processingKey =
-        orderApi.getProcessingKey(this) {
-            PublicKeyData(userCardData.getPublicKey())
-        }
+            orderApi.getProcessingKey(this) {
+                PublicKeyData(userCardData.getPublicKey())
+            }
 
     val processingResult = Transformations.switchMap(processingKey) { resource ->
         resource.enqueueWith({
             it.data.let {
                 orderApi.sendToProcessing(this) {
                     VerificationData(
-                        secretId = it!!.secretId,
-                        cardData = userCardData.generateProcessingCardData(it.publicKey)
+                            secretId = it!!.secretId,
+                            cardData = userCardData.generateProcessingCardData(it.publicKey)
                     )
                 }.apply { execute() }
             }
@@ -157,18 +152,18 @@ class VerificationActivityViewModel(
         when (userDocs.currentPhotoType) {
             PhotoType.SELFIE -> {
                 ImageBody(
-                    ImageData(
-                        documentType = DocumentType.SELFIE.value,
-                        base64image = arrayOf(userDocs.selfieBase64)
-                    )
+                        ImageData(
+                                documentType = DocumentType.SELFIE.value,
+                                base64image = arrayOf(userDocs.selfieBase64)
+                        )
                 )
             }
             PhotoType.ID, PhotoType.ID_BACK -> {
                 ImageBody(
-                    ImageData(
-                        documentType = userDocs.documentType.value,
-                        base64image = userDocs.imagesBase64.values.toTypedArray()
-                    )
+                        ImageData(
+                                documentType = userDocs.documentType.value,
+                                base64image = userDocs.imagesBase64.values.toTypedArray()
+                        )
                 )
             }
         }
@@ -176,14 +171,14 @@ class VerificationActivityViewModel(
 
     val paymentData = orderApi.sendPaymentData(this) {
         val payment =
-            Payment(
-                userCardData.getCardBin(),
-                userCardData.expiry,
-                Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
-            )
+                Payment(
+                        userCardData.getCardBin(),
+                        userCardData.expiry,
+                        Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
+                )
 
         val additional =
-            if (userCountry.shouldShowState) mapOf("billingSsn" to extras["billingSsn"]!!) else emptyMap()
+                if (userCountry.shouldShowState) mapOf("billingSsn" to extras["billingSsn"]!!) else emptyMap()
         PaymentData(payment, additional)
     }
 
@@ -197,8 +192,30 @@ class VerificationActivityViewModel(
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 countrySearch.get()?.takeIf { it.isNotBlank() }?.let { part ->
                     countryAdapter.get()!!.items =
-                        currentCountryData.filter { it.name.contains(part, true) }
+                            currentCountryData.filter { it.name.contains(part, true) }
                 } ?: run { countryAdapter.get()!!.items = currentCountryData }
+            }
+        })
+        extras.addOnMapChangedCallback(
+                object : ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
+                    override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
+                        key?.let {
+                            if (extras[it].isNullOrBlank()) {
+                                validationMap[it] = FieldStatus.EMPTY
+                            } else {
+                                validationMap[it] = FieldStatus.VALID
+                            }
+                        }
+                    }
+                }
+        )
+        additionalFields.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                additionalFields.get()?.entries?.forEach {
+                    if (it.value.req && it.value.editable) {
+                        validationMap[it.key] = FieldStatus.EMPTY
+                    }
+                }
             }
         })
     }
@@ -230,16 +247,31 @@ class VerificationActivityViewModel(
         copyEvent.postValue(orderId.get())
     }
 
-    fun canSendPaymentData() =
-        userCardData.isCardDataPresent() && userWallet.walletDataPresent() && ssnPresent()
+    fun createOrder() {
+        userEmail.forceValidate()
+        userCountry.forceValidate()
+
+        if (userEmail.isValid() && userCountry.isValid()) {
+            Direct.userEmail = userEmail.email
+            createOrder.execute()
+        }
+    }
 
     private fun ssnPresent() =
-        if (userCountry.shouldShowState) !extras["billingSsn"].isNullOrBlank() else true
+            if (userCountry.shouldShowState) !extras["billingSsn"].isNullOrBlank() else true
 
-    fun extrasValid(): Boolean =
-        extras.entries.takeIf { it.size > 0 }?.fold(false, { _, entry ->
-            entry.value.isNotBlank()
-        }) ?: true
+    private fun forceValidateExtras() {
+        validationMap.entries.forEach {
+            if (it.value == FieldStatus.EMPTY) {
+                it.setValue(FieldStatus.INVALID)
+            }
+        }
+    }
+
+    private fun extrasValid() =
+            validationMap.entries.takeIf { it.size > 0 }?.fold(false, { _, entry ->
+                entry.value == FieldStatus.VALID
+            }) ?: true
 
     fun nextStep() {
         nextClickEvent.call()
@@ -267,10 +299,10 @@ class VerificationActivityViewModel(
     fun toggleLocationEmail() {
         when (locationEmailContentState.get()) {
             CollapsibleLayout.ContentState.COLLAPSED -> locationEmailContentState.set(
-                CollapsibleLayout.ContentState.EXPANDED
+                    CollapsibleLayout.ContentState.EXPANDED
             )
             CollapsibleLayout.ContentState.EXPANDED -> locationEmailContentState.set(
-                CollapsibleLayout.ContentState.COLLAPSED
+                    CollapsibleLayout.ContentState.COLLAPSED
             )
         }
     }
@@ -278,16 +310,12 @@ class VerificationActivityViewModel(
     fun togglePaymentBase() {
         when (paymentBaseContentState.get()) {
             CollapsibleLayout.ContentState.COLLAPSED -> paymentBaseContentState.set(
-                CollapsibleLayout.ContentState.EXPANDED
+                    CollapsibleLayout.ContentState.EXPANDED
             )
             CollapsibleLayout.ContentState.EXPANDED -> paymentBaseContentState.set(
-                CollapsibleLayout.ContentState.COLLAPSED
+                    CollapsibleLayout.ContentState.COLLAPSED
             )
         }
-    }
-
-    fun sendToVerification() {
-        walletVerification.execute()
     }
 
     fun setPaymentBase() {
@@ -298,19 +326,32 @@ class VerificationActivityViewModel(
     }
 
     fun uploadPaymentData() {
-        paymentData.execute()
+        userCardData.forceValidate()
+        userTerms.forceValidate()
+        userWallet.forceValidate()
+
+        if (paymentDataValid()) {
+            paymentData.execute()
+        }
     }
+
+    private fun paymentDataValid() =
+            userCardData.isValid() && userTerms.accepted() && userWallet.isValid() && ssnPresent()
 
     fun startVerificationChain() {
         walletVerification.execute()
     }
 
     fun updatePaymentData() {
-        updatePaymentData.execute()
+        forceValidateExtras()
+
+        if (extrasValid()) {
+            updatePaymentData.execute()
+        }
     }
 
     fun setRequiredImages(images: Images) {
-        this.images.set(images)
+        userDocs.requiredImages = images
     }
 
     fun showCvvInfo() {
@@ -318,11 +359,7 @@ class VerificationActivityViewModel(
     }
 
     fun setImage(imageBase64: String) {
-        when (userDocs.currentPhotoType) {
-            PhotoType.SELFIE -> userDocs.selfieBase64 = imageBase64
-            PhotoType.ID -> userDocs.setFrontPhoto(imageBase64)
-            PhotoType.ID_BACK -> userDocs.setBackPhoto(imageBase64)
-        }
+        userDocs.setImage(imageBase64)
     }
 
     fun closeCountryPicker() {
@@ -343,24 +380,24 @@ class VerificationActivityViewModel(
     }
 
     class Factory(
-        private val paymentApi: PaymentApi,
-        private val orderApi: OrderApi,
-        private val stringProvider: StringProvider,
-        private val messenger: Messenger,
-        private val dh: DH,
-        private val dispatcherProvider: CoroutineDispatcherProvider
+            private val paymentApi: PaymentApi,
+            private val orderApi: OrderApi,
+            private val stringProvider: StringProvider,
+            private val messenger: Messenger,
+            private val dh: DH,
+            private val dispatcherProvider: CoroutineDispatcherProvider
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            VerificationActivityViewModel(
-                paymentApi,
-                orderApi,
-                stringProvider,
-                messenger,
-                dh,
-                dispatcherProvider
-            ) as T
+                VerificationActivityViewModel(
+                        paymentApi,
+                        orderApi,
+                        stringProvider,
+                        messenger,
+                        dh,
+                        dispatcherProvider
+                ) as T
     }
 }
 

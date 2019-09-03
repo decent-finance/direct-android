@@ -14,21 +14,13 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
-import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
+import android.content.Context
+import com.cexdirect.lib.OpenForTesting
 
-class CardNumberFormatUtilsTest {
+@OpenForTesting
+class PlacementValidator(private val context: Context) {
 
-    @Test
-    fun extractCardNumberBin() {
-        val given = "1234567887654321"
-
-        val actual = given.binifyCardNumber()
-
-        assertThat(actual).isNotBlank().isEqualTo("4321")
-    }
-
-
+    fun isPlacementUriAllowed(uri: String) = uri.contains(context.packageName)
 }

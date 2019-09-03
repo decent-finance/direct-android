@@ -14,31 +14,29 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
-import android.content.Context
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 
-class PlacementValidatorTest {
 
-    private lateinit var context: Context
-    private lateinit var validator: PlacementValidator
+class EmailValidatorTest {
 
-    @Before
-    internal fun setUp() {
-        context = mock {
-            on { packageName } doReturn "com.cexdirect.direct.sample"
-        }
-        validator = PlacementValidator(context)
+    @Test
+    fun returnEmptyStatus() {
+        val actual = checkEmailStatus("")
+        assertThat(actual).`as`("Email status").isEqualTo(FieldStatus.EMPTY)
     }
 
     @Test
-    fun validateGivenUri() {
-        val actual = validator.isPlacementUriAllowed("android://com.cexdirect.direct.sample")
-        assertThat(actual).isTrue()
+    fun returnValidStatus() {
+        val actual = checkEmailStatus("dd@dd.de")
+        assertThat(actual).`as`("Email status").isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun returnInvalidStatus() {
+        val actual = checkEmailStatus("xyz")
+        assertThat(actual).`as`("Email status").isEqualTo(FieldStatus.INVALID)
     }
 }

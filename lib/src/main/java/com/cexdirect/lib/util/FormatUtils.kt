@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
 import android.util.Base64
 import com.cexdirect.lib.network.models.Precision

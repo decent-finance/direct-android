@@ -19,9 +19,9 @@ package com.cexdirect.lib._di
 import android.content.Context
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._util.DH
-import com.cexdirect.lib._util.Encryptor
-import com.cexdirect.lib._util.PlacementValidator
+import com.cexdirect.lib.util.DH
+import com.cexdirect.lib.util.Encryptor
+import com.cexdirect.lib.util.PlacementValidator
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

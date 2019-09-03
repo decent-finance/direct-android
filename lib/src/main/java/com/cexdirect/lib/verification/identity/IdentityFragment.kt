@@ -34,7 +34,6 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._util.EmailStatus
 import com.cexdirect.lib.databinding.FragmentIdentityBinding
 import com.cexdirect.lib.error.locationNotSupported
 import com.cexdirect.lib.error.purchaseFailed
@@ -44,6 +43,7 @@ import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.OrderStatus
+import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.events.StickyViewEvent
@@ -93,9 +93,9 @@ class IdentityFragment : BaseVerificationFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ) = FragmentIdentityBinding.inflate(inflater, container, false).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,8 +121,7 @@ class IdentityFragment : BaseVerificationFragment() {
         }
 
         event.observe(this, Observer {
-            @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
-            when (it) {
+            when (it!!) {
                 SourceClickType.PHOTO -> choosePhotoFromGalleryWithPermissionCheck()
                 SourceClickType.CAMERA -> takePhotoWithPermissionCheck()
                 SourceClickType.CANCEL -> {
@@ -132,9 +131,15 @@ class IdentityFragment : BaseVerificationFragment() {
         })
 
         model.apply {
-            uploadImage.observe(this@IdentityFragment, operationObserver)
-            paymentData.observe(this@IdentityFragment, operationObserver)
-            updatePaymentData.observe(this@IdentityFragment, operationObserver)
+            uploadImage.observe(this@IdentityFragment, Observer {
+                userDocs.currentPhotoType
+            })
+            paymentData.observe(this@IdentityFragment, Observer {
+                if (it is Failure) operationObserver.onChanged(it)
+            })
+            updatePaymentData.observe(this@IdentityFragment, Observer {
+                if (it is Failure) operationObserver.onChanged(it)
+            })
             processingResult.observe(this@IdentityFragment, operationObserver)
             createOrder.observe(this@IdentityFragment, Observer {
                 when (it) {
@@ -158,42 +163,18 @@ class IdentityFragment : BaseVerificationFragment() {
             })
             nextClickEvent.observe(this@IdentityFragment, Observer {
                 when (verificationStep.get()) {
-                    VerificationStep.LOCATION_EMAIL -> {
-                        if (userEmail.emailStatus == EmailStatus.EMPTY) {
-                            toast("Please, enter your e-mail address")
-                            return@Observer
-                        } else if (userEmail.emailStatus == EmailStatus.INVALID) {
-                            toast("Please, enter valid e-mail address")
-                            return@Observer
-                        }
-                        if (!userCountry.isCountrySelected()) {
-                            toast("Please, fill in country information")
-                            return@Observer
-                        }
-                        Direct.userEmail = userEmail.email
-                        createOrder.execute()
-                    }
+                    VerificationStep.LOCATION_EMAIL -> createOrder()
                     VerificationStep.PAYMENT_BASE -> {
-                        if (canSendPaymentData()) {
-                            if (!termsAccepted.get()) {
-                                toast("Please, accept our Terms of Use")
-                                return@Observer
-                            }
-                            if (currentOrderStatus.get() == OrderStatus.INCOMPLETE) {
-                                uploadPaymentData()
-                            } else if (currentOrderStatus.get() == OrderStatus.IVS_READY) {
-                                startVerificationChain()
-                            }
-                        } else {
-                            toast("Please, fill in payment information")
+                        if (currentOrderStatus.get() == OrderStatus.INCOMPLETE) {
+                            showLoader()
+                            uploadPaymentData()
+                        } else if (currentOrderStatus.get() == OrderStatus.IVS_READY) {
+                            startVerificationChain()
                         }
                     }
                     VerificationStep.PAYMENT_EXTRA -> {
-                        if (extrasValid()) {
-                            updatePaymentData()
-                        } else {
-                            toast("Please, fill in all fields")
-                        }
+                        showLoader()
+                        updatePaymentData()
                     }
                 }
             })
@@ -216,9 +197,8 @@ class IdentityFragment : BaseVerificationFragment() {
                 when (it) {
                     is Failure -> {
                         if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
-                            userWallet.walletValid = false
+                            userWallet.walletStatus = FieldStatus.INVALID
                             hideLoader()
-                            toast("Invalid wallet address")
                         } else {
                             operationObserver.onChanged(it)
                         }
@@ -251,21 +231,22 @@ class IdentityFragment : BaseVerificationFragment() {
                     OrderStatus.IVS_READY -> {
                         if (currentOrderStatus.get() != OrderStatus.IVS_READY) {
                             currentOrderStatus.set(OrderStatus.IVS_READY)
-                            model.sendToVerification()
+                            model.startVerificationChain()
                         }
                     }
                     OrderStatus.PSS_WAITDATA -> {
                         if (currentOrderStatus.get() != OrderStatus.PSS_WAITDATA) {
                             currentOrderStatus.set(OrderStatus.PSS_WAITDATA)
+                            hideLoader()
                             model.apply {
                                 it.data.additional
-                                    .takeIf { it.filter { it.value.req }.isNotEmpty() }
-                                    .let {
-                                        additionalFields.set(it.orEmpty())
-                                        verificationStep.set(VerificationStep.PAYMENT_EXTRA)
-                                        paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
-                                        paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
-                                    }
+                                        .takeIf { it.filter { it.value.req }.isNotEmpty() }
+                                        .let {
+                                            additionalFields.set(it.orEmpty())
+                                            verificationStep.set(VerificationStep.PAYMENT_EXTRA)
+                                            paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
+                                            paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
+                                        }
                             }
                         }
                     }
@@ -324,8 +305,8 @@ class IdentityFragment : BaseVerificationFragment() {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
         val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File
-            .createTempFile("JPEG_${timestamp}_", ".jpg", storageDir)
-            .apply { currentPhotoPath = absolutePath }
+                .createTempFile("JPEG_${timestamp}_", ".jpg", storageDir)
+                .apply { currentPhotoPath = absolutePath }
     }
 
     @NeedsPermission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -340,9 +321,9 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
                 photoFile?.let {
                     val photoURI: Uri = FileProvider.getUriForFile(
-                        context!!,
-                        "${Direct.context.packageName}.directfile",
-                        it
+                            context!!,
+                            "${Direct.context.packageName}.directfile",
+                            it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, RQ_TAKE_PHOTO)
@@ -359,17 +340,17 @@ class IdentityFragment : BaseVerificationFragment() {
         }.let { chooseIntent ->
             chooseIntent.resolveActivity(context!!.packageManager)?.let {
                 startActivityForResult(
-                    Intent.createChooser(chooseIntent, "Select Picture"),
-                    RQ_CHOOSE_PIC
+                        Intent.createChooser(chooseIntent, "Select Picture"),
+                        RQ_CHOOSE_PIC
                 )
             }
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
@@ -386,13 +367,13 @@ class IdentityFragment : BaseVerificationFragment() {
 
             when (requestCode) {
                 RQ_CHOOSE_PIC -> {
-                    data?.data?.let {
-                        convertAndSet(context!!, it) { model.setImage(it) }
+                    data?.data?.let { uri ->
+                        convertAndSet(context!!, uri) { model.setImage(it) }
 
                         Glide.with(this)
-                            .load(it)
-                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                            .into(targetView)
+                                .load(uri)
+                                .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                .into(targetView)
                     }
                 }
                 RQ_TAKE_PHOTO -> {
@@ -400,9 +381,9 @@ class IdentityFragment : BaseVerificationFragment() {
                         convertAndSet(currentPhotoPath) { model.setImage(it) }
 
                         Glide.with(this)
-                            .load(File(currentPhotoPath))
-                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                            .into(targetView)
+                                .load(File(currentPhotoPath))
+                                .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                .into(targetView)
                     } catch (e: FileNotFoundException) {
                         toast(R.string.cexd_file_not_found)
                     }

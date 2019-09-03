@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
 import android.os.Handler
 import android.os.Looper

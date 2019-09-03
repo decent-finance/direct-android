@@ -24,7 +24,7 @@
                 name="model"
                 type="com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel"/>
 
-        <import type="com.cexdirect.lib._util.EmailStatus"/>
+        <import type="com.cexdirect.lib.util.FieldStatus" />
     </data>
 
     <LinearLayout
@@ -49,7 +49,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-            app:isActivated="@{model.userEmail.emailStatus == EmailStatus.INVALID}">
+            app:isActivated="@{model.userEmail.emailStatus == FieldStatus.INVALID}">
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                     android:layout_height="60dp"
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
-                android:enabled="@{model.userEmail.emailStatus == EmailStatus.VALID}"
+                android:enabled="@{model.userEmail.emailStatus == FieldStatus.VALID}"
                     android:onClick="@{() -> model.saveEmail()}"
                     android:text="@string/cexd_save"/>
 

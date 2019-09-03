@@ -17,7 +17,7 @@
 package com.cexdirect.lib.network.models
 
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._util.sha512
+import com.cexdirect.lib.util.sha512
 
 class ProcessingBody(data: ProcessingData) : BaseBody<ProcessingData>(data = data) {
     init {

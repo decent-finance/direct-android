@@ -21,6 +21,8 @@ import androidx.databinding.*
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.network.models.Images
+import com.cexdirect.lib.util.FieldStatus
 
 class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
 
@@ -80,19 +82,45 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             notifyPropertyChanged(BR.selectedDocType)
         }
 
+    @get:Bindable
+    var requiredImages = Images(false, false)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.requiredImages)
+        }
+
+    @get:Bindable
+    var selfieStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selfieStatus)
+        }
+
+    @get:Bindable
+    var documentFrontStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentFrontStatus)
+        }
+
+    @get:Bindable
+    var documentBackStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentBackStatus)
+        }
+
     var imagesBase64 = ObservableArrayMap<String, String>()
+
+    @get:Bindable
     var selfieBase64 = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selfieBase64)
+        }
 
     lateinit var currentPhotoType: PhotoType
     lateinit var uploadAction: () -> Unit
-
-    fun setFrontPhoto(img: String) {
-        imagesBase64["front"] = img
-    }
-
-    fun setBackPhoto(img: String) {
-        imagesBase64["back"] = img
-    }
 
     init {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
@@ -110,6 +138,9 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                         if (shouldSendPhoto) {
                             uploadAction.invoke()
                         }
+                    }
+                    BR.selfieBase64 -> {
+                        uploadAction.invoke()
                     }
                     BR.selectedDocType -> {
                         when (selectedDocType) {
@@ -155,4 +186,26 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             }
         })
     }
+
+    fun setImage(imageBase64: String) {
+        when (currentPhotoType) {
+            PhotoType.SELFIE -> selfieBase64 = imageBase64
+            PhotoType.ID -> imagesBase64["front"] = imageBase64
+            PhotoType.ID_BACK -> imagesBase64["back"] = imageBase64
+        }
+    }
+
+    fun forceValidate() {
+        if (requiredImages.isSelfieRequired) {
+            if (selfieStatus == FieldStatus.EMPTY) {
+                selfieStatus = FieldStatus.INVALID
+            }
+        }
+
+        if (requiredImages.isIdentityDocumentsRequired) {
+
+        }
+    }
+
+    fun isValid() = true
 }
