@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.assertj.core.data.Offset

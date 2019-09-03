@@ -21,6 +21,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.network.models.emptyCountry
+import com.cexdirect.lib.util.FieldStatus
 
 class UserCountry : BaseObservable() {
 
@@ -32,10 +33,24 @@ class UserCountry : BaseObservable() {
         }
 
     @get:Bindable
+    var selectedCountryStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selectedCountryStatus)
+        }
+
+    @get:Bindable
     var selectedState = emptyCountry()
         set(value) {
             field = value
             notifyPropertyChanged(BR.selectedState)
+        }
+
+    @get:Bindable
+    var selectedStateStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selectedStateStatus)
         }
 
     @get:Bindable
@@ -52,17 +67,38 @@ class UserCountry : BaseObservable() {
                     BR.selectedCountry -> {
                         shouldShowState =
                             selectedCountry.states != null && selectedCountry.states!!.isNotEmpty()
+                        selectedCountryStatus = if (selectedCountry != emptyCountry()) {
+                            FieldStatus.VALID
+                        } else {
+                            FieldStatus.EMPTY
+                        }
+                    }
+                    BR.selectedState -> {
+                        selectedStateStatus = if (selectedState != emptyCountry()) {
+                            FieldStatus.VALID
+                        } else {
+                            FieldStatus.EMPTY
+                        }
                     }
                 }
             }
         })
     }
 
-    fun isCountrySelected() =
+    fun isValid() =
         if (shouldShowState) {
-            selectedCountry.name.isNotBlank() && selectedState.name.isNotBlank()
+            selectedCountryStatus == FieldStatus.VALID && selectedStateStatus == FieldStatus.VALID
         } else {
-            selectedCountry.name.isNotBlank()
+            selectedCountryStatus == FieldStatus.VALID
         }
 
+    fun forceValidate() {
+        if (selectedCountryStatus == FieldStatus.EMPTY) {
+            selectedCountryStatus = FieldStatus.INVALID
+        }
+
+        if (shouldShowState && selectedStateStatus == FieldStatus.EMPTY) {
+            selectedStateStatus = FieldStatus.INVALID
+        }
+    }
 }

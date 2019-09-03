@@ -25,7 +25,6 @@ import com.cexdirect.lib._di.annotation.BuyActivityFactory
 import com.cexdirect.lib._di.annotation.CheckActivityFactory
 import com.cexdirect.lib._di.annotation.ErrorActivityFactory
 import com.cexdirect.lib._di.annotation.TermsActivityFactory
-import com.cexdirect.lib._util.PlacementValidator
 import com.cexdirect.lib.buy.BuyActivityViewModel
 import com.cexdirect.lib.check.CheckActivityViewModel
 import com.cexdirect.lib.check.RuleIds
@@ -35,6 +34,7 @@ import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.terms.TermsActivityViewModel
+import com.cexdirect.lib.util.PlacementValidator
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

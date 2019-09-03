@@ -14,23 +14,15 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
-import java.util.regex.Pattern
+class RateConverter(
+    val a: Double,
+    val b: Double,
+    val c: Double
+) {
 
-val emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
+    fun convertToCrypto(fiat: Double): Double = (a * fiat - b) / c
 
-fun checkEmailStatus(email: String?) =
-    if (email.isNullOrBlank()) {
-        EmailStatus.EMPTY
-    } else {
-        if (emailPattern.matcher(email).matches()) {
-            EmailStatus.VALID
-        } else {
-            EmailStatus.INVALID
-        }
-    }
-
-enum class EmailStatus {
-    EMPTY, INVALID, VALID
+    fun convertToFiat(crypto: Double): Double = (crypto * c + b) / a
 }

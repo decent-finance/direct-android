@@ -21,51 +21,37 @@ import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class UserEmailTest {
+class UserWalletTest {
 
-    lateinit var userEmail: UserEmail
+    private lateinit var userWallet: UserWallet
 
     @Before
     fun setUp() {
-        userEmail = UserEmail()
-    }
-
-    @Test
-    fun empty() {
-        userEmail.email = ""
-
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.EMPTY)
-    }
-
-    @Test
-    fun invalid() {
-        userEmail.email = "incorrect_em@il"
-
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.INVALID)
+        userWallet = UserWallet()
     }
 
     @Test
     fun valid() {
-        userEmail.email = "support@cex.io"
+        userWallet.needsTag = false
+        userWallet.address = "test"
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.VALID)
+        assertThat(userWallet.walletStatus).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun empty() {
+        userWallet.needsTag = false
+        userWallet.address = ""
+
+        assertThat(userWallet.walletStatus).isEqualTo(FieldStatus.EMPTY)
     }
 
     @Test
     fun invalidAfterForceValidate() {
-        userEmail.email = ""
+        userWallet.address = ""
 
-        userEmail.forceValidate()
+        userWallet.forceValidate()
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.INVALID)
-    }
-
-    @Test
-    fun validAfterForceValidate() {
-        userEmail.email = "support@cex.io"
-
-        userEmail.forceValidate()
-
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.VALID)
+        assertThat(userWallet.walletStatus).isEqualTo(FieldStatus.INVALID)
     }
 }

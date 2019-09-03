@@ -15,43 +15,30 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-                name="rule"
-                type="com.cexdirect.lib.views.ExtraFieldRule"/>
-
-        <variable
-                name="editable"
-                type="Boolean"/>
-
-        <variable
-                name="key"
-                type="String"/>
-
-        <variable
-                name="input"
-                type="androidx.databinding.ObservableMap&lt;String,String&gt;"/>
-    </data>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
             style="@style/Direct.InputLayout"
             android:layout_width="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:isActivated="@{validation[key] == FieldStatus.INVALID}">
 
-        <ImageView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/ic_user"/>
+                android:src="@drawable/ic_user" />
 
-        <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -60,8 +47,7 @@
                 app:hintTextAppearance="@style/Direct.TextHint"
                 tools:hint="SSN">
 
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fiInputCardNumber"
+                <com.google.android.material.textfield.TextInputEditText
                     style="@style/Direct.Input2"
                     inputFilter="@{rule.inputFilter}"
                     android:layout_width="match_parent"
@@ -69,10 +55,54 @@
                     android:enabled="@{safeUnbox(editable)}"
                     android:inputType="@{rule.inputType}"
                     android:text="@={input[key]}"
-                    tools:text=""/>
+                    tools:text="" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@{rule.validationMessage}"
+            android:visibility="@{validation[key] == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+            tools:text="@string/cexd_invalid_street" />
 
     </LinearLayout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
+        <import
+            alias="util"
+            type="com.cexdirect.lib.views.ExtraFieldsLayoutKt" />
+
+        <variable
+            name="rule"
+            type="com.cexdirect.lib.views.ExtraFieldRule" />
+
+        <variable
+            name="editable"
+            type="Boolean" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="validation"
+            type="androidx.databinding.ObservableMap&lt;String,FieldStatus&gt;" />
+
+        <variable
+            name="input"
+            type="androidx.databinding.ObservableMap&lt;String,String&gt;" />
+    </data>
 
 </layout>

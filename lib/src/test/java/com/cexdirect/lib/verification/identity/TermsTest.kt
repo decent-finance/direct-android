@@ -21,51 +21,61 @@ import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class UserEmailTest {
+class TermsTest {
 
-    lateinit var userEmail: UserEmail
+    lateinit var terms: Terms
 
     @Before
     fun setUp() {
-        userEmail = UserEmail()
+        terms = Terms()
     }
 
     @Test
-    fun empty() {
-        userEmail.email = ""
+    fun changeStatusToValid() {
+        terms.termsAccepted = true
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.EMPTY)
+        assertThat(terms.termsStatus).isEqualTo(FieldStatus.VALID)
     }
 
     @Test
-    fun invalid() {
-        userEmail.email = "incorrect_em@il"
+    fun changeStatusToEmpty() {
+        terms.termsAccepted = false
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.INVALID)
+        assertThat(terms.termsStatus).isEqualTo(FieldStatus.EMPTY)
     }
 
     @Test
-    fun valid() {
-        userEmail.email = "support@cex.io"
+    fun changeStatusToInvalid() {
+        terms.termsAccepted = false
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.VALID)
+        terms.forceValidate()
+
+        assertThat(terms.termsStatus).isEqualTo(FieldStatus.INVALID)
     }
 
     @Test
-    fun invalidAfterForceValidate() {
-        userEmail.email = ""
+    fun isAccepted() {
+        terms.termsAccepted = true
 
-        userEmail.forceValidate()
-
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.INVALID)
+        assertThat(terms.accepted()).isTrue()
     }
 
     @Test
-    fun validAfterForceValidate() {
-        userEmail.email = "support@cex.io"
+    fun isAcceptedAfterForceValidate() {
+        terms.termsAccepted = true
 
-        userEmail.forceValidate()
+        terms.forceValidate()
 
-        assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.VALID)
+        assertThat(terms.accepted()).isTrue()
+    }
+
+    @Test
+    fun notAcceptedAfterForceValidate() {
+        terms.termsAccepted = false
+
+        terms.forceValidate()
+
+        assertThat(terms.accepted()).isFalse()
     }
 }
+

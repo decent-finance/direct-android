@@ -21,12 +21,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._util.PlacementValidator
 import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.network.models.RuleData
+import com.cexdirect.lib.util.PlacementValidator
 
 class CheckActivityViewModel(
     merchantApi: MerchantApi,

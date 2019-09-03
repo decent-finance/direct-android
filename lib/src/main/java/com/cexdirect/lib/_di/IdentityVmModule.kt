@@ -22,10 +22,10 @@ import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._di.annotation.*
-import com.cexdirect.lib._util.DH
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.verification.VerificationActivityViewModel
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragmentViewModel

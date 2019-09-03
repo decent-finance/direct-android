@@ -69,6 +69,7 @@
                 android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 app:additionalFields="@{model.additionalFields}"
+                app:validation="@{model.validationMap}"
                 app:input="@={model.extras}" />
 
         </LinearLayout>

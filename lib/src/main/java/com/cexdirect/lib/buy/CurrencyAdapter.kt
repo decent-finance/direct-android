@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cexdirect.lib.ClickListener
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringLiveEvent
-import com.cexdirect.lib._util.orDefault
-import com.cexdirect.lib._util.symbolMap
 import com.cexdirect.lib.databinding.ItemPairBinding
+import com.cexdirect.lib.util.orDefault
+import com.cexdirect.lib.util.symbolMap
 
 class CurrencyAdapter(private val clickEvent: StringLiveEvent) :
     RecyclerView.Adapter<PairViewHolder>(),

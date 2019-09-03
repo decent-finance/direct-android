@@ -20,6 +20,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -44,9 +46,11 @@ class VerificationActivity : BaseActivity() {
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
 
-    private val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
+    @VisibleForTesting
+    val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
+
     private val fragments =
-        listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
+            listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
     private lateinit var binding: ActivityVerificationBinding
 
@@ -75,7 +79,7 @@ class VerificationActivity : BaseActivity() {
             copyEvent.observe(this@VerificationActivity, Observer { orderId ->
                 if (!orderId.isNullOrBlank()) {
                     (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
-                        ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
+                            ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
                     toast(getString(R.string.cexd_order_id_copied))
                 }
             })
@@ -83,14 +87,20 @@ class VerificationActivity : BaseActivity() {
             binding.model = it
         }
 
-        stickyViewEvent.observe(this, Observer { binding.avScroll.initFooterView(it) })
+        stickyViewEvent.observe(this, Observer {
+            if (it != View.NO_ID) {
+                binding.avScroll.initFooterView(it)
+            } else {
+                binding.avScroll.freeFooter()
+            }
+        })
         replaceFragment(0)
     }
 
     private fun replaceFragment(position: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.avFragmentFrame, fragments[position])
-            .commit()
+                .replace(R.id.avFragmentFrame, fragments[position])
+                .commit()
     }
 
     override fun onDestroy() {

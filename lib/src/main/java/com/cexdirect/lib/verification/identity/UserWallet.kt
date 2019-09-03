@@ -20,6 +20,7 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import com.cexdirect.lib.BR
+import com.cexdirect.lib.util.FieldStatus
 
 class UserWallet : BaseObservable() {
 
@@ -38,10 +39,10 @@ class UserWallet : BaseObservable() {
         }
 
     @get:Bindable
-    var walletValid = true
+    var walletStatus = FieldStatus.EMPTY
         set(value) {
             field = value
-            notifyPropertyChanged(BR.walletValid)
+            notifyPropertyChanged(BR.walletStatus)
         }
 
     @get:Bindable
@@ -54,15 +55,27 @@ class UserWallet : BaseObservable() {
     init {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (propertyId == BR.address) walletValid = true
+                if (propertyId == BR.address) {
+                    walletStatus = if (address.isEmpty()) {
+                        FieldStatus.EMPTY
+                    } else {
+                        FieldStatus.VALID
+                    }
+                }
             }
         })
     }
 
-    fun walletDataPresent() =
+    fun forceValidate() {
+        if (walletStatus == FieldStatus.EMPTY) {
+            walletStatus = FieldStatus.INVALID
+        }
+    }
+
+    fun isValid() =
         if (needsTag) {
-            address.isNotBlank() && tag.isNotBlank()
+            walletStatus == FieldStatus.VALID && tag.isNotBlank()
         } else {
-            address.isNotBlank()
+            walletStatus == FieldStatus.VALID
         }
 }

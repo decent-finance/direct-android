@@ -50,7 +50,7 @@ class UserCountryTest {
     fun countryIsNotSelectedWhenEmpty() {
         userCountry.selectedCountry = emptyCountry()
 
-        assertThat(userCountry.isCountrySelected()).isFalse()
+        assertThat(userCountry.isValid()).isFalse()
     }
 
     @Test
@@ -59,14 +59,14 @@ class UserCountryTest {
             CountryData("United States", "US", arrayListOf(CountryData("California", "CA", null)))
         userCountry.selectedState = emptyCountry()
 
-        assertThat(userCountry.isCountrySelected()).isFalse()
+        assertThat(userCountry.isValid()).isFalse()
     }
 
     @Test
     fun countryIsSelected() {
         userCountry.selectedCountry = CountryData("Mexico", "MX", null)
 
-        assertThat(userCountry.isCountrySelected()).isTrue()
+        assertThat(userCountry.isValid()).isTrue()
     }
 
     @Test
@@ -75,6 +75,23 @@ class UserCountryTest {
             CountryData("United States", "US", arrayListOf(CountryData("California", "CA", null)))
         userCountry.selectedState = CountryData("California", "CA", null)
 
-        assertThat(userCountry.isCountrySelected()).isTrue()
+        assertThat(userCountry.isValid()).isTrue()
+    }
+
+    @Test
+    fun notValidAfterForceValidate() {
+        userCountry.forceValidate()
+
+        assertThat(userCountry.isValid()).isFalse()
+    }
+
+    @Test
+    fun notValidAfterForceValidateWhenStateIsNotSelected() {
+        userCountry.selectedCountry =
+            CountryData("United States", "US", arrayListOf(CountryData("California", "CA", null)))
+
+        userCountry.forceValidate()
+
+        assertThat(userCountry.isValid()).isFalse()
     }
 }

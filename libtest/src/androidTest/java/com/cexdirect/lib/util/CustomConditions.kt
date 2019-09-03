@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._util
+package com.cexdirect.lib.util
 
-import android.content.Context
-import com.cexdirect.lib.OpenForTesting
+import org.assertj.core.api.Condition
 
-@OpenForTesting
-class PlacementValidator(private val context: Context) {
-
-    fun isPlacementUriAllowed(uri: String) = uri.contains(context.packageName)
-}
+fun <K, V> entryData(key: K, value: V) =
+        object : Condition<Map.Entry<K, V>>("$key = $value") {
+            override fun matches(entry: Map.Entry<K, V>?) =
+                    key == entry?.key && value == entry?.value
+        }

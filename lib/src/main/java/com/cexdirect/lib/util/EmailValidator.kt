@@ -14,20 +14,23 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.network.models
+package com.cexdirect.lib.util
 
-import com.cexdirect.lib.Direct
-import com.cexdirect.lib.util.sha512
+import java.util.regex.Pattern
 
-class ChangeEmailBody(data: ChangeEmailRequest) : BaseBody<ChangeEmailRequest>(data = data) {
+val emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
 
-    init {
-        data.orderSecret = "${Direct.userEmail}${Direct.pendingOrderId}${serviceData.nonce}".sha512()
+fun checkEmailStatus(email: String?) =
+    if (email.isNullOrBlank()) {
+        FieldStatus.EMPTY
+    } else {
+        if (emailPattern.matcher(email).matches()) {
+            FieldStatus.VALID
+        } else {
+            FieldStatus.INVALID
+        }
     }
-}
 
-data class ChangeEmailRequest(
-    val orderId: String = Direct.pendingOrderId,
-    var orderSecret: String = "",
-    val newEmail: String
-)
+enum class FieldStatus {
+    EMPTY, INVALID, VALID
+}

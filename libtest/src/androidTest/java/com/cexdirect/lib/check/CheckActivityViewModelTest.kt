@@ -20,7 +20,6 @@ import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.MockCoroutineDispatcherProvider
-import com.cexdirect.lib._util.PlacementValidator
 import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.MerchantService
 import com.cexdirect.lib.network.PaymentApi
@@ -28,6 +27,7 @@ import com.cexdirect.lib.network.PaymentService
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.terms.TermsActivity
+import com.cexdirect.lib.util.PlacementValidator
 import com.nhaarman.mockitokotlin2.*
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.After
