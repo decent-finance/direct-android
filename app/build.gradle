@@ -98,6 +98,8 @@ ext {
     lifecycleVersion = '2.0.0'
     okHttpVersion = '4.1.0'
 
+    hyperionVersion = '0.9.27'
+
     // test deps versions
     junitVersion = '5.4.0'
     espressoVersion = '3.2.0'
@@ -121,6 +123,9 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+    debugImplementation "com.willowtreeapps.hyperion:hyperion-core:$hyperionVersion"
+    debugImplementation "com.willowtreeapps.hyperion:hyperion-attr:$hyperionVersion"
+    debugImplementation "com.willowtreeapps.hyperion:hyperion-crash:$hyperionVersion"
 
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:core:1.2.0'
