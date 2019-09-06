@@ -17,4 +17,5 @@
 
 <resources>
     <string name="app_name">CEX Direct DEV</string>
+    <string name="leak_canary_display_activity_label">CEX Direct DEV Leaks</string>
 </resources>
