@@ -41,14 +41,21 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
-    var documentImage = R.drawable.ic_pic_id_card
+    var documentSelectionStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentSelectionStatus)
+        }
+
+    @get:Bindable
+    var documentImage = R.drawable.ic_pic_id_front
         set(value) {
             field = value
             notifyPropertyChanged(BR.documentImage)
         }
 
     @get:Bindable
-    var documentImageBack = R.drawable.ic_pic_id_card
+    var documentImageBack = R.drawable.ic_pic_id_back
         set(value) {
             field = value
             notifyPropertyChanged(BR.documentImageBack)
@@ -69,10 +76,10 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
-    var requiredPhotos = 1
+    var requiredImagesAmount = 1
         set(value) {
             field = value
-            notifyPropertyChanged(BR.requiredPhotos)
+            notifyPropertyChanged(BR.requiredImagesAmount)
         }
 
     @get:Bindable
@@ -128,7 +135,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                 when (propertyId) {
                     BR.documentType -> {
                         imagesBase64.clear()
-                        requiredPhotos = when (documentType) {
+                        requiredImagesAmount = when (documentType) {
                             DocumentType.PASSPORT -> 1
                             DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD -> 2
                             else -> error("Illegal document type $documentType")
@@ -139,16 +146,14 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                             uploadAction.invoke()
                         }
                     }
-                    BR.selfieBase64 -> {
-                        uploadAction.invoke()
-                    }
+                    BR.selfieBase64 -> uploadAction.invoke()
                     BR.selectedDocType -> {
                         when (selectedDocType) {
                             R.id.fiIdCard -> {
                                 documentTypeSelected = true
                                 documentType = DocumentType.ID_CARD
-                                documentImage = R.drawable.ic_pic_id_card
-                                documentImageBack = R.drawable.ic_pic_id_card
+                                documentImage = R.drawable.ic_pic_id_front
+                                documentImageBack = R.drawable.ic_pic_id_back
                                 documentTypeText =
                                     stringProvider.provideString(R.string.cexd_take_pic_id)
                             }
@@ -162,25 +167,26 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                             R.id.fiDriversLicence -> {
                                 documentTypeSelected = true
                                 documentType = DocumentType.DRIVER_LICENCE
-                                documentImage = R.drawable.ic_pic_driver_license
-                                documentImageBack = R.drawable.ic_pic_driver_license
+                                documentImage = R.drawable.ic_pic_license_front
+                                documentImageBack = R.drawable.ic_pic_license_back
                                 documentTypeText =
                                     stringProvider.provideString(R.string.cexd_take_pic_licence)
                             }
-                            else -> {
-                                error("Illegal doc type")
-                            }
+                            else -> error("Illegal doc type")
                         }
+                        documentFrontStatus = FieldStatus.EMPTY
+                        documentBackStatus = FieldStatus.EMPTY
                     }
+                    BR.documentTypeSelected -> documentSelectionStatus = FieldStatus.VALID
                 }
             }
         })
         imagesBase64.addOnMapChangedCallback(object :
             ObservableMap.OnMapChangedCallback<ObservableMap<String, String>, String, String>() {
             override fun onMapChanged(sender: ObservableMap<String, String>, key: String?) {
-                if (sender.keys.size == requiredPhotos) {
+                if (sender.keys.size == requiredImagesAmount) {
                     shouldSendPhoto = true
-                } else if (sender.isEmpty() || sender.keys.size < requiredPhotos) {
+                } else if (sender.isEmpty() || sender.keys.size < requiredImagesAmount) {
                     shouldSendPhoto = false
                 }
             }
@@ -196,6 +202,11 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     }
 
     fun forceValidate() {
+        if (!documentTypeSelected) {
+            documentSelectionStatus = FieldStatus.INVALID
+            return
+        }
+
         if (requiredImages.isSelfieRequired) {
             if (selfieStatus == FieldStatus.EMPTY) {
                 selfieStatus = FieldStatus.INVALID
@@ -203,9 +214,33 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
         if (requiredImages.isIdentityDocumentsRequired) {
-
+            if (documentFrontStatus == FieldStatus.EMPTY) {
+                documentFrontStatus = FieldStatus.INVALID
+            }
+            if (requiredImagesAmount == 2 /* id card, licence */ && documentBackStatus == FieldStatus.EMPTY) {
+                documentBackStatus = FieldStatus.INVALID
+            }
         }
     }
 
-    fun isValid() = true
+    fun isValid() = documentTypeSelected && docsValid() && selfieValid()
+
+    private fun docsValid() =
+        if (requiredImages.isIdentityDocumentsRequired) {
+            when (requiredImagesAmount) {
+                2 -> documentFrontStatus == FieldStatus.VALID && documentBackStatus == FieldStatus.VALID
+                1 -> documentFrontStatus == FieldStatus.VALID
+                else -> error("Invalid amount: $requiredImagesAmount")
+            }
+        } else {
+            true
+        }
+
+    private fun selfieValid() =
+        if (requiredImages.isSelfieRequired) {
+            selfieStatus == FieldStatus.VALID
+        } else {
+            true
+        }
+
 }

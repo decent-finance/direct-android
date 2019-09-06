@@ -20,8 +20,7 @@ import android.content.Intent
 import android.view.View
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
@@ -29,6 +28,7 @@ import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
 import com.cexdirect.lib.network.models.Additional
+import com.cexdirect.lib.network.models.Images
 import com.cexdirect.lib.network.ws.CexdSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.FieldStatus
@@ -38,6 +38,7 @@ import com.cexdirect.lib.verification.identity.VerificationStep
 import com.cexdirect.lib.views.CollapsibleLayout
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.allOf
 import org.junit.*
 import org.mockito.Mock
 
@@ -86,6 +87,22 @@ class VerificationActivityDataValidationTest {
         onView(withHint(R.string.cexd_email)).perform(typeText("aaaaaaa"))
 
         onView(withText(R.string.cexd_invalid_email)).perform(scrollTo()).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun displayNoPhotoErrorForPassport() {
+        activityRule.launchActivity(givenIntent())
+        goToBase()
+        givenAllPhotosRequired()
+
+        onView(withId(R.id.fiPassport)).perform(click())
+        onView(withId(R.id.fiNext)).perform(click())
+
+        onView(allOf(
+                withText(R.string.cexd_no_photo_uploaded),
+                hasSibling(withId(R.id.fiDocument)),
+                withParentIndex(2)
+        )).perform(scrollTo()).check(hasVisibility(View.VISIBLE))
     }
 
     @Test
@@ -143,7 +160,7 @@ class VerificationActivityDataValidationTest {
 
         onView(withHint(R.string.cexd_last_name)).perform(scrollTo(), typeText("Smith"))
         val model = activityRule.activity.model
-        model.updatePaymentData()
+        model.uploadExtraPaymentData()
 
 
         assertThat(model.validationMap)
@@ -177,6 +194,10 @@ class VerificationActivityDataValidationTest {
                 putExtra("fiat", "USD")
                 putExtra("fiatAmount", "50")
             }
+
+    private fun givenAllPhotosRequired() {
+        activityRule.activity.model.userDocs.requiredImages = Images(true, true)
+    }
 
     private fun givenAdditionalFields() {
         activityRule.activity.model.apply {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -347,5 +346,14 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">bottom</item>
         <item name="android:background">#BDC8D9</item>
+    </style>
+
+    <style name="Direct.Document">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:background">@drawable/selector_bg_doc</item>
     </style>
 </resources>

@@ -42,6 +42,7 @@ import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.OrderInfoData
 import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
@@ -92,10 +93,17 @@ class IdentityFragment : BaseVerificationFragment() {
         }
     }
 
+    private val paymentDataObserver = Observer<Resource<OrderInfoData>> { resource ->
+        when (resource) {
+            is Loading -> showLoader()
+            is Failure -> operationObserver.onChanged(resource)
+        }
+    }
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ) = FragmentIdentityBinding.inflate(inflater, container, false).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,14 +140,11 @@ class IdentityFragment : BaseVerificationFragment() {
 
         model.apply {
             uploadImage.observe(this@IdentityFragment, Observer {
-                userDocs.currentPhotoType
+                if (it is Success) setDocumentStatusToValid()
+                operationObserver.onChanged(it)
             })
-            paymentData.observe(this@IdentityFragment, Observer {
-                if (it is Failure) operationObserver.onChanged(it)
-            })
-            updatePaymentData.observe(this@IdentityFragment, Observer {
-                if (it is Failure) operationObserver.onChanged(it)
-            })
+            basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
+            extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
             processingResult.observe(this@IdentityFragment, operationObserver)
             createOrder.observe(this@IdentityFragment, Observer {
                 when (it) {
@@ -166,16 +171,12 @@ class IdentityFragment : BaseVerificationFragment() {
                     VerificationStep.LOCATION_EMAIL -> createOrder()
                     VerificationStep.PAYMENT_BASE -> {
                         if (currentOrderStatus.get() == OrderStatus.INCOMPLETE) {
-                            showLoader()
-                            uploadPaymentData()
+                            uploadBasePaymentData()
                         } else if (currentOrderStatus.get() == OrderStatus.IVS_READY) {
                             startVerificationChain()
                         }
                     }
-                    VerificationStep.PAYMENT_EXTRA -> {
-                        showLoader()
-                        updatePaymentData()
-                    }
+                    VerificationStep.PAYMENT_EXTRA -> uploadExtraPaymentData()
                 }
             })
             orderInfo.observe(this@IdentityFragment, Observer {
@@ -240,13 +241,13 @@ class IdentityFragment : BaseVerificationFragment() {
                             hideLoader()
                             model.apply {
                                 it.data.additional
-                                        .takeIf { it.filter { it.value.req }.isNotEmpty() }
-                                        .let {
-                                            additionalFields.set(it.orEmpty())
-                                            verificationStep.set(VerificationStep.PAYMENT_EXTRA)
-                                            paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
-                                            paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
-                                        }
+                                    .takeIf { it.filter { it.value.req }.isNotEmpty() }
+                                    .let {
+                                        additionalFields.set(it.orEmpty())
+                                        verificationStep.set(VerificationStep.PAYMENT_EXTRA)
+                                        paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
+                                        paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
+                                    }
                             }
                         }
                     }
@@ -305,8 +306,8 @@ class IdentityFragment : BaseVerificationFragment() {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
         val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File
-                .createTempFile("JPEG_${timestamp}_", ".jpg", storageDir)
-                .apply { currentPhotoPath = absolutePath }
+            .createTempFile("JPEG_${timestamp}_", ".jpg", storageDir)
+            .apply { currentPhotoPath = absolutePath }
     }
 
     @NeedsPermission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -321,9 +322,9 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
                 photoFile?.let {
                     val photoURI: Uri = FileProvider.getUriForFile(
-                            context!!,
-                            "${Direct.context.packageName}.directfile",
-                            it
+                        context!!,
+                        "${Direct.context.packageName}.directfile",
+                        it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, RQ_TAKE_PHOTO)
@@ -340,17 +341,17 @@ class IdentityFragment : BaseVerificationFragment() {
         }.let { chooseIntent ->
             chooseIntent.resolveActivity(context!!.packageManager)?.let {
                 startActivityForResult(
-                        Intent.createChooser(chooseIntent, "Select Picture"),
-                        RQ_CHOOSE_PIC
+                    Intent.createChooser(chooseIntent, "Select Picture"),
+                    RQ_CHOOSE_PIC
                 )
             }
         }
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
@@ -371,9 +372,9 @@ class IdentityFragment : BaseVerificationFragment() {
                         convertAndSet(context!!, uri) { model.setImage(it) }
 
                         Glide.with(this)
-                                .load(uri)
-                                .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                                .into(targetView)
+                            .load(uri)
+                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                            .into(targetView)
                     }
                 }
                 RQ_TAKE_PHOTO -> {
@@ -381,9 +382,9 @@ class IdentityFragment : BaseVerificationFragment() {
                         convertAndSet(currentPhotoPath) { model.setImage(it) }
 
                         Glide.with(this)
-                                .load(File(currentPhotoPath))
-                                .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                                .into(targetView)
+                            .load(File(currentPhotoPath))
+                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                            .into(targetView)
                     } catch (e: FileNotFoundException) {
                         toast(R.string.cexd_file_not_found)
                     }
