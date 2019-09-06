@@ -15,65 +15,65 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-                name="model"
-                type="com.cexdirect.lib.verification.VerificationActivityViewModel"/>
-
-        <import type="android.view.View"/>
-    </data>
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-            style="@style/Direct.Logo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+        style="@style/Direct.Logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@null"
-                android:contentDescription="@string/cexd_cex_io_icon"
-                android:src="@drawable/ic_cex_logo"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:contentDescription="@string/cexd_cex_io_icon"
+            android:src="@drawable/ic_cex_logo" />
 
         <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:animateLayoutChanges="true"
+            android:gravity="end|center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ltdBuyForWidget"
+                style="@style/Direct.Textfield.S"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:animateLayoutChanges="true"
-                android:gravity="end|center_vertical"
-                android:orientation="vertical">
-
-            <TextView
-                    android:id="@+id/ltdBuyForWidget"
-                    style="@style/Direct.Textfield.S"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                 android:text="@{@string/cexd_buy(model.orderAmounts.selectedCryptoAmount, model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatAmount, model.orderAmounts.selectedFiatCurrency)}"
-                    tools:text="Buy 0.1235 BTC for 500 USD"/>
+                tools:text="Buy 0.1235 BTC for 500 USD" />
 
             <TextView
-                    android:id="@+id/ltdOrderIdWidget"
-                    style="@style/Direct.Textfield.S2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@{@string/cexd_order_id(model.orderId)}"
-                    android:visibility="@{model.orderId.isEmpty() ? View.INVISIBLE : View.VISIBLE}"
-                    android:onClick="@{() -> model.copyOrderId()}"
-                    tools:text="Order id: BTCC-AA-123456789"/>
+                android:id="@+id/ltdOrderIdWidget"
+                style="@style/Direct.Textfield.S2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:onClick="@{() -> model.copyOrderId()}"
+                android:singleLine="true"
+                android:text="@{@string/cexd_order_id(model.orderId)}"
+                android:visibility="@{model.orderId.isEmpty() ? View.INVISIBLE : View.VISIBLE}"
+                tools:text="Order id: BTCC-AA-123456789" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="model"
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+    </data>
 
 </layout>

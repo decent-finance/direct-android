@@ -18,6 +18,8 @@ package com.cexdirect.lib.verification.identity
 
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.network.models.Images
+import com.cexdirect.lib.util.FieldStatus
 import com.nhaarman.mockitokotlin2.*
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.After
@@ -49,21 +51,21 @@ class UserDocsTest {
     fun setOneReqPhotoForPassport() {
         userDocs.documentType = DocumentType.PASSPORT
 
-        assertThat(userDocs.requiredPhotos).isEqualTo(1)
+        assertThat(userDocs.requiredImagesAmount).isEqualTo(1)
     }
 
     @Test
     fun setTwoReqPhotosForIdCard() {
         userDocs.documentType = DocumentType.ID_CARD
 
-        assertThat(userDocs.requiredPhotos).isEqualTo(2)
+        assertThat(userDocs.requiredImagesAmount).isEqualTo(2)
     }
 
     @Test
     fun setTwoReqPhotosForDriverLicence() {
         userDocs.documentType = DocumentType.DRIVER_LICENCE
 
-        assertThat(userDocs.requiredPhotos).isEqualTo(2)
+        assertThat(userDocs.requiredImagesAmount).isEqualTo(2)
     }
 
     @Test
@@ -89,7 +91,7 @@ class UserDocsTest {
     @Test
     fun setSendPhotosToTrueWhenReqAmountReached() {
         userDocs.uploadAction = { }
-        userDocs.requiredPhotos = 2
+        userDocs.requiredImagesAmount = 2
 
         userDocs.imagesBase64.let {
             it["abc"] = "abc"
@@ -100,8 +102,8 @@ class UserDocsTest {
     }
 
     @Test
-    fun notSetSendPhotosToTrueWhenReqAmountNotReached() {
-        userDocs.requiredPhotos = 2
+    fun dontSetSendPhotosToTrueWhenReqAmountNotReached() {
+        userDocs.requiredImagesAmount = 2
 
         userDocs.imagesBase64.let {
             it["abc"] = "abc"
@@ -119,8 +121,8 @@ class UserDocsTest {
         assertThat(userDocs)
             .hasFieldOrPropertyWithValue("documentTypeSelected", true)
             .hasFieldOrPropertyWithValue("documentType", DocumentType.ID_CARD)
-            .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_id_card)
-            .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_id_card)
+                .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_id_front)
+                .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_id_back)
         verify(stringProvider, atMost(2)).provideString(eq(R.string.cexd_take_pic_id))
     }
 
@@ -146,8 +148,50 @@ class UserDocsTest {
         assertThat(userDocs)
             .hasFieldOrPropertyWithValue("documentTypeSelected", true)
             .hasFieldOrPropertyWithValue("documentType", DocumentType.DRIVER_LICENCE)
-            .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_driver_license)
-            .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_driver_license)
+                .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_license_front)
+                .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_license_back)
         verify(stringProvider).provideString(eq(R.string.cexd_take_pic_licence))
+    }
+
+    @Test
+    fun invokeUploadWhenSelfieSet() {
+        val mock: Runnable = mock()
+        userDocs.uploadAction = { mock.run() }
+
+        userDocs.selfieBase64 = ""
+
+        verify(mock).run()
+    }
+
+    @Test
+    fun setSelfieStatusToInvalidAfterForceValidateWhenEmpty() {
+        userDocs.documentTypeSelected = true
+        userDocs.requiredImages = Images(false, true)
+
+        userDocs.forceValidate()
+
+        assertThat(userDocs.selfieStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun dontSetSelfieStatusToInvalidAfterForceValidateWhenEmpty() {
+        userDocs.documentTypeSelected = true
+        userDocs.requiredImages = Images(false, false)
+
+        userDocs.forceValidate()
+
+        assertThat(userDocs.selfieStatus).isEqualTo(FieldStatus.EMPTY)
+    }
+
+    @Test
+    fun validateSelfieStatus() {
+        userDocs.documentTypeSelected = true
+        userDocs.requiredImages = Images(false, true)
+        userDocs.uploadAction = { }
+        userDocs.selfieStatus = FieldStatus.VALID
+
+        userDocs.forceValidate()
+
+        assertThat(userDocs.selfieStatus).isEqualTo(FieldStatus.VALID)
     }
 }

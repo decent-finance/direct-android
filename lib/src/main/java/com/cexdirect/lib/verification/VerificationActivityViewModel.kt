@@ -169,21 +169,23 @@ class VerificationActivityViewModel(
         }
     }
 
-    val paymentData = orderApi.sendPaymentData(this) {
-        val payment =
-                Payment(
-                        userCardData.getCardBin(),
-                        userCardData.expiry,
-                        Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
-                )
+    val basePaymentData = orderApi.sendPaymentData(this) {
+        val payment = Payment(
+                userCardData.getCardBin(),
+                userCardData.expiry,
+                Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
+        )
 
-        val additional =
-                if (userCountry.shouldShowState) mapOf("billingSsn" to extras["billingSsn"]!!) else emptyMap()
+        val additional = if (userCountry.shouldShowState) {
+            mapOf("billingSsn" to extras["billingSsn"]!!)
+        } else {
+            emptyMap()
+        }
         PaymentData(payment, additional)
     }
 
-    val updatePaymentData = orderApi.updatePaymentData(this) {
-        PaymentData(paymentData = null, additional = extras, termUrl = null)
+    val extraPaymentData = orderApi.updatePaymentData(this) {
+        PaymentData(paymentData = null, additional = extras)
     }
     // --- Requests --- //
 
@@ -197,7 +199,8 @@ class VerificationActivityViewModel(
             }
         })
         extras.addOnMapChangedCallback(
-                object : ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
+                object :
+                        ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
                     override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
                         key?.let {
                             if (extras[it].isNullOrBlank()) {
@@ -209,7 +212,8 @@ class VerificationActivityViewModel(
                     }
                 }
         )
-        additionalFields.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+        additionalFields.addOnPropertyChangedCallback(object :
+                Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 additionalFields.get()?.entries?.forEach {
                     if (it.value.req && it.value.editable) {
@@ -325,28 +329,32 @@ class VerificationActivityViewModel(
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
     }
 
-    fun uploadPaymentData() {
+    fun uploadBasePaymentData() {
+        userDocs.forceValidate()
         userCardData.forceValidate()
         userTerms.forceValidate()
         userWallet.forceValidate()
 
         if (paymentDataValid()) {
-            paymentData.execute()
+            basePaymentData.execute()
         }
     }
 
-    private fun paymentDataValid() =
-            userCardData.isValid() && userTerms.accepted() && userWallet.isValid() && ssnPresent()
+    private fun paymentDataValid() = userDocs.isValid()
+            && userCardData.isValid()
+            && userTerms.accepted()
+            && userWallet.isValid()
+            && ssnPresent()
 
     fun startVerificationChain() {
         walletVerification.execute()
     }
 
-    fun updatePaymentData() {
+    fun uploadExtraPaymentData() {
         forceValidateExtras()
 
         if (extrasValid()) {
-            updatePaymentData.execute()
+            extraPaymentData.execute()
         }
     }
 
@@ -377,6 +385,18 @@ class VerificationActivityViewModel(
     fun clearSearch() {
         countrySearch.set("")
         showCountrySearch.set(false)
+    }
+
+    fun setDocumentStatusToValid() {
+        when (userDocs.currentPhotoType) {
+            PhotoType.ID, PhotoType.ID_BACK -> {
+                userDocs.documentFrontStatus = FieldStatus.VALID
+                userDocs.documentBackStatus = FieldStatus.VALID
+            }
+            PhotoType.SELFIE -> {
+                userDocs.selfieStatus = FieldStatus.VALID
+            }
+        }
     }
 
     class Factory(

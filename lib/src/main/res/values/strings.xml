@@ -153,4 +153,7 @@
     <string name="cexd_invalid_mid_postcode">Please enter valid postcode</string>
     <string name="cexd_invalid_generic_field">Please fill in this field</string>
     <string name="cexd_no_email_apps">No e-mail apps found</string>
+    <string name="cexd_docs_note">Make sure photo details are clear to read.\nMaximum file size is 15 Mb.</string>
+    <string name="cexd_no_doc_type_selected">Please, select document type</string>
+    <string name="cexd_no_photo_uploaded">Please upload a photo</string>
 </resources>

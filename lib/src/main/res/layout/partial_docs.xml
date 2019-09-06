@@ -30,6 +30,8 @@
             alias="type"
             type="com.cexdirect.lib.verification.identity.PhotoType" />
 
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
     </data>
 
     <merge>
@@ -37,6 +39,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:visibility="@{model.userDocs.requiredImages.isIdentityDocumentsRequired ? View.VISIBLE : View.GONE}">
 
@@ -94,6 +97,17 @@
 
             </com.cexdirect.lib.views.SwitcherLayout>
 
+            <TextView
+                style="@style/Direct.Textfield.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_no_doc_type_selected"
+                android:visibility="@{model.userDocs.documentSelectionStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,17 +127,24 @@
 
                 <ImageView
                     android:id="@+id/fiDocument"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    style="@style/Direct.Document"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/ic_rectangle"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:scaleType="centerInside"
+                    app:isActivated="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID}"
                     app:pic="@{model.userDocs.documentImage}"
                     tools:src="@drawable/ic_pic_passport" />
+
+                <TextView
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/cexd_no_photo_uploaded"
+                    android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                    tools:visibility="gone" />
 
                 <Button
                     android:id="@+id/fiDocumentUpl"
@@ -139,18 +160,25 @@
 
                 <ImageView
                     android:id="@+id/fiDocumentBack"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    style="@style/Direct.Document"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/ic_rectangle"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:scaleType="centerInside"
-                    android:visibility="@{model.userDocs.requiredPhotos == 2 ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{model.userDocs.requiredImagesAmount == 2 ? View.VISIBLE : View.GONE}"
                     app:pic="@{model.userDocs.documentImageBack}"
+                    app:isActivated="@{model.userDocs.documentBackStatus == FieldStatus.INVALID}"
                     tools:src="@drawable/ic_pic_passport" />
+
+                <TextView
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/cexd_no_photo_uploaded"
+                    android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                    tools:visibility="gone" />
 
                 <Button
                     android:id="@+id/fiDocumentBackUpl"
@@ -163,7 +191,7 @@
                     android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_upload_photo"
-                    android:visibility="@{model.userDocs.requiredPhotos == 2 ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{model.userDocs.requiredImagesAmount == 2 ? View.VISIBLE : View.GONE}" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -182,16 +210,24 @@
 
                     <ImageView
                         android:id="@+id/fiSelfie"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        style="@style/Direct.Document"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
-                        android:background="@drawable/ic_rectangle"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_pic_portrait" />
+                        android:src="@drawable/ic_pic_portrait"
+                        app:isActivated="@{model.userDocs.selfieStatus == FieldStatus.INVALID}" />
+
+                    <TextView
+                        style="@style/Direct.Textfield.Error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/cexd_no_photo_uploaded"
+                        android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                        tools:visibility="gone" />
 
                     <Button
                         android:id="@+id/fiSelfieUpl"
@@ -207,6 +243,16 @@
                         android:text="@string/cexd_upload_photo" />
 
                 </LinearLayout>
+
+                <TextView
+                    style="@style/Direct.Textfield.M2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:text="@string/cexd_docs_note" />
 
             </LinearLayout>
 
