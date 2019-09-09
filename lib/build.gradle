@@ -155,7 +155,6 @@ dependencies {
     api "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    api 'com.github.mukeshsolanki:country-picker-android:2.0.1'
     api 'com.mcxiaoke.koi:core:0.5.5'
     api 'com.shopify:livedata-ktx:3.0.0'
     api 'com.github.amarjain07:StickyScrollView:1.0.2'
