@@ -104,7 +104,7 @@ class CountryPickerDialog : BaseCountryPickerDialog() {
         model.userCountry.selectedCountry = countryData
     }
 
-    override fun getCountries() = Direct.countries
+    override fun getCountries() = Direct.countries.sortByName()
 }
 
 class StatePickerDialog : BaseCountryPickerDialog() {
@@ -117,5 +117,8 @@ class StatePickerDialog : BaseCountryPickerDialog() {
         model.userCountry.selectedState = countryData
     }
 
-    override fun getCountries() = Direct.countries.find { it.states != null }?.states ?: emptyList()
+    override fun getCountries() =
+        Direct.countries.find { it.states != null }?.states?.sortByName() ?: emptyList()
 }
+
+fun List<CountryData>.sortByName() = this.sortedBy { it.name }
