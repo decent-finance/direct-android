@@ -48,4 +48,9 @@
     <declare-styleable name="CompleteSectionTitleLayout">
         <attr name="title" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="DirectProgressView">
+        <attr name="firstColor" format="color"/>
+        <attr name="secondColor" format="color"/>
+    </declare-styleable>
 </resources>
