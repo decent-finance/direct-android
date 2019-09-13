@@ -294,4 +294,13 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             }
         }
     }
+
+    fun getDocumentPhotosArray() =
+        Array(requiredImagesAmount) {
+            when (it) {
+                0 -> imagesBase64["front"]!!
+                1 -> imagesBase64["back"]!!
+                else -> "Illegal index $it"
+            }
+        }
 }
