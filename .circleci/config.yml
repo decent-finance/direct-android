@@ -189,8 +189,11 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: Assemble release
+          command: ./gradlew lib:assembleProdRelease
+      - run:
           name: Publish artifact
-          command: ./gradlew clean lib:assembleProdRelease lib:bintrayUpload
+          command: ./gradlew lib:bintrayUpload
 
 workflows:
   version: 2.1
