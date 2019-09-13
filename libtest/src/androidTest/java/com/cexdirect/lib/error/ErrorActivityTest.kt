@@ -29,10 +29,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
-import com.cexdirect.lib.Credentials
-import com.cexdirect.lib.Direct
-import com.cexdirect.lib.DirectMockRule
-import com.cexdirect.lib.R
+import com.cexdirect.lib.*
 import com.cexdirect.lib.buy.BuyActivity
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.TermsActivity
@@ -199,11 +196,11 @@ class ErrorActivityTest {
         onView(withText(R.string.cexd_support)).perform(scrollTo(), click())
 
         val resolved = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:support@cex.io")
+            data = Uri.parse(BaseActivity.SUPPORT_EMAIL)
         }.resolveActivity(InstrumentationRegistry.getInstrumentation().targetContext.packageManager)
         assumeThat(resolved, notNullValue())
 
-        intended(allOf(hasData("mailto:support@cex.io"), hasAction(Intent.ACTION_SENDTO)))
+        intended(allOf(hasData(BaseActivity.SUPPORT_EMAIL), hasAction(Intent.ACTION_SENDTO)))
     }
 
     private fun givenLocationNotSupportedIntent() =

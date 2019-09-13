@@ -75,6 +75,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val SUPPORT_EMAIL = "mailto:support@cex.io"
+        const val SUPPORT_EMAIL = "mailto:support@cexdirect.com"
     }
 }
