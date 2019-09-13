@@ -85,6 +85,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
                         android:background="@drawable/shape_bg_input_normal"
                         android:elevation="8dp"
                         android:outlineProvider="background"
@@ -95,7 +96,6 @@
                             style="@style/Direct.Input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:digits="0123456789."
                             android:enabled="@{model.shouldShowCryptoInput}"
                             android:inputType="numberDecimal"
                             android:maxLines="1"
@@ -106,10 +106,10 @@
                             android:paddingBottom="10dp"
                             android:visibility="@{model.shouldShowCryptoInput ? View.VISIBLE : View.GONE}"
                             app:input="@={model.amount.cryptoAmount}"
-                            app:isActivated="@{model.amount.boundaryMessage.isEmpty() ? false : true}"
+                            app:isActivated="@{model.amount.fiatBoundaryMessage.isEmpty() ? false : true}"
                             app:onFocused="@{() -> model.amount.setInputMode(InputMode.CRYPTO)}"
                             app:showSoftInputOnFocus="@{model.dataLoaded}"
-                            app:tradeInputFilter="@{model.cryptoInputFilter}" />
+                            app:tradeInputFilter="@{model.amount.cryptoInputFilter}" />
 
                         <TextView
                             android:id="@+id/abCryptoCurrency"
@@ -127,6 +127,16 @@
 
                 </FrameLayout>
 
+                <TextView
+                    android:id="@+id/abCryptoMinAmountErr"
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="@{model.amount.cryptoBoundaryMessage}"
+                    android:visibility="@{model.amount.cryptoBoundaryMessage.isEmpty() ? View.GONE : View.VISIBLE}"
+                    tools:text="@string/cexd_please_enter_amount" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,9 +149,8 @@
                         style="@style/Direct.Input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="0123456789."
                         android:enabled="@{model.dataLoaded}"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:minLines="1"
                         android:paddingStart="8dp"
@@ -149,10 +158,10 @@
                         android:paddingEnd="96dp"
                         android:paddingBottom="10dp"
                         app:input="@={model.amount.fiatAmount}"
-                        app:isActivated="@{model.amount.boundaryMessage.isEmpty() ? false : true}"
+                        app:isActivated="@{model.amount.fiatBoundaryMessage.isEmpty() ? false : true}"
                         app:onFocused="@{() -> model.amount.setInputMode(InputMode.FIAT)}"
                         app:showSoftInputOnFocus="@{model.dataLoaded}"
-                        app:tradeInputFilter="@{model.fiatInputFilter}" />
+                        app:tradeInputFilter="@{model.amount.fiatInputFilter}" />
 
                     <TextView
                         android:id="@+id/abFiatCurrency"
@@ -174,8 +183,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="@{model.amount.boundaryMessage}"
-                    android:visibility="@{model.amount.boundaryMessage.isEmpty()? View.GONE : View.VISIBLE}"
+                    android:text="@{model.amount.fiatBoundaryMessage}"
+                    android:visibility="@{model.amount.fiatBoundaryMessage.isEmpty() ? View.GONE : View.VISIBLE}"
                     tools:text="Min amount is 250" />
 
                 <com.cexdirect.lib.views.PopularValuesView
@@ -193,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:elevation="8dp"
-                    android:enabled="@{model.amount.boundaryMessage.isEmpty() &amp;&amp; !model.amount.fiatAmount.isEmpty()}"
+                    android:enabled="@{model.amount.fiatBoundaryMessage.isEmpty() &amp;&amp; !model.amount.fiatAmount.isEmpty() &amp;&amp; model.amount.cryptoBoundaryMessage.isEmpty()}"
                     android:onClick="@{() -> model.buyCrypto()}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_buy_label" />

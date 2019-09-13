@@ -22,6 +22,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.BindingAdapter
+import com.cexdirect.lib.LegalClickEvent
 import com.cexdirect.lib.databinding.LayoutBtnLegalBinding
 import com.cexdirect.lib.network.models.RuleData
 

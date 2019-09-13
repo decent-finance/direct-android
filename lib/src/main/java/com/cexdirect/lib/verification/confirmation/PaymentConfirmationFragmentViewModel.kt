@@ -20,22 +20,18 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.CoroutineDispatcherProvider
-import com.cexdirect.lib.Direct
-import com.cexdirect.lib.SingleLiveEvent
-import com.cexdirect.lib._network.OrderApi
-import com.cexdirect.lib._network.models.ChangeEmailRequest
-import com.cexdirect.lib._network.models.CheckCodeData
-import com.cexdirect.lib._network.models._3Ds
-import com.cexdirect.lib._network.ws.Messenger
-import com.cexdirect.lib.verification.EmailChangedEvent
+import com.cexdirect.lib.*
+import com.cexdirect.lib.network.OrderApi
+import com.cexdirect.lib.network.models.ChangeEmailRequest
+import com.cexdirect.lib.network.models.CheckCodeData
+import com.cexdirect.lib.network.models._3Ds
+import com.cexdirect.lib.network.ws.Messenger
 
 class PaymentConfirmationFragmentViewModel(
-        private val orderApi: OrderApi,
-        val emailChangedEvent: EmailChangedEvent,
-        private val messenger: Messenger,
-        dispatcherProvider: CoroutineDispatcherProvider
+    private val orderApi: OrderApi,
+    val emailChangedEvent: StringLiveEvent,
+    private val messenger: Messenger,
+    dispatcherProvider: CoroutineDispatcherProvider
 ) : BaseObservableViewModel(dispatcherProvider) {
 
     val confirmationCode = ObservableField("")
@@ -43,15 +39,15 @@ class PaymentConfirmationFragmentViewModel(
 
     val confirmationStep = ObservableField<ConfirmationStep>()
 
-    val resendCodeEvent = ResendCodeEvent()
-    val editEmailEvent = EditEmailEvent()
+    val resendCodeEvent = VoidLiveEvent()
+    val editEmailEvent = VoidLiveEvent()
 
     val _3dsData = _3dsData()
     var orderId: String = Direct.pendingOrderId
 
     val changeEmail = Transformations.switchMap(emailChangedEvent) {
         orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
-    }!!
+    }
 
     val resendCheckCode =
         orderApi.resendCheckCode(this@PaymentConfirmationFragmentViewModel, orderId)
@@ -108,7 +104,7 @@ class PaymentConfirmationFragmentViewModel(
 
     class Factory(
         private val orderApi: OrderApi,
-        private val emailChangedEvent: EmailChangedEvent,
+        private val emailChangedEvent: StringLiveEvent,
         private val messenger: Messenger,
         private val dispatcherProvider: CoroutineDispatcherProvider
     ) : ViewModelProvider.Factory {
@@ -118,6 +114,3 @@ class PaymentConfirmationFragmentViewModel(
             PaymentConfirmationFragmentViewModel(orderApi, emailChangedEvent, messenger, dispatcherProvider) as T
     }
 }
-
-class ResendCodeEvent : SingleLiveEvent<Void>()
-class EditEmailEvent : SingleLiveEvent<Void>()

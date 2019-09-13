@@ -17,12 +17,12 @@
 package com.cexdirect.lib
 
 import androidx.lifecycle.MutableLiveData
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Resource
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.ApiResponse
-import com.cexdirect.lib._network.models.Extractable
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.ApiResponse
+import com.cexdirect.lib.network.models.Extractable
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import retrofit2.HttpException
@@ -33,7 +33,7 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
 ) : MutableLiveData<Resource<V>>() {
 
     open fun execute() {
-        value = Loading()
+        postValue(Loading())
         scope.launch {
             runCatching {
                 val response = block().await() as Extractable<V>

@@ -22,6 +22,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
 
-    protected inline fun <reified VM : BaseObservableViewModel> fragmentViewModelProvider(crossinline factory: () -> ViewModelProvider.Factory) =
+    protected inline fun <reified VM : BaseObservableViewModel> viewModelProvider(
+        crossinline factory: () -> ViewModelProvider.Factory
+    ) =
+        lazy { ViewModelProviders.of(activity!!, factory()).get(VM::class.java) }
+
+    protected inline fun <reified VM : BaseObservableViewModel> fragmentViewModelProvider(
+        crossinline factory: () -> ViewModelProvider.Factory
+    ) =
         lazy { ViewModelProviders.of(this, factory()).get(VM::class.java) }
 }

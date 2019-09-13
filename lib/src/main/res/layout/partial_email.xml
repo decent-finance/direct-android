@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+
+        <variable
+            name="model"
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+    </data>
+
+    <merge>
+
+        <LinearLayout
+            style="@style/Direct.InputLayout"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:isActivated="@{model.userEmail.emailStatus == FieldStatus.INVALID}">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@string/cexd_email_icon"
+                android:src="@drawable/ic_email" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:hint="@string/cexd_email"
+                app:hintTextAppearance="@style/Direct.TextHint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/Direct.Input2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:text="@={model.userEmail.email}"
+                    tools:text="d.trump@whouse.gov" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_invalid_email"
+            android:visibility="@{model.userEmail.emailStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
+
+    </merge>
+
+</layout>

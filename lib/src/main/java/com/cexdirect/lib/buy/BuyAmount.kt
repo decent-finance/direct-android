@@ -21,15 +21,15 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.Precision
-import com.cexdirect.lib._util.RateConverter
-import com.cexdirect.lib._util.formatAmount
-import kotlin.math.max
-import kotlin.math.min
+import com.cexdirect.lib.R
+import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.Precision
+import com.cexdirect.lib.util.RateConverter
+import com.cexdirect.lib.util.formatAmount
 
 @OpenForTesting
-class BuyAmount : BaseObservable() {
+class BuyAmount(private val stringProvider: StringProvider) : BaseObservable() {
 
     var inputMode: InputMode = InputMode.FIAT
 
@@ -39,6 +39,7 @@ class BuyAmount : BaseObservable() {
             if (value != field) {
                 field = value
                 notifyPropertyChanged(BR.selectedFiatCurrency)
+                updateFiatInputFilter()
                 updateConverter()
                 popularValues = currentPairPopularValues()
                 updateAmountBoundaries()
@@ -52,6 +53,7 @@ class BuyAmount : BaseObservable() {
             if (value != field) {
                 field = value
                 notifyPropertyChanged(BR.selectedCryptoCurrency)
+                updateCryptoInputFilter()
                 updateConverter()
                 popularValues = currentPairPopularValues()
                 updateAmountBoundaries()
@@ -64,7 +66,7 @@ class BuyAmount : BaseObservable() {
         set(value) {
             field = value
             notifyPropertyChanged(BR.fiatAmount)
-            updateBoundaryMessage()
+            updateFiatBoundaryMessage()
             if (inputMode == InputMode.FIAT) convertToCrypto()
         }
 
@@ -73,15 +75,25 @@ class BuyAmount : BaseObservable() {
         set(value) {
             field = value
             notifyPropertyChanged(BR.cryptoAmount)
+            updateCryptoBoundaryMessage()
             if (inputMode == InputMode.CRYPTO) convertToFiat()
         }
 
     @get:Bindable
-    var boundaryMessage: String = ""
+    var fiatBoundaryMessage: String = ""
         set(value) {
             if (value != field) {
                 field = value
-                notifyPropertyChanged(BR.boundaryMessage)
+                notifyPropertyChanged(BR.fiatBoundaryMessage)
+            }
+        }
+
+    @get:Bindable
+    var cryptoBoundaryMessage: String = ""
+        set(value) {
+            if (value != field) {
+                field = value
+                notifyPropertyChanged(BR.cryptoBoundaryMessage)
             }
         }
 
@@ -103,10 +115,28 @@ class BuyAmount : BaseObservable() {
             notifyPropertyChanged(BR.popularValues)
         }
 
+    @get:Bindable
+    var cryptoInputFilter: TradeInputFilter? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.cryptoInputFilter)
+        }
+
+    @get:Bindable
+    var fiatInputFilter: TradeInputFilter? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.fiatInputFilter)
+        }
+
     @VisibleForTesting
-    internal var minBoundary = ""
+    internal var fiatMinBoundary = ""
     @VisibleForTesting
-    internal var maxBoundary = ""
+    internal var fiatMaxBoundary = ""
+    @VisibleForTesting
+    internal var cryptoMinBoundary = ""
+    @VisibleForTesting
+    internal var cryptoMaxBoundary = ""
 
     @VisibleForTesting
     internal var converter: RateConverter? = null
@@ -150,6 +180,20 @@ class BuyAmount : BaseObservable() {
         }
     }
 
+    @VisibleForTesting
+    internal fun updateFiatInputFilter() {
+        findPrecision(selectedFiatCurrency)!!.let {
+            fiatInputFilter = TradeInputFilter(it.visiblePrecision)
+        }
+    }
+
+    @VisibleForTesting
+    internal fun updateCryptoInputFilter() {
+        findPrecision(selectedCryptoCurrency)!!.let {
+            cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
+        }
+    }
+
     private fun findPrecision(givenCurrency: String) = precisionList.find { it.currency == givenCurrency }
 
     private fun String?.amountToDouble() = this?.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0
@@ -157,28 +201,48 @@ class BuyAmount : BaseObservable() {
     @VisibleForTesting
     internal fun updateAmountBoundaries() {
         findCurrentPair()?.let { rate ->
-            val converter = RateConverter(rate.a, rate.b, rate.c)
+            precisionList.find { it.currency == rate.fiat }!!
+                    .let { fiatPrecision ->
+                        fiatMinBoundary = fiatPrecision.minLimit
+                        fiatMaxBoundary = fiatPrecision.maxLimit
+                    }
 
-            val fiatPrecision = precisionList.find { it.currency == selectedFiatCurrency }!!
-            val cryptoPrecision = precisionList.find { it.currency == selectedCryptoCurrency }!!
-
-            val minLimit = converter.convertToFiat(cryptoPrecision.minLimit.toDouble())
-            minBoundary = max(minLimit, fiatPrecision.minLimit.toDouble()).formatAmount(fiatPrecision)
-
-            val cryptoMaxLimit = cryptoPrecision.maxLimit.toDouble()
-            val maxLimit = if (cryptoMaxLimit > 0) converter.convertToFiat(cryptoMaxLimit) else Double.POSITIVE_INFINITY
-            maxBoundary = min(maxLimit, fiatPrecision.maxLimit.toDouble()).formatAmount(fiatPrecision)
+            precisionList.find { it.currency == rate.crypto }!!
+                    .let { cryptoPrecision ->
+                        cryptoMinBoundary = cryptoPrecision.minLimit
+                        cryptoMaxBoundary = if (cryptoPrecision.maxLimit.toDouble() <= 0.0) {
+                            Double.MAX_VALUE.toString()
+                        } else {
+                            cryptoPrecision.maxLimit
+                        }
+                    }
         }
     }
 
-    private fun updateBoundaryMessage() {
-        boundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
+    @VisibleForTesting
+    internal fun updateFiatBoundaryMessage() {
+        fiatBoundaryMessage = fiatAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
             when {
-                value < minBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> return@let "Min amount $minBoundary"
-                value > maxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 -> return@let "Max amount $maxBoundary"
+                value < fiatMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_min_amount, fiatMinBoundary)
+                value > fiatMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_max_amount, fiatMaxBoundary)
                 else -> ""
             }
-        } ?: ""
+        } ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
+    }
+
+    @VisibleForTesting
+    internal fun updateCryptoBoundaryMessage() {
+        cryptoBoundaryMessage = cryptoAmount.takeIf { it.isNotBlank() }?.toDouble()?.let { value ->
+            when {
+                value < cryptoMinBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_min_sale, cryptoMinBoundary)
+                value > cryptoMaxBoundary.takeIf { it.isNotBlank() }?.toDouble() ?: 0.0 ->
+                    stringProvider.provideString(R.string.cexd_max_sale, cryptoMaxBoundary)
+                else -> ""
+            }
+        } ?: stringProvider.provideString(R.string.cexd_please_enter_amount)
     }
 
     fun currentPairPopularValues() = findCurrentPair()?.fiatPopularValues ?: emptyList()

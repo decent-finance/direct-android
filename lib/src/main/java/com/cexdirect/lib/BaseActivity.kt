@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.cexdirect.lib.stub.StubActivity
 import com.cexdirect.lib.terms.showTerms
 import com.cexdirect.lib.views.LoaderView
 import com.mcxiaoke.koi.ext.toast
@@ -44,10 +45,10 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun LegalViewModel.applyLegalObservers() {
         supportClickEvent.observe(this@BaseActivity, Observer {
             Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:support@cex.io")
+                data = Uri.parse(SUPPORT_EMAIL)
             }.let {
                 it.resolveActivity(packageManager)?.run { startActivity(it) }
-                    ?: toast("No e-mail apps found")
+                        ?: toast(R.string.cexd_no_email_apps)
             }
         })
         legalClickEvent.observe(this@BaseActivity, Observer {
@@ -66,5 +67,14 @@ abstract class BaseActivity : AppCompatActivity() {
     fun hideLoader() {
         loader?.hide()
         loader = null
+    }
+
+    protected fun showStubScreen() {
+        startActivity(Intent(this, StubActivity::class.java))
+        finish()
+    }
+
+    companion object {
+        const val SUPPORT_EMAIL = "mailto:support@cexdirect.com"
     }
 }

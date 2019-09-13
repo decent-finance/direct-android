@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -122,6 +121,7 @@
         <item name="android:paddingBottom">8dp</item>
         <item name="android:maxLines">1</item>
         <item name="fontFamily">@font/open_sans</item>
+        <item name="android:imeOptions">actionNext</item>
     </style>
 
     <style name="Direct.MainButton">
@@ -193,7 +193,7 @@
         <item name="android:textColor">@color/cexd_textfield_text</item>
         <item name="android:textColorHint">@color/cexd_textfield_text</item>
         <item name="android:background">@color/cexd_input_bg</item>
-        <item name="android:drawable">@drawable/ic_gray_search</item>
+        <item name="android:drawable">@drawable/ic_search</item>
     </style>
 
     <style name="Direct.TextHint">
@@ -266,6 +266,10 @@
         <item name="android:textColor">@color/cexd_white</item>
     </style>
 
+    <style name="Direct.DialogTitle.Black" parent="Direct.DialogTitle">
+        <item name="android:textColor">@color/cexd_black</item>
+    </style>
+
     <style name="Direct.DialogButton">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
@@ -280,7 +284,6 @@
     <style name="Direct.Picker.Pair">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/cexd_black</item>
-
         <item name="android:background">@null</item>
         <item name="fontFamily">@font/open_sans</item>
     </style>
@@ -336,5 +339,20 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/cexd_stub_text</item>
         <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+
+    <style name="Direct.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">#BDC8D9</item>
+    </style>
+
+    <style name="Direct.Document">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:scaleType">centerInside</item>
     </style>
 </resources>

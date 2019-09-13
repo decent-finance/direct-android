@@ -21,6 +21,10 @@
     <data>
 
         <variable
+            name="title"
+            type="String" />
+
+        <variable
                 name="model"
                 type="com.cexdirect.lib.buy.BuyActivityViewModel"/>
     </data>
@@ -36,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/cexd_choose_currency"/>
+            android:text="@{title}" />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="16dp"

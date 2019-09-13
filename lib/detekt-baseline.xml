@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+    <Blacklist></Blacklist>
+    <Whitelist>
+        <ID>ChainWrapping:</ID>
+        <ID>ClassNaming:OrderInfoResponse.kt$_3Ds</ID>
+        <ID>ClassNaming:OrderInfoResponse.kt$_3DsExtras : HashMap</ID>
+        <ID>ClassNaming:_3dsData.kt$_3dsData : BaseObservable</ID>
+        <ID>CommentSpacing:</ID>
+        <ID>EmptyFunctionBlock:BindingAdapters.kt$&lt;no name provided&gt;${ }</ID>
+        <ID>EmptyFunctionBlock:CexdSocket.kt$CexdSocket.&lt;no name provided&gt;${ }</ID>
+        <ID>EmptyFunctionBlock:DateWatcher.kt$DateWatcher${ }</ID>
+        <ID>FunctionParameterNaming:BindingAdapters.kt$_3dsData: _3dsData?</ID>
+        <ID>
+            MatchingDeclarationName:BaseResponse.kt$com.cexdirect.lib.network.models.BaseResponse.kt
+        </ID>
+        <ID>MatchingDeclarationName:CustomLiveData.kt$com.cexdirect.lib.CustomLiveData.kt</ID>
+        <ID>MatchingDeclarationName:EmailValidator.kt$com.cexdirect.lib.util.EmailValidator.kt</ID>
+        <ID>MatchingDeclarationName:SymbolMapping.kt$com.cexdirect.lib.util.SymbolMapping.kt</ID>
+        <ID>
+            MatchingDeclarationName:WalletAddressBody.kt$com.cexdirect.lib.network.models.WalletAddressBody.kt
+        </ID>
+        <ID>MaxLineLength:BaseActivity.kt$BaseActivity$protected inline</ID>
+        <ID>MaxLineLength:BaseBottomSheetDialog.kt$BaseBottomSheetDialog$protected inline</ID>
+        <ID>MaxLineLength:BaseFragment.kt$BaseFragment$protected inline</ID>
+        <ID>MaxLineLength:PairSelectionBottomSheetDialog.kt$PairSelectionBottomSheetDialog$private inline</ID>
+        <ID>MultiLineIfElse:</ID>
+        <ID>NestedBlockDepth:ExtraFieldsLayout.kt$ExtraFieldsLayout$private fun updateLayout()</ID>
+        <ID>NoBlankLineBeforeRbrace:</ID>
+        <ID>NoConsecutiveBlankLines:</ID>
+        <ID>NoWildcardImports:</ID>
+        <ID>PackageName:</ID>
+        <ID>PackageNaming:AnalyticsApi.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:AnalyticsService.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:BaseBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:BaseData.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:BaseResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:BindingAdapters.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:BuyActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:CexdSocket.kt$package com.cexdirect.lib.network.ws</ID>
+        <ID>PackageNaming:ChangeEmailBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ChangeEmailResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:CheckActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:CheckCodeBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:CheckCodeResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:CoreModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:CountriesResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:DH2.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:DateDeserializer.kt$package com.cexdirect.lib.network.serializers</ID>
+        <ID>PackageNaming:DateWatcher.kt$package com.cexdirect.lib.verification.identity._util</ID>
+        <ID>PackageNaming:DefaultEvent.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:DirectComponent.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:EmailValidator.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:EncryptionKeysResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ErrorActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:ExchangeRatesResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:Extractable.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:FileUtils.kt$package com.cexdirect.lib.verification.identity._util</ID>
+        <ID>PackageNaming:FormatUtils.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:HeaderInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentityFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentityScope.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:IdentitySubcomponent.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:IdentityVmModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:ImageBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:LoggingInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:Mapper.kt$package com.cexdirect.lib.network.ws</ID>
+        <ID>PackageNaming:MerchantApi.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:MerchantService.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:Messenger.kt$package com.cexdirect.lib.network.ws</ID>
+        <ID>PackageNaming:MonetaryData.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:NetworkModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:NewOrderBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ObservavleExtensions.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:OrderApi.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:OrderDataResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:OrderInfoBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:OrderInfoResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:OrderService.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:OrderStatus.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:OrderStatusDeserializer.kt$package
+            com.cexdirect.lib.network.deserializers
+        </ID>
+        <ID>PackageNaming:PaymentApi.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:PaymentBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:PaymentConfirmationFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:PaymentService.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:PhotoSourceDialogFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:PlacementInfoResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:PlacementValidator.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:PrecisionsResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ProcessingBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ProcessingResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:PublicKeyBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:PublicKeyResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:RateConverter.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:RawCardData.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:ReceiptFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:ResendCheckCodeBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:Resource.kt$package com.cexdirect.lib.network</ID>
+        <ID>PackageNaming:ShaUtil.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:SharedStateModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:SocketModels.kt$package com.cexdirect.lib.network.ws</ID>
+        <ID>PackageNaming:SymbolMapping.kt$package com.cexdirect.lib.util</ID>
+        <ID>PackageNaming:TermsActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:UploadImageResponse.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:VerificationActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
+        <ID>PackageNaming:VerificationBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:VmModule.kt$package com.cexdirect.lib._di</ID>
+        <ID>PackageNaming:Wallet.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:WalletAddressBody.kt$package com.cexdirect.lib.network.models</ID>
+        <ID>PackageNaming:WsUrlProvider.kt$package com.cexdirect.lib.network.ws</ID>
+        <ID>ParameterListWrapping:</ID>
+        <ID>SpreadOperator:StringProvider.kt$StringProvider$(id, *args)</ID>
+        <ID>TooManyFunctions:BindingAdapters.kt$com.cexdirect.lib.util.BindingAdapters.kt</ID>
+        <ID>TooManyFunctions:BuyActivityViewModel.kt$BuyActivityViewModel : LegalViewModel</ID>
+        <ID>TooManyFunctions:BuyAmount.kt$BuyAmount : BaseObservable</ID>
+        <ID>TooManyFunctions:DocumentTypeButton.kt$DocumentTypeButton : FrameLayoutRadioCheckable</ID>
+        <ID>TooManyFunctions:FooterScrollView.kt$FooterScrollView : ScrollView</ID>
+        <ID>TooManyFunctions:IdentityFragmentViewModel.kt$IdentityFragmentViewModel : BaseObservableViewModel</ID>
+        <ID>TooManyFunctions:OrderApi.kt$OrderApi</ID>
+        <ID>TooManyFunctions:OrderService.kt$OrderService</ID>
+        <ID>WildcardImport:BindingAdapters.kt$import android.text.*</ID>
+        <ID>WildcardImport:BuyActivityViewModel.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:CexdSocket.kt$import okhttp3.*</ID>
+        <ID>WildcardImport:CustomLiveData.kt$import kotlinx.coroutines.*</ID>
+        <ID>WildcardImport:CvvInfoDialog.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:DH2.kt$import java.security.*</ID>
+        <ID>WildcardImport:DocumentPhotos.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:ExtraFieldsLayout.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import androidx.databinding.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib.*</ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib.network.models.*
+        </ID>
+        <ID>WildcardImport:IdentityFragmentViewModel.kt$import com.cexdirect.lib.util.*</ID>
+        <ID>WildcardImport:IdentityVmModule.kt$import com.cexdirect.lib._di.annotation.*</ID>
+        <ID>WildcardImport:NetworkModule.kt$import com.cexdirect.lib.network.*</ID>
+        <ID>WildcardImport:OrderApi.kt$import com.cexdirect.lib.network.models.*</ID>
+        <ID>WildcardImport:OrderService.kt$import com.cexdirect.lib.network.models.*</ID>
+        <ID>WildcardImport:PhotoSourceDialog.kt$import com.cexdirect.lib.*</ID>
+    </Whitelist>
+</SmellBaseline>

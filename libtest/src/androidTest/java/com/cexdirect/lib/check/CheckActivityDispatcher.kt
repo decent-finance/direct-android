@@ -18,8 +18,8 @@ package com.cexdirect.lib.check
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.BaseDispatcher
-import com.cexdirect.lib._network.models.PlacementInfo
-import com.cexdirect.lib._network.models.PlacementInfoResponse
+import com.cexdirect.lib.network.models.PlacementInfo
+import com.cexdirect.lib.network.models.PlacementInfoResponse
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.network.models.RuleResponse
 import com.cexdirect.lib.util.TEST_PLACEMENT

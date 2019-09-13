@@ -21,10 +21,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
-import com.cexdirect.lib.SingleLiveEvent
-import com.cexdirect.lib._network.models.PaymentInfo
-import com.cexdirect.lib._network.ws.Messenger
-import com.cexdirect.lib.verification.CopyEvent
+import com.cexdirect.lib.StringLiveEvent
+import com.cexdirect.lib.VoidLiveEvent
+import com.cexdirect.lib.network.models.PaymentInfo
+import com.cexdirect.lib.network.ws.Messenger
 
 class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
@@ -32,8 +32,8 @@ class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvi
     val paymentInfo = ObservableField<PaymentInfo>()
     val txId = ObservableField("")
 
-    val buyMoreEvent = BuyMoreEvent()
-    val txIdCopyEvent = CopyEvent()
+    val buyMoreEvent = VoidLiveEvent()
+    val txIdCopyEvent = StringLiveEvent()
 
     fun buyMore() {
         buyMoreEvent.call()
@@ -58,5 +58,3 @@ class ReceiptFragmentViewModel(private val messenger: Messenger, dispatcherProvi
             ReceiptFragmentViewModel(messenger, dispatcherProvider) as T
     }
 }
-
-class BuyMoreEvent : SingleLiveEvent<Void>()

@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib
 
-import com.cexdirect.lib._network.models.ApiResponse
+import com.cexdirect.lib.network.models.ApiResponse
 import com.cexdirect.lib.util.applyErrorFields
 import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher

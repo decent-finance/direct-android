@@ -21,12 +21,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._network.MerchantApi
-import com.cexdirect.lib._util.PlacementValidator
+import com.cexdirect.lib.network.MerchantApi
+import com.cexdirect.lib.network.PaymentApi
+import com.cexdirect.lib.network.models.CountryData
+import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.network.models.RuleData
+import com.cexdirect.lib.util.PlacementValidator
 
 class CheckActivityViewModel(
     merchantApi: MerchantApi,
+    paymentApi: PaymentApi,
     private val placementValidator: PlacementValidator,
     private val ruleIds: RuleIds,
     dispatcherProvider: CoroutineDispatcherProvider
@@ -34,20 +38,30 @@ class CheckActivityViewModel(
 
     val checkResult = merchantApi.getPlacementInfo(this, Direct.credentials.placementId)
     val ruleResult = merchantApi.getRule(this) { ruleIds.getCurrentRuleId() }
+    val countryResult = paymentApi.getCountries(this)
 
     fun checkPlacement() {
         checkResult.execute()
     }
 
-    fun updateIds(rulesIds: List<String>) {
+    private fun updateIds(rulesIds: List<String>) {
         ruleIds.ids = rulesIds
     }
 
-    fun loadRules() {
+    private fun loadCountries() {
+        countryResult.execute()
+    }
+
+    fun saveCountriesAndLoadRules(data: List<CountryData>) {
+        Direct.countries = data
+        loadRules()
+    }
+
+    private fun loadRules() {
         ruleResult.execute()
     }
 
-    fun loadNextRule(block: () -> Unit) {
+    private fun loadNextRule(block: () -> Unit) {
         if (ruleIds.shouldLoadNext()) {
             ruleResult.execute()
         } else {
@@ -55,9 +69,19 @@ class CheckActivityViewModel(
         }
     }
 
-    fun saveRule(ruleData: RuleData) {
+    fun saveRuleAndLoadNext(ruleData: RuleData, action: () -> Unit) {
         Direct.rules.add(ruleData)
         ruleIds.selectNextId()
+        loadNextRule(action)
+    }
+
+    fun processPlacementInfo(info: PlacementInfo, failAction: () -> Unit) {
+        if (canLaunch(info.activityStatus, info.placementUris)) {
+            updateIds(info.rulesIds)
+            loadCountries()
+        } else {
+            failAction.invoke()
+        }
     }
 
     @Suppress("ConstantConditionIf")
@@ -70,6 +94,7 @@ class CheckActivityViewModel(
 
     class Factory(
         private val merchantApi: MerchantApi,
+        private val paymentApi: PaymentApi,
         private val placementValidator: PlacementValidator,
         private val ruleIds: RuleIds,
         private val dispatcherProvider: CoroutineDispatcherProvider
@@ -77,6 +102,12 @@ class CheckActivityViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            CheckActivityViewModel(merchantApi, placementValidator, ruleIds, dispatcherProvider) as T
+            CheckActivityViewModel(
+                merchantApi,
+                paymentApi,
+                placementValidator,
+                ruleIds,
+                dispatcherProvider
+            ) as T
     }
 }

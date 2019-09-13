@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.verification.confirmation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,16 +26,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.PaymentConfirmationFragmentFactory
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.OrderStatus
-import com.cexdirect.lib._network.webview.Client
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.OrderStatus
+import com.cexdirect.lib.network.webview.Client
+import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.StickyViewEvent
+import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import java.util.concurrent.atomic.AtomicReference
@@ -63,12 +65,21 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 binding = this
             }.root
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding.model = fragmentModel
 
-        binding.fpc3ds.webViewClient = webViewClient
+        binding.fpc3ds.apply {
+            webViewClient = this@PaymentConfirmationFragment.webViewClient
+            settings.apply {
+                javaScriptEnabled = true
+                loadWithOverviewMode = true
+                useWideViewPort = false
+                domStorageEnabled = true
+            }
+        }
 
         fragmentModel.apply {
             userEmail.set(Direct.userEmail)
@@ -92,7 +103,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                             OrderStatus.COMPLETE -> {
                                 if (currentOrderStatus.get() != OrderStatus.COMPLETE) {
                                     currentOrderStatus.set(OrderStatus.COMPLETE)
-                                    fragmentModel.confirmOrder { model.nextStep() }
+                                    fragmentModel.confirmOrder { model.next() }
                                 }
                             }
                             OrderStatus.REJECTED -> {
@@ -121,7 +132,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                     is Failure -> {
                         hideLoader()
-                        if (it.code == 400) {
+                        if (it.code == CODE_BAD_REQUEST) {
                             toast(R.string.cexd_wrong_code)
                         } else {
                             purchaseFailed(it.message)

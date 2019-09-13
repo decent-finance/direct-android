@@ -28,12 +28,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.ReceiptFragmentFactory
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.OrderStatus
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.StickyViewEvent
+import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject

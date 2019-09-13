@@ -24,13 +24,9 @@
         android:elevation="4dp"
         android:outlineProvider="background">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/cexd_indicator_active"
-            android:indeterminateTintMode="src_atop"/>
-
+        <com.cexdirect.lib.views.DirectProgressView
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"/>
     </FrameLayout>
 </merge>

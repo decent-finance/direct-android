@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
-import com.cexdirect.lib.SingleLiveEvent
+import com.cexdirect.lib.VoidLiveEvent
 
 class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
@@ -29,7 +29,7 @@ class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     val title = ObservableField("")
     val content = ObservableField("")
 
-    val okEvent = OkEvent()
+    val okEvent = VoidLiveEvent()
 
     fun callOk() {
         okEvent.call()
@@ -40,5 +40,3 @@ class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
         override fun <T : ViewModel?> create(modelClass: Class<T>) = TermsActivityViewModel(dispatcherProvider) as T
     }
 }
-
-class OkEvent : SingleLiveEvent<Void>()

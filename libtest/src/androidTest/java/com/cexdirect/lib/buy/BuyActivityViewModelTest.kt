@@ -16,13 +16,15 @@
 
 package com.cexdirect.lib.buy
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.MockCoroutineDispatcherProvider
-import com.cexdirect.lib._network.AnalyticsApi
-import com.cexdirect.lib._network.MerchantApi
-import com.cexdirect.lib._network.PaymentApi
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.Precision
-import com.cexdirect.lib._network.ws.Messenger
+import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.network.AnalyticsApi
+import com.cexdirect.lib.network.MerchantApi
+import com.cexdirect.lib.network.PaymentApi
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.Precision
+import com.cexdirect.lib.network.ws.Messenger
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import org.assertj.core.api.Java6Assertions.assertThat
@@ -51,7 +53,16 @@ class BuyActivityViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        model = BuyActivityViewModel(mock(), mock(), mock(), mock(), MockCoroutineDispatcherProvider())
+        val stringProvider =
+            StringProvider(InstrumentationRegistry.getInstrumentation().targetContext)
+        model = BuyActivityViewModel(
+            mock(),
+            mock(),
+            mock(),
+            mock(),
+            MockCoroutineDispatcherProvider(),
+            stringProvider
+        )
     }
 
     @After
@@ -64,10 +75,12 @@ class BuyActivityViewModelTest {
         model.amount.apply {
             precisionList = givenPrecisions()
             rates = givenRates()
+            selectedCryptoCurrency = "BTC"
         }
 
         model.filterBaseCurrencies { }
 
+        assertThat(model.currencyAdapter.selectedCurrency).isEqualTo("BTC")
         assertThat(model.currencyAdapter.items).containsOnly("BTC", "BCH", "ETH")
     }
 
@@ -81,6 +94,7 @@ class BuyActivityViewModelTest {
 
         model.filterBaseCurrencies { }
 
+        assertThat(model.currencyAdapter.selectedCurrency).isEqualTo("BTC")
         assertThat(model.currencyAdapter.items).containsOnly("BTC")
     }
 
@@ -89,10 +103,12 @@ class BuyActivityViewModelTest {
         model.amount.apply {
             precisionList = givenPrecisions()
             rates = givenRates()
+            selectedFiatCurrency = "EUR"
         }
 
         model.filterQuoteCurrencies { }
 
+        assertThat(model.currencyAdapter.selectedCurrency).isEqualTo("EUR")
         assertThat(model.currencyAdapter.items).containsOnly("EUR", "USD")
     }
 
@@ -105,95 +121,95 @@ class BuyActivityViewModelTest {
         model.initRates(givenRates()) { }
 
         assertThat(model.amount.rates).containsOnlyElementsOf(givenRates())
-        assertThat(model.amount.fiatAmount).isEqualTo("100")
+        assertThat(model.amount.fiatAmount).isEqualTo("250")
         assertThat(model.amount.inputMode).isEqualTo(InputMode.FIAT)
         assertThat(model.dataLoaded.get()).isTrue()
     }
 
     private fun givenPrecisions() = listOf(
-            Precision(
-                    "crypto",
-                    "ETH",
-                    6,
-                    6,
-                    "trunk",
-                    "0.01",
-                    "0"
-            ),
-            Precision(
-                    "fiat",
-                    "USD",
-                    2,
-                    2,
-                    "trunk",
-                    "50",
-                    "1000"
-            ),
-            Precision(
-                    "fiat",
-                    "EUR",
-                    2,
-                    2,
-                    "trunk",
-                    "50",
-                    "1000"
-            ),
-            Precision(
-                    "crypto",
-                    "BTC",
-                    4,
-                    8,
-                    "trunk",
-                    "0.01",
-                    "0"
-            ),
-            Precision(
-                    "crypto",
-                    "BCH",
-                    4,
-                    8,
-                    "trunk",
-                    "0.01",
-                    "0"
-            )
+        Precision(
+            "crypto",
+            "ETH",
+            6,
+            6,
+            "trunk",
+            "0.01",
+            "0"
+        ),
+        Precision(
+            "fiat",
+            "USD",
+            2,
+            2,
+            "trunk",
+            "50",
+            "1000"
+        ),
+        Precision(
+            "fiat",
+            "EUR",
+            2,
+            2,
+            "trunk",
+            "50",
+            "1000"
+        ),
+        Precision(
+            "crypto",
+            "BTC",
+            4,
+            8,
+            "trunk",
+            "0.01",
+            "0"
+        ),
+        Precision(
+            "crypto",
+            "BCH",
+            4,
+            8,
+            "trunk",
+            "0.01",
+            "0"
+        )
     )
 
     private fun givenRates() = listOf(
-            ExchangeRate(
-                    "USD",
-                    "ETH",
-                    0.0011550998408705918,
-                    0.01,
-                    1.0,
-                    listOf("100", "200", "500"),
-                    listOf("0.01", "0.05", "0.1")
-            ),
-            ExchangeRate(
-                    "USD",
-                    "BCH",
-                    0.0008324855256099591,
-                    0.001,
-                    1.0,
-                    emptyList(),
-                    listOf("0.01", "0.05", "0.1")
-            ),
-            ExchangeRate(
-                    "USD",
-                    "BTC",
-                    0.000051758739067181134,
-                    0.0005,
-                    1.0,
-                    listOf("100", "200", "500"),
-                    listOf("0.01", "0.05", "0.1")
-            ),
-            ExchangeRate(
-                    "EUR",
-                    "BTC",
-                    0.00010585050029429076,
-                    0.0005,
-                    1.0,
-                    listOf("50", "100", "200"),
-                    listOf("0.01", "0.05", "0.1")
-            )
+        ExchangeRate(
+            "USD",
+            "ETH",
+            0.0011550998408705918,
+            0.01,
+            1.0,
+            listOf("100", "200", "500"),
+            listOf("0.01", "0.05", "0.1")
+        ),
+        ExchangeRate(
+            "USD",
+            "BCH",
+            0.0008324855256099591,
+            0.001,
+            1.0,
+            emptyList(),
+            listOf("0.01", "0.05", "0.1")
+        ),
+        ExchangeRate(
+            "USD",
+            "BTC",
+            0.000051758739067181134,
+            0.0005,
+            1.0,
+            listOf("100", "200", "500"),
+            listOf("0.01", "0.05", "0.1")
+        ),
+        ExchangeRate(
+            "EUR",
+            "BTC",
+            0.00010585050029429076,
+            0.0005,
+            1.0,
+            listOf("50", "100", "200"),
+            listOf("0.01", "0.05", "0.1")
+        )
     )
 }

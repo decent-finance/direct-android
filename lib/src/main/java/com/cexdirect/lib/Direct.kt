@@ -25,8 +25,9 @@ import com.cexdirect.lib._di.CoreModule
 import com.cexdirect.lib._di.DaggerDirectComponent
 import com.cexdirect.lib._di.DirectComponent
 import com.cexdirect.lib._di.IdentitySubcomponent
-import com.cexdirect.lib._network.models.MonetaryData
 import com.cexdirect.lib.check.CheckActivity
+import com.cexdirect.lib.network.models.CountryData
+import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
 import java.util.*
 import kotlin.collections.HashSet
@@ -45,6 +46,7 @@ object Direct {
     var pendingCryptoAmount = MonetaryData("", "")
     var pendingOrderId = ""
 
+    var countries: List<CountryData> = emptyList()
     val rules = HashSet<RuleData>()
 
     var identitySubcomponent: IdentitySubcomponent? = null

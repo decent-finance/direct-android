@@ -16,7 +16,7 @@
 
 package com.cexdirect.lib.util
 
-import com.cexdirect.lib._network.models.ApiResponse
+import com.cexdirect.lib.network.models.ApiResponse
 
 fun <T> ApiResponse<T>.applyOkFields(): ApiResponse<T> = this.apply {
     code = 200

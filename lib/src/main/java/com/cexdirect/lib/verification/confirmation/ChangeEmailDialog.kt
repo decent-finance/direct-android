@@ -24,14 +24,14 @@ import androidx.lifecycle.Observer
 import com.cexdirect.lib.BaseBottomSheetDialog
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
+import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.databinding.DialogChangeEmailBinding
-import com.cexdirect.lib.verification.EmailChangedEvent
 import javax.inject.Inject
 
 class ChangeEmailDialog : BaseBottomSheetDialog() {
 
     @Inject
-    lateinit var emailChangedEvent: EmailChangedEvent
+    lateinit var emailChangedEvent: StringLiveEvent
 
     @Inject
     lateinit var factory: ChangeEmailDialogViewModel.Factory
@@ -57,7 +57,7 @@ class ChangeEmailDialog : BaseBottomSheetDialog() {
         binding.model = model
 
         model.saveEvent.observe(this, Observer {
-            emailChangedEvent.value = model.email.get()
+            emailChangedEvent.value = model.userEmail.email
             dismiss()
         })
         model.cancelEvent.observe(this, Observer {

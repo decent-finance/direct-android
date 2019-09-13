@@ -23,13 +23,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.LegalViewModel
-import com.cexdirect.lib.SingleLiveEvent
-import com.cexdirect.lib._util.EmailStatus
-import com.cexdirect.lib._util.checkEmailStatus
+import com.cexdirect.lib.VoidLiveEvent
+import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.util.checkEmailStatus
 
 class ErrorActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) : LegalViewModel(dispatcherProvider) {
 
-    var emailStatus = EmailStatus.EMPTY
+    var emailStatus = FieldStatus.EMPTY
         private set
 
     val reason = ObservableField("")
@@ -42,8 +42,8 @@ class ErrorActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) : 
     }
     val emailNotificationChecked = ObservableBoolean(false)
 
-    val tryAgainEvent = TryAgainEvent()
-    val informMeEvent = InformMeEvent()
+    val tryAgainEvent = VoidLiveEvent()
+    val informMeEvent = VoidLiveEvent()
 
     fun tryAgain() {
         tryAgainEvent.call()
@@ -59,6 +59,3 @@ class ErrorActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) : 
         override fun <T : ViewModel> create(modelClass: Class<T>): T = ErrorActivityViewModel(dispatcherProvider) as T
     }
 }
-
-class TryAgainEvent : SingleLiveEvent<Void>()
-class InformMeEvent : SingleLiveEvent<Void>()

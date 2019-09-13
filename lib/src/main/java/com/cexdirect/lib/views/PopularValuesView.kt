@@ -22,9 +22,9 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import com.cexdirect.lib.ClickListener
 import com.cexdirect.lib.R
-import com.cexdirect.lib.buy.ClickEvent
-import com.cexdirect.lib.buy.ClickListener
+import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.databinding.LayoutPopularValuesBinding
 
 class PopularValuesView @JvmOverloads constructor(
@@ -45,7 +45,7 @@ class PopularValuesView @JvmOverloads constructor(
             binding.currency = field
         }
 
-    var clickEvent: ClickEvent? = null
+    var clickEvent: StringLiveEvent? = null
 
     val binding: LayoutPopularValuesBinding = DataBindingUtil.inflate(
         LayoutInflater.from(context),
@@ -70,6 +70,6 @@ fun PopularValuesView.setValues(values: List<String>, currency: String) {
 }
 
 @BindingAdapter("clickEvent")
-fun PopularValuesView.applyClickEvent(event: ClickEvent) {
+fun PopularValuesView.applyClickEvent(event: StringLiveEvent) {
     clickEvent = event
 }

@@ -25,11 +25,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.R
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
-@Ignore
 class TermsActivityTest {
 
     @get:Rule

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
+        <variable
+            name="model"
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+    </data>
+
+    <merge>
+
+        <LinearLayout
+            style="@style/Direct.InputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start|center_vertical"
+            android:outlineProvider="background"
+            app:isActivated="@{model.userTerms.termsStatus == FieldStatus.INVALID}">
+
+            <CheckBox
+                android:id="@+id/ptAcceptTerms"
+                style="@style/Direct.Checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={model.userTerms.termsAccepted}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:legal="@{model.legal}"
+                tools:text="I agree with Terms Of Use" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_accept_terms"
+            android:visibility="@{model.userTerms.termsStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
+
+    </merge>
+
+</layout>

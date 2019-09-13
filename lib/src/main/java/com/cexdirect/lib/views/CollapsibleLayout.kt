@@ -57,8 +57,8 @@ class CollapsibleLayout @JvmOverloads constructor(
             }
             LayoutState.ENCLOSED -> {
                 (layoutParams as LayoutParams).apply {
-                    setMargins(10.dpToPx(), topMargin, 10.dpToPx(), bottomMargin)
-                    setPadding(0, 10.dpToPx(), 0, 10.dpToPx())
+                    setMargins(DEFAULT_MARGIN_DP.dpToPx(), topMargin, DEFAULT_MARGIN_DP.dpToPx(), bottomMargin)
+                    setPadding(0, DEFAULT_MARGIN_DP.dpToPx(), 0, DEFAULT_MARGIN_DP.dpToPx())
                 }.also { layoutParams = it }
                 background = ResourcesCompat.getDrawable(resources, R.drawable.shape_border, context.theme)
             }
@@ -71,6 +71,10 @@ class CollapsibleLayout @JvmOverloads constructor(
 
     private fun collapse() {
         visibility = View.GONE
+    }
+
+    companion object {
+        const val DEFAULT_MARGIN_DP = 10
     }
 
     enum class LayoutState { ENCLOSED, EMPTY }

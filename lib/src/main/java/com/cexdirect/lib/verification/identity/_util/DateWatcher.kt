@@ -20,7 +20,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 
+@Suppress("MagicNumber")
 class DateWatcher(private val editText: EditText) : TextWatcher {
+
     private var datePrevLength: Int = 0
 
     override fun afterTextChanged(p0: Editable?) {

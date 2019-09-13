@@ -20,6 +20,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +32,7 @@ import com.cexdirect.lib._di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityVerificationBinding
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
+import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.IdentityFragment
 import com.cexdirect.lib.verification.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
@@ -43,8 +46,11 @@ class VerificationActivity : BaseActivity() {
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
 
-    private val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
-    private val fragments = listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
+    @VisibleForTesting
+    val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
+
+    private val fragments =
+            listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
     private lateinit var binding: ActivityVerificationBinding
 
@@ -52,17 +58,17 @@ class VerificationActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_verification)
-        binding.avStepsViewPager.pageMargin = 10
+        binding.avStepsViewPager.pageMargin = VIEWPAGER_ELEMENT_MARGIN
 
         model.apply {
             intent.let {
-                selectedCryptoCurrency.set(it.getStringExtra("crypto"))
-                selectedCryptoAmount.set(it.getStringExtra("cryptoAmount"))
-                selectedFiatCurrency.set(it.getStringExtra("fiat"))
-                selectedFiatAmount.set(it.getStringExtra("fiatAmount"))
+                orderAmounts.selectedCryptoCurrency = it.getStringExtra("crypto")
+                orderAmounts.selectedCryptoAmount = it.getStringExtra("cryptoAmount")
+                orderAmounts.selectedFiatCurrency = it.getStringExtra("fiat")
+                orderAmounts.selectedFiatAmount = it.getStringExtra("fiatAmount")
             }
             applyLegalObservers()
-            nextClickEvent.observe(this@VerificationActivity, Observer {
+            nextClickEvent2.observe(this@VerificationActivity, Observer {
                 model.proceed()
                 replaceFragment(model.currentStep.get() - 1)
             })
@@ -73,7 +79,7 @@ class VerificationActivity : BaseActivity() {
             copyEvent.observe(this@VerificationActivity, Observer { orderId ->
                 if (!orderId.isNullOrBlank()) {
                     (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
-                        ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
+                            ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
                     toast(getString(R.string.cexd_order_id_copied))
                 }
             })
@@ -81,18 +87,28 @@ class VerificationActivity : BaseActivity() {
             binding.model = it
         }
 
-        stickyViewEvent.observe(this, Observer { binding.avScroll.initFooterView(it) })
+        stickyViewEvent.observe(this, Observer {
+            if (it != View.NO_ID) {
+                binding.avScroll.initFooterView(it)
+            } else {
+                binding.avScroll.freeFooter()
+            }
+        })
         replaceFragment(0)
     }
 
     private fun replaceFragment(position: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.avFragmentFrame, fragments[position])
-            .commit()
+                .replace(R.id.avFragmentFrame, fragments[position])
+                .commit()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Direct.releaseIdentitySubcomponent()
+    }
+
+    companion object {
+        const val VIEWPAGER_ELEMENT_MARGIN = 10
     }
 }

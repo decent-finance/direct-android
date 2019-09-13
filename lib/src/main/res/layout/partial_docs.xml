@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+
+        <import type="android.view.View" />
+
+        <import
+            alias="type"
+            type="com.cexdirect.lib.verification.identity.PhotoType" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
+    </data>
+
+    <merge>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:visibility="@{model.userDocs.requiredImages.isIdentityDocumentsRequired ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                style="@style/Direct.IdentityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_choose_document_type" />
+
+            <com.cexdirect.lib.views.SwitcherLayout
+                android:id="@+id/fiDocumentSelector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:animateLayoutChanges="true"
+                android:clipChildren="false"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
+                app:selectedViewId="@={model.userDocs.selectedDocType}">
+
+                <com.cexdirect.lib.views.DocumentTypeButton
+                    android:id="@+id/fiIdCard"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:outlineProvider="paddedBounds"
+                    app:text="ID card" />
+
+                <com.cexdirect.lib.views.DocumentTypeButton
+                    android:id="@+id/fiDriversLicence"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:outlineProvider="paddedBounds"
+                    app:text="Drivers Licence" />
+
+                <com.cexdirect.lib.views.DocumentTypeButton
+                    android:id="@+id/fiPassport"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:outlineProvider="paddedBounds"
+                    app:text="Passport" />
+
+            </com.cexdirect.lib.views.SwitcherLayout>
+
+            <TextView
+                style="@style/Direct.Textfield.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/cexd_no_doc_type_selected"
+                android:visibility="@{model.userDocs.documentSelectionStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:clipChildren="false"
+                android:orientation="vertical"
+                android:visibility="@{model.userDocs.documentTypeSelected ? View.VISIBLE : View.GONE}">
+
+                <TextView
+                    style="@style/Direct.Textfield.M2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:text="@string/cexd_docs_note" />
+
+                <TextView
+                    style="@style/Direct.IdentityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{model.userDocs.documentTypeText}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/selector_bg_doc"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    app:isActivated="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID}">
+
+                    <TextView
+                        style="@style/Direct.Textfield.M2.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|top"
+                        android:text="@string/cexd_front_side" />
+
+                    <ImageView
+                        android:id="@+id/fiDocument"
+                        style="@style/Direct.Document"
+                        app:isActivated="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID}"
+                        app:pic="@{model.userDocs.documentImage}"
+                        tools:src="@drawable/ic_pic_passport" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/pdDocFrontError"
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{model.userDocs.documentFrontSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                    tools:visibility="gone" />
+
+                <Button
+                    android:id="@+id/fiDocumentUpl"
+                    style="@style/Direct.MainButton.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:onClick="@{() -> model.uploadPhoto(type.ID)}"
+                    android:outlineProvider="background"
+                    android:text="@string/cexd_upload_photo" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/selector_bg_doc"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="@{model.userDocs.requiredImagesAmount == 2 ? View.VISIBLE : View.GONE}"
+                    app:isActivated="@{model.userDocs.documentBackStatus == FieldStatus.INVALID}">
+
+                    <TextView
+                        style="@style/Direct.Textfield.M2.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|top"
+                        android:text="@string/cexd_back_side" />
+
+                    <ImageView
+                        android:id="@+id/fiDocumentBack"
+                        style="@style/Direct.Document"
+                        android:layout_gravity="bottom"
+                        app:pic="@{model.userDocs.documentImageBack}"
+                        tools:src="@drawable/ic_pic_passport" />
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/Direct.Textfield.Error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{model.userDocs.documentBackSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                    tools:visibility="gone" />
+
+                <Button
+                    android:id="@+id/fiDocumentBackUpl"
+                    style="@style/Direct.MainButton.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
+                    android:outlineProvider="background"
+                    android:text="@string/cexd_upload_photo"
+                    android:visibility="@{model.userDocs.requiredImagesAmount == 2 ? View.VISIBLE : View.GONE}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="@{model.userDocs.requiredImages.isSelfieRequired ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        style="@style/Direct.IdentityTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/cexd_selfie_with_your_payment_card" />
+
+                    <ImageView
+                        android:id="@+id/fiSelfie"
+                        style="@style/Direct.Document"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/selector_bg_doc"
+                        android:src="@drawable/ic_pic_portrait"
+                        app:isActivated="@{model.userDocs.selfieStatus == FieldStatus.INVALID}" />
+
+                    <TextView
+                        style="@style/Direct.Textfield.Error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@{model.userDocs.selfieSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                        android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
+                        tools:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/fiSelfieUpl"
+                        style="@style/Direct.MainButton.Big"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:elevation="8dp"
+                        android:onClick="@{() -> model.uploadPhoto(type.SELFIE)}"
+                        android:outlineProvider="background"
+                        android:text="@string/cexd_upload_photo" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </merge>
+
+</layout>

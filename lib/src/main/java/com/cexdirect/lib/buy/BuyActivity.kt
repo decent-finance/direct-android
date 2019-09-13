@@ -26,14 +26,14 @@ import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.BuyActivityFactory
-import com.cexdirect.lib._network.Failure
-import com.cexdirect.lib._network.Loading
-import com.cexdirect.lib._network.Resource
-import com.cexdirect.lib._network.Success
-import com.cexdirect.lib._network.models.ExchangeRate
-import com.cexdirect.lib._network.models.MonetaryData
 import com.cexdirect.lib.databinding.ActivityBuyBinding
 import com.cexdirect.lib.error.purchaseFailed
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.verification.VerificationActivity
 import javax.inject.Inject
 
@@ -92,7 +92,7 @@ class BuyActivity : BaseActivity() {
                         hideLoader()
                         subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
                     }
-                    is Failure -> purchaseFailed(it.message)
+                    is Failure -> showStubScreen()
                 }
             })
             popularClickEvent.observe(this@BuyActivity, Observer {
