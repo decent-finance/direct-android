@@ -117,6 +117,16 @@
                 android:visibility="@{model.userDocs.documentTypeSelected ? View.VISIBLE : View.GONE}">
 
                 <TextView
+                    style="@style/Direct.Textfield.M2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:text="@string/cexd_docs_note" />
+
+                <TextView
                     style="@style/Direct.IdentityTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,7 +152,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_no_photo_uploaded"
+                    android:text="@{model.userDocs.documentFrontSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -176,7 +186,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/cexd_no_photo_uploaded"
+                    android:text="@{model.userDocs.documentBackSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -225,7 +235,7 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@string/cexd_no_photo_uploaded"
+                        android:text="@{model.userDocs.selfieSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
                         android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                         tools:visibility="gone" />
 
@@ -243,16 +253,6 @@
                         android:text="@string/cexd_upload_photo" />
 
                 </LinearLayout>
-
-                <TextView
-                    style="@style/Direct.Textfield.M2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center"
-                    android:text="@string/cexd_docs_note" />
 
             </LinearLayout>
 

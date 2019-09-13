@@ -156,4 +156,5 @@
     <string name="cexd_docs_note">Make sure photo details are clear to read.\nMaximum file size is 15 Mb.</string>
     <string name="cexd_no_doc_type_selected">Please, select document type</string>
     <string name="cexd_no_photo_uploaded">Please upload a photo</string>
+    <string name="cexd_file_too_big">File size should be no more than 15 MB</string>
 </resources>

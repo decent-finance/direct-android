@@ -17,6 +17,7 @@
 package com.cexdirect.lib.verification
 
 import android.content.Intent
+import android.os.SystemClock
 import android.view.View
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
@@ -34,6 +35,7 @@ import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.entryData
 import com.cexdirect.lib.util.hasVisibility
+import com.cexdirect.lib.verification.identity.PhotoType
 import com.cexdirect.lib.verification.identity.VerificationStep
 import com.cexdirect.lib.views.CollapsibleLayout
 import okhttp3.mockwebserver.MockWebServer
@@ -101,8 +103,26 @@ class VerificationActivityDataValidationTest {
         onView(allOf(
                 withText(R.string.cexd_no_photo_uploaded),
                 hasSibling(withId(R.id.fiDocument)),
-                withParentIndex(2)
+            withParentIndex(3)
         )).perform(scrollTo()).check(hasVisibility(View.VISIBLE))
+    }
+
+    @Test
+    fun displayFileTooBigError() {
+        activityRule.launchActivity(givenIntent())
+        goToBase()
+        givenAllPhotosRequired()
+
+        onView(withId(R.id.fiPassport)).perform(click())
+        activityRule.activity.model.apply {
+            userDocs.currentPhotoType = PhotoType.ID
+            setImage("", 201 * 1024 * 1024)
+        }
+
+        SystemClock.sleep(500) // FIXME make espresso wait for layout to settle
+
+        onView(withText(R.string.cexd_file_too_big)).perform(scrollTo())
+            .check(hasVisibility(View.VISIBLE))
     }
 
     @Test

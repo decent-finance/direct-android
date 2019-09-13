@@ -366,8 +366,8 @@ class VerificationActivityViewModel(
         cvvInfoEvent.call()
     }
 
-    fun setImage(imageBase64: String) {
-        userDocs.setImage(imageBase64)
+    fun setImage(imageBase64: String, length: Long) {
+        userDocs.setImage(imageBase64, length)
     }
 
     fun closeCountryPicker() {

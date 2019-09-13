@@ -369,7 +369,12 @@ class IdentityFragment : BaseVerificationFragment() {
             when (requestCode) {
                 RQ_CHOOSE_PIC -> {
                     data?.data?.let { uri ->
-                        convertAndSet(context!!, uri) { model.setImage(it) }
+                        convertAndSet(context!!, uri) {
+                            model.setImage(
+                                it,
+                                File(uri.path!!).length()
+                            )
+                        }
 
                         Glide.with(this)
                             .load(uri)
@@ -379,7 +384,12 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
                 RQ_TAKE_PHOTO -> {
                     try {
-                        convertAndSet(currentPhotoPath) { model.setImage(it) }
+                        convertAndSet(currentPhotoPath) {
+                            model.setImage(
+                                it,
+                                File(currentPhotoPath).length()
+                            )
+                        }
 
                         Glide.with(this)
                             .load(File(currentPhotoPath))
