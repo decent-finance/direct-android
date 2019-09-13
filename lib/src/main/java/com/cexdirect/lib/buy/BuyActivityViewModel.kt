@@ -65,14 +65,15 @@ class BuyActivityViewModel(
                 amount.precisionList.find { it.currency == amount.selectedFiatCurrency }?.let {
                     amount.fiatInputFilter = TradeInputFilter(it.visiblePrecision)
                 }
-                amount.precisionList.findLast { it.currency == amount.selectedCryptoCurrency }?.let {
-                    amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
-                }
+                amount.precisionList.findLast { it.currency == amount.selectedCryptoCurrency }
+                    ?.let {
+                        amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
+                    }
 
             }
             paymentApi.getExchangeRates(this).apply { execute() }
         })
-    }!!
+    }
 
     val sendBuyEvent = analyticsApi.sendBuyEvent(this) {
         EventData(

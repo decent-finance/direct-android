@@ -47,7 +47,7 @@ class PaymentConfirmationFragmentViewModel(
 
     val changeEmail = Transformations.switchMap(emailChangedEvent) {
         orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
-    }!!
+    }
 
     val resendCheckCode =
         orderApi.resendCheckCode(this@PaymentConfirmationFragmentViewModel, orderId)

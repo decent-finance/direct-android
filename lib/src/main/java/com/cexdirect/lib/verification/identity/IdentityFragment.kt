@@ -186,13 +186,13 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
             })
             chooseCountryEvent.observe(this@IdentityFragment, Observer {
-                CountryPickerDialog().show(fragmentManager, "country")
+                CountryPickerDialog().show(fragmentManager!!, "country")
             })
             chooseStateEvent.observe(this@IdentityFragment, Observer {
-                StatePickerDialog().show(fragmentManager, "state")
+                StatePickerDialog().show(fragmentManager!!, "state")
             })
             uploadPhotoEvent.observe(this@IdentityFragment, Observer {
-                PhotoSourceDialog().show(fragmentManager, "choose")
+                PhotoSourceDialog().show(fragmentManager!!, "choose")
             })
             verificationResult.observe(this@IdentityFragment, Observer {
                 when (it) {
@@ -209,7 +209,7 @@ class IdentityFragment : BaseVerificationFragment() {
                 }
             })
             cvvInfoEvent.observe(this@IdentityFragment, Observer {
-                CvvInfoDialog().show(fragmentManager, "cvv")
+                CvvInfoDialog().show(fragmentManager!!, "cvv")
             })
         }.let { binding.model = it }
         stickyViewEvent.postValue(R.id.fiNext)

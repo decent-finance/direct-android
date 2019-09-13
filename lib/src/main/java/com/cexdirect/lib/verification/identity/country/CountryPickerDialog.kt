@@ -80,7 +80,7 @@ abstract class BaseCountryPickerDialog : BaseBottomSheetDialog() {
         binding.root.requestLayout()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         model.clearSearch()
     }

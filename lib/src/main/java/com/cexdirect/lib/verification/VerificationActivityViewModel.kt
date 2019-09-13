@@ -126,7 +126,7 @@ class VerificationActivityViewModel(
                     }.apply { execute() }
                 }
             })
-        }!!
+        }
 
     val processingKey =
         orderApi.getProcessingKey(this) {
@@ -144,7 +144,7 @@ class VerificationActivityViewModel(
                 }.apply { execute() }
             }
         })
-    }!!
+    }
 
     val orderInfo = orderApi.checkOrderInfo(this)
 
