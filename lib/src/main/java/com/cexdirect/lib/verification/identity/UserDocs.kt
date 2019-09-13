@@ -220,14 +220,17 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         when (currentPhotoType) {
             PhotoType.SELFIE -> {
                 selfieSizeValid = true
+                selfieStatus = FieldStatus.VALID
                 selfieBase64 = imageBase64
             }
             PhotoType.ID -> {
                 selfieSizeValid = true
+                documentFrontStatus = FieldStatus.VALID
                 imagesBase64["front"] = imageBase64
             }
             PhotoType.ID_BACK -> {
                 selfieSizeValid = true
+                documentBackStatus = FieldStatus.VALID
                 imagesBase64["back"] = imageBase64
             }
         }

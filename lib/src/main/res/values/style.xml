@@ -351,9 +351,8 @@
     <style name="Direct.Document">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">200dp</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
         <item name="android:scaleType">centerInside</item>
-        <item name="android:background">@drawable/selector_bg_doc</item>
     </style>
 </resources>
