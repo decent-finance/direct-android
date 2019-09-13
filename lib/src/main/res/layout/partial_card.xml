@@ -140,8 +140,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:text="@string/cexd_invalid_exp_date"
                     android:visibility="@{model.userCardData.expiryStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
@@ -212,8 +210,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:text="@string/cexd_invalid_cvv"
                     android:visibility="@{model.userCardData.cvvStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
