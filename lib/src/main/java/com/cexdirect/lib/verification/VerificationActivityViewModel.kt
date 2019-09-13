@@ -162,7 +162,7 @@ class VerificationActivityViewModel(
                 ImageBody(
                     ImageData(
                         documentType = userDocs.documentType.value,
-                        base64image = userDocs.imagesBase64.values.toTypedArray()
+                        base64image = userDocs.getDocumentPhotosArray()
                     )
                 )
             }
