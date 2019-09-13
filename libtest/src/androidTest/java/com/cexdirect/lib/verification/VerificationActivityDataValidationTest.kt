@@ -40,7 +40,6 @@ import com.cexdirect.lib.verification.identity.VerificationStep
 import com.cexdirect.lib.views.CollapsibleLayout
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.allOf
 import org.junit.*
 import org.mockito.Mock
 
@@ -78,8 +77,13 @@ class VerificationActivityDataValidationTest {
         activityRule.activity.model.createOrder()
         closeSoftKeyboard()
 
-        onView(withText(R.string.cexd_invalid_email)).perform(scrollTo()).check(hasVisibility(View.VISIBLE))
-        onView(withText(R.string.cexd_select_country))/*.perform(scrollTo())*/.check(hasVisibility(View.VISIBLE))
+        onView(withText(R.string.cexd_invalid_email)).perform(scrollTo())
+            .check(hasVisibility(View.VISIBLE))
+        onView(withText(R.string.cexd_select_country))/*.perform(scrollTo())*/.check(
+            hasVisibility(
+                View.VISIBLE
+            )
+        )
     }
 
     @Test
@@ -88,7 +92,9 @@ class VerificationActivityDataValidationTest {
 
         onView(withHint(R.string.cexd_email)).perform(typeText("aaaaaaa"))
 
-        onView(withText(R.string.cexd_invalid_email)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withText(R.string.cexd_invalid_email))
+            .perform(scrollTo())
+            .check(matches(isDisplayed()))
     }
 
     @Test
@@ -100,11 +106,9 @@ class VerificationActivityDataValidationTest {
         onView(withId(R.id.fiPassport)).perform(click())
         onView(withId(R.id.fiNext)).perform(click())
 
-        onView(allOf(
-                withText(R.string.cexd_no_photo_uploaded),
-                hasSibling(withId(R.id.fiDocument)),
-            withParentIndex(3)
-        )).perform(scrollTo()).check(hasVisibility(View.VISIBLE))
+        onView(withId(R.id.pdDocFrontError))
+            .perform(scrollTo())
+            .check(hasVisibility(View.VISIBLE))
     }
 
     @Test
@@ -156,7 +160,8 @@ class VerificationActivityDataValidationTest {
         onView(withHint(R.string.cexd_cvv)).perform(scrollTo(), typeText("9"))
         closeSoftKeyboard()
 
-        onView(withText(R.string.cexd_invalid_cvv)).perform(scrollTo()).check(hasVisibility(View.VISIBLE))
+        onView(withText(R.string.cexd_invalid_cvv)).perform(scrollTo())
+            .check(hasVisibility(View.VISIBLE))
     }
 
     @Test
@@ -167,8 +172,8 @@ class VerificationActivityDataValidationTest {
 
         val model = activityRule.activity.model
         assertThat(model.validationMap).hasSize(2)
-                .hasEntrySatisfying(entryData("userLastName", FieldStatus.EMPTY))
-                .hasEntrySatisfying(entryData("userFirstName", FieldStatus.EMPTY))
+            .hasEntrySatisfying(entryData("userLastName", FieldStatus.EMPTY))
+            .hasEntrySatisfying(entryData("userFirstName", FieldStatus.EMPTY))
     }
 
     @Ignore("loader is shown for some reason")
@@ -183,9 +188,9 @@ class VerificationActivityDataValidationTest {
         model.uploadExtraPaymentData()
 
         assertThat(model.validationMap)
-                .hasSize(2)
-                .hasEntrySatisfying(entryData("userLastName", FieldStatus.VALID))
-                .hasEntrySatisfying(entryData("userFirstName", FieldStatus.INVALID))
+            .hasSize(2)
+            .hasEntrySatisfying(entryData("userLastName", FieldStatus.VALID))
+            .hasEntrySatisfying(entryData("userFirstName", FieldStatus.INVALID))
     }
 
     private fun goToBase() {
@@ -207,12 +212,12 @@ class VerificationActivityDataValidationTest {
     }
 
     private fun givenIntent() =
-            Intent().apply {
-                putExtra("crypto", "BTC")
-                putExtra("cryptoAmount", "0.5")
-                putExtra("fiat", "USD")
-                putExtra("fiatAmount", "50")
-            }
+        Intent().apply {
+            putExtra("crypto", "BTC")
+            putExtra("cryptoAmount", "0.5")
+            putExtra("fiat", "USD")
+            putExtra("fiatAmount", "50")
+        }
 
     private fun givenAllPhotosRequired() {
         activityRule.activity.model.userDocs.requiredImages = Images(true, true)
@@ -221,10 +226,10 @@ class VerificationActivityDataValidationTest {
     private fun givenAdditionalFields() {
         activityRule.activity.model.apply {
             additionalFields.set(
-                    hashMapOf(
-                            "userFirstName" to Additional(null, true, true),
-                            "userLastName" to Additional(null, true, true)
-                    )
+                hashMapOf(
+                    "userFirstName" to Additional(null, true, true),
+                    "userLastName" to Additional(null, true, true)
+                )
             )
         }
     }
