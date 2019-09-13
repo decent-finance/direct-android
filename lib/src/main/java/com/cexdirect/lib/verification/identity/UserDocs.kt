@@ -104,6 +104,13 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
+    var selfieSizeValid = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selfieSizeValid)
+        }
+
+    @get:Bindable
     var documentFrontStatus = FieldStatus.EMPTY
         set(value) {
             field = value
@@ -111,10 +118,24 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
+    var documentFrontSizeValid = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentFrontSizeValid)
+        }
+
+    @get:Bindable
     var documentBackStatus = FieldStatus.EMPTY
         set(value) {
             field = value
             notifyPropertyChanged(BR.documentBackStatus)
+        }
+
+    @get:Bindable
+    var documentBackSizeValid = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentBackSizeValid)
         }
 
     var imagesBase64 = ObservableArrayMap<String, String>()
@@ -175,7 +196,9 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                             else -> error("Illegal doc type")
                         }
                         documentFrontStatus = FieldStatus.EMPTY
+                        documentFrontSizeValid = true
                         documentBackStatus = FieldStatus.EMPTY
+                        documentBackSizeValid = true
                     }
                     BR.documentTypeSelected -> documentSelectionStatus = FieldStatus.VALID
                 }
@@ -193,11 +216,36 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         })
     }
 
-    fun setImage(imageBase64: String) {
+    fun setImage(imageBase64: String, length: Long) {
+        val fileSizeValid = fileSizeValid(length)
         when (currentPhotoType) {
-            PhotoType.SELFIE -> selfieBase64 = imageBase64
-            PhotoType.ID -> imagesBase64["front"] = imageBase64
-            PhotoType.ID_BACK -> imagesBase64["back"] = imageBase64
+            PhotoType.SELFIE -> {
+                if (fileSizeValid) {
+                    selfieSizeValid = true
+                    selfieBase64 = imageBase64
+                } else {
+                    selfieSizeValid = false
+                    selfieStatus = FieldStatus.INVALID
+                }
+            }
+            PhotoType.ID -> {
+                if (fileSizeValid) {
+                    selfieSizeValid = true
+                    imagesBase64["front"] = imageBase64
+                } else {
+                    documentFrontSizeValid = false
+                    documentFrontStatus = FieldStatus.INVALID
+                }
+            }
+            PhotoType.ID_BACK -> {
+                if (fileSizeValid) {
+                    selfieSizeValid = true
+                    imagesBase64["back"] = imageBase64
+                } else {
+                    documentBackSizeValid = false
+                    documentBackStatus = FieldStatus.INVALID
+                }
+            }
         }
     }
 
@@ -223,6 +271,9 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
     }
 
+    private fun fileSizeValid(length: Long) =
+        (length / (BYTES_IN_KB * BYTES_IN_KB)) <= MAX_FILE_SIZE_MB
+
     fun isValid() = documentTypeSelected && docsValid() && selfieValid()
 
     private fun docsValid() =
@@ -243,4 +294,8 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             true
         }
 
+    companion object {
+        const val MAX_FILE_SIZE_MB = 15
+        const val BYTES_IN_KB = 1024.0
+    }
 }
