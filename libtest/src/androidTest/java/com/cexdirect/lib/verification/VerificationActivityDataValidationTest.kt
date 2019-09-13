@@ -116,7 +116,7 @@ class VerificationActivityDataValidationTest {
         onView(withId(R.id.fiPassport)).perform(click())
         activityRule.activity.model.apply {
             userDocs.currentPhotoType = PhotoType.ID
-            setImage("", 201 * 1024 * 1024)
+            setImageSizeInvalid()
         }
 
         SystemClock.sleep(500) // FIXME make espresso wait for layout to settle
