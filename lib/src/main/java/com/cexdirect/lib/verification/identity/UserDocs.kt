@@ -216,35 +216,19 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         })
     }
 
-    fun setImage(imageBase64: String, length: Long) {
-        val fileSizeValid = fileSizeValid(length)
+    fun setImage(imageBase64: String) {
         when (currentPhotoType) {
             PhotoType.SELFIE -> {
-                if (fileSizeValid) {
-                    selfieSizeValid = true
-                    selfieBase64 = imageBase64
-                } else {
-                    selfieSizeValid = false
-                    selfieStatus = FieldStatus.INVALID
-                }
+                selfieSizeValid = true
+                selfieBase64 = imageBase64
             }
             PhotoType.ID -> {
-                if (fileSizeValid) {
-                    selfieSizeValid = true
-                    imagesBase64["front"] = imageBase64
-                } else {
-                    documentFrontSizeValid = false
-                    documentFrontStatus = FieldStatus.INVALID
-                }
+                selfieSizeValid = true
+                imagesBase64["front"] = imageBase64
             }
             PhotoType.ID_BACK -> {
-                if (fileSizeValid) {
-                    selfieSizeValid = true
-                    imagesBase64["back"] = imageBase64
-                } else {
-                    documentBackSizeValid = false
-                    documentBackStatus = FieldStatus.INVALID
-                }
+                selfieSizeValid = true
+                imagesBase64["back"] = imageBase64
             }
         }
     }
@@ -271,9 +255,6 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
     }
 
-    private fun fileSizeValid(length: Long) =
-        (length / (BYTES_IN_KB * BYTES_IN_KB)) <= MAX_FILE_SIZE_MB
-
     fun isValid() = documentTypeSelected && docsValid() && selfieValid()
 
     private fun docsValid() =
@@ -294,8 +275,20 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             true
         }
 
-    companion object {
-        const val MAX_FILE_SIZE_MB = 15
-        const val BYTES_IN_KB = 1024.0
+    fun setImageSizeInvalid() {
+        when (currentPhotoType) {
+            PhotoType.ID -> {
+                documentFrontSizeValid = false
+                documentFrontStatus = FieldStatus.INVALID
+            }
+            PhotoType.ID_BACK -> {
+                documentBackSizeValid = false
+                documentBackStatus = FieldStatus.INVALID
+            }
+            PhotoType.SELFIE -> {
+                selfieSizeValid = false
+                selfieStatus = FieldStatus.INVALID
+            }
+        }
     }
 }

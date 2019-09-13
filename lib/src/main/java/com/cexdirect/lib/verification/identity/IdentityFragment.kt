@@ -369,32 +369,33 @@ class IdentityFragment : BaseVerificationFragment() {
             when (requestCode) {
                 RQ_CHOOSE_PIC -> {
                     data?.data?.let { uri ->
-                        convertAndSet(context!!, uri) {
-                            model.setImage(
-                                it,
-                                File(uri.path!!).length()
-                            )
-                        }
-
-                        Glide.with(this)
-                            .load(uri)
-                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                            .into(targetView)
+                        convertAndSet(
+                            context!!,
+                            uri,
+                            {
+                                model.setImage(it)
+                                Glide.with(this)
+                                    .load(uri)
+                                    .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                    .into(targetView)
+                            },
+                            { model.setImageSizeInvalid() }
+                        )
                     }
                 }
                 RQ_TAKE_PHOTO -> {
                     try {
-                        convertAndSet(currentPhotoPath) {
-                            model.setImage(
-                                it,
-                                File(currentPhotoPath).length()
-                            )
-                        }
-
-                        Glide.with(this)
-                            .load(File(currentPhotoPath))
-                            .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                            .into(targetView)
+                        convertAndSet(
+                            currentPhotoPath,
+                            {
+                                model.setImage(it)
+                                Glide.with(this)
+                                    .load(File(currentPhotoPath))
+                                    .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                    .into(targetView)
+                            },
+                            { model.setImageSizeInvalid() }
+                        )
                     } catch (e: FileNotFoundException) {
                         toast(R.string.cexd_file_not_found)
                     }

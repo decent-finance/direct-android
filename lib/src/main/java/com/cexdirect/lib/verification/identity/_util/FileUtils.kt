@@ -25,15 +25,31 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 
-fun convertAndSet(imgFilePath: String, block: (imgBase64: String) -> Unit) {
-    FileInputStream(File(imgFilePath)).use { input ->
-        convertStreamToBase64(input)?.let { block.invoke(it) }
+fun convertAndSet(imgFilePath: String, block: (imgBase64: String) -> Unit, failure: () -> Unit) {
+    val imgFile = File(imgFilePath)
+    if (fileSizeValid(imgFile.length())) {
+        FileInputStream(imgFile).use { input ->
+            convertStreamToBase64(input)?.let { block.invoke(it) }
+        }
+    } else {
+        failure.invoke()
     }
 }
 
-fun convertAndSet(context: Context, uri: Uri, block: (imgBase64: String) -> Unit) {
-    context.contentResolver.openInputStream(uri)?.use { input ->
-        convertStreamToBase64(input)?.let { block.invoke(it) }
+fun convertAndSet(
+    context: Context,
+    uri: Uri,
+    success: (imgBase64: String) -> Unit,
+    failure: () -> Unit
+) {
+    val fileLength =
+        context.contentResolver.openTypedAssetFileDescriptor(uri, "*/*", null)!!.length
+    if (fileSizeValid(fileLength)) {
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            convertStreamToBase64(input)?.let { success.invoke(it) }
+        }
+    } else {
+        failure.invoke()
     }
 }
 
@@ -46,3 +62,9 @@ fun convertStreamToBase64(input: InputStream): String? {
         }
     }
 }
+
+fun fileSizeValid(length: Long) =
+    (length / (BYTES_IN_KB * BYTES_IN_KB)) <= MAX_FILE_SIZE_MB
+
+const val MAX_FILE_SIZE_MB = 15
+const val BYTES_IN_KB = 1024.0
