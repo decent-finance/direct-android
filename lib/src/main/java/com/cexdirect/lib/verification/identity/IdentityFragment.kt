@@ -368,19 +368,23 @@ class IdentityFragment : BaseVerificationFragment() {
 
             when (requestCode) {
                 RQ_CHOOSE_PIC -> {
-                    data?.data?.let { uri ->
-                        convertAndSet(
-                            context!!,
-                            uri,
-                            {
-                                model.setImage(it)
-                                Glide.with(this)
-                                    .load(uri)
-                                    .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                                    .into(targetView)
-                            },
-                            { model.setImageSizeInvalid() }
-                        )
+                    try {
+                        data?.data?.let { uri ->
+                            convertAndSet(
+                                context!!,
+                                uri,
+                                {
+                                    model.setImage(it)
+                                    Glide.with(this)
+                                        .load(uri)
+                                        .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                        .into(targetView)
+                                },
+                                { model.setImageSizeInvalid() }
+                            )
+                        }
+                    } catch (e: FileNotFoundException) {
+                        toast(R.string.cexd_file_not_loaded)
                     }
                 }
                 RQ_TAKE_PHOTO -> {
