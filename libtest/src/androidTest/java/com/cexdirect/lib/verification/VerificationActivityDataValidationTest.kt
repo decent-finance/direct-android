@@ -182,7 +182,6 @@ class VerificationActivityDataValidationTest {
         val model = activityRule.activity.model
         model.uploadExtraPaymentData()
 
-
         assertThat(model.validationMap)
                 .hasSize(2)
                 .hasEntrySatisfying(entryData("userLastName", FieldStatus.VALID))
