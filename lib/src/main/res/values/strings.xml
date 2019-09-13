@@ -124,6 +124,7 @@
     <string name="cexd_choose_country">Choose Country</string>
     <string name="cexd_choose_state">Choose State</string>
     <string name="cexd_file_not_found">File not found</string>
+    <string name="cexd_file_not_loaded">Could not load file</string>
     <string name="cexd_currency_is_selected">Currency is selected</string>
     <string name="cexd_identity_payment_data">Identity and Payment Data</string>
     <string name="cexd_city">City</string>
