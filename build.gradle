@@ -16,7 +16,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
         classpath 'com.google.gms:google-services:4.3.2'
         classpath 'io.fabric.tools:gradle:1.31.0'
-        classpath 'com.cmgapps:gradle-licenses-plugin:1.2.1'
+        classpath 'com.cmgapps:gradle-licenses-plugin:1.3.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'org.ajoberstar:grgit:2.3.0'
@@ -37,6 +37,20 @@ allprojects {
         maven { url "https://dl.bintray.com/shopify/shopify-android" }
     }
     apply from: "$rootDir/detekt.gradle"
+}
+
+ext {
+    testCoreVersion = '1.2.0'
+    coreTestingVersion = '2.1.0'
+    espressoVersion = '3.2.0'
+    assertjVersion = '2.9.1'
+    daggerMockVersion = '0.8.5'
+    mockitoVersion = '3.0.0'
+    mockitoKotlinVersion = '2.1.0'
+    testRunnerVersion = '1.2.0'
+    testRulesVersion = '1.2.0'
+    orchestratorVersion = '1.2.0'
+    databindVersion = '3.5.0'
 }
 
 task clean(type: Delete) {
