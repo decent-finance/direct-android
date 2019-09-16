@@ -25,6 +25,8 @@
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
     </data>
 
     <merge>
@@ -45,7 +47,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="10dp"
-            android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}">
+            android:visibility="@{model.userCountry.shouldShowState ? View.VISIBLE : View.GONE}"
+            app:isActivated="@{model.userSsn.ssnStatus == FieldStatus.INVALID}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -62,18 +65,30 @@
                 app:hintTextAppearance="@style/Direct.TextHint">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/psSsn"
                     style="@style/Direct.Input2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/cexd_ssn"
                     android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:text="@={model.extras[`billingSsn`]}"
+                    android:inputType="number"
+                    android:digits="0123456789-"
+                    android:text="@={model.userSsn.ssn}"
                     tools:text="" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
+
+        <TextView
+            style="@style/Direct.Textfield.Error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cexd_invalid_ssn"
+            android:visibility="@{model.userSsn.ssnStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
     </merge>
 

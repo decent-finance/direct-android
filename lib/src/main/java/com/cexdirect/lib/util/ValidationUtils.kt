@@ -14,17 +14,34 @@
  *    limitations under the License.
  */
 
+@file:Suppress("MatchingDeclarationName")
+
 package com.cexdirect.lib.util
 
 import java.util.regex.Pattern
 
-val emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
+val emailPattern =
+    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
 
 fun checkEmailStatus(email: String?) =
     if (email.isNullOrBlank()) {
         FieldStatus.EMPTY
     } else {
         if (emailPattern.matcher(email).matches()) {
+            FieldStatus.VALID
+        } else {
+            FieldStatus.INVALID
+        }
+    }
+
+val ssnPattern =
+    Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}\$")!!
+
+fun checkSsnStatus(ssn: String?) =
+    if (ssn.isNullOrBlank()) {
+        FieldStatus.EMPTY
+    } else {
+        if (ssnPattern.matcher(ssn).matches()) {
             FieldStatus.VALID
         } else {
             FieldStatus.INVALID

@@ -48,11 +48,12 @@ import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.events.StickyViewEvent
-import com.cexdirect.lib.verification.identity._util.CreditCardFormatTextWatcher
-import com.cexdirect.lib.verification.identity._util.DateWatcher
-import com.cexdirect.lib.verification.identity._util.convertAndSet
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
+import com.cexdirect.lib.verification.identity.util.CreditCardFormatTextWatcher
+import com.cexdirect.lib.verification.identity.util.DateWatcher
+import com.cexdirect.lib.verification.identity.util.SsnWatcher
+import com.cexdirect.lib.verification.identity.util.convertAndSet
 import com.cexdirect.lib.views.CollapsibleLayout
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
@@ -125,6 +126,10 @@ class IdentityFragment : BaseVerificationFragment() {
             fiContent.layoutTransition = LayoutTransition().apply {
                 disableTransitionType(LayoutTransition.DISAPPEARING)
                 enableTransitionType(LayoutTransition.CHANGING)
+            }
+            fiSsn.psSsn.apply {
+                filters = arrayOf(InputFilter.LengthFilter(MAX_SSN_LENGTH))
+                addTextChangedListener(SsnWatcher(this))
             }
         }
 
@@ -412,6 +417,7 @@ class IdentityFragment : BaseVerificationFragment() {
         const val MAX_CARD_LENGTH = 16
         const val MAX_CVV_LENGTH = 4
         const val MAX_EXP_DATE_LENGTH = 5
+        const val MAX_SSN_LENGTH = 11
         const val THUMBNAIL_SCALE_FACTOR = 0.25f
         const val RQ_TAKE_PHOTO = 1000
         const val RQ_CHOOSE_PIC = 1001

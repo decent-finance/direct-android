@@ -107,6 +107,7 @@
                 app:model="@{model}" />
 
             <include
+                android:id="@+id/fiSsn"
                 layout="@layout/partial_ssn"
                 app:model="@{model}" />
 

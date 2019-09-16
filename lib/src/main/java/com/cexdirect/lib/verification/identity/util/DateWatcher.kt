@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.identity._util
+package com.cexdirect.lib.verification.identity.util
 
 import android.text.Editable
 import android.text.TextWatcher

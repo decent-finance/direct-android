@@ -139,6 +139,20 @@ class VerificationActivityDataValidationTest {
         onView(withText(R.string.cexd_invalid_card_number)).check(hasVisibility(View.VISIBLE))
     }
 
+    @Ignore
+    @Test
+    fun displayValidationErrorForSsn() {
+        activityRule.launchActivity(givenIntent())
+        goToBase()
+        activityRule.activity.model.apply {
+            userCountry.shouldShowState = true
+        }
+
+        onView(withHint(R.string.cexd_ssn)).perform(scrollTo(), typeText("911"))
+
+        onView(withText(R.string.cexd_invalid_ssn)).check(hasVisibility(View.VISIBLE))
+    }
+
     @Ignore // todo fix
     @Test
     fun displayValidationErrorsForCardExpDate() {

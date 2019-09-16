@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.identity._util;
+package com.cexdirect.lib.verification.identity.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -25,6 +25,7 @@ import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.TypedValue;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 
 /**

@@ -70,6 +70,7 @@ class VerificationActivityViewModel(
     val userCountry = UserCountry()
     val userCardData = UserCardData(dh)
     val userWallet = UserWallet()
+    val userSsn = UserSsn()
     val userDocs: UserDocs /* intentionally specified explicitly */ =
         UserDocs(stringProvider).apply {
             uploadAction = { uploadImage.execute() }
@@ -177,7 +178,7 @@ class VerificationActivityViewModel(
         )
 
         val additional = if (userCountry.shouldShowState) {
-            mapOf("billingSsn" to extras["billingSsn"]!!)
+            mapOf("billingSsn" to userSsn.getFormattedValue())
         } else {
             emptyMap()
         }
@@ -262,7 +263,7 @@ class VerificationActivityViewModel(
     }
 
     private fun ssnPresent() =
-        if (userCountry.shouldShowState) !extras["billingSsn"].isNullOrBlank() else true
+        if (userCountry.shouldShowState) userSsn.isSsnValid() else true
 
     private fun forceValidateExtras() {
         validationMap.entries.forEach {
@@ -334,6 +335,9 @@ class VerificationActivityViewModel(
         userCardData.forceValidate()
         userTerms.forceValidate()
         userWallet.forceValidate()
+        if (userCountry.shouldShowState) {
+            userSsn.forceValidate()
+        }
 
         if (paymentDataValid()) {
             basePaymentData.execute()
