@@ -30,6 +30,10 @@
             alias="type"
             type="com.cexdirect.lib.verification.identity.PhotoType" />
 
+        <import
+            alias="docType"
+            type="com.cexdirect.lib.verification.identity.DocumentType" />
+
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
     </data>
@@ -141,6 +145,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:animateLayoutChanges="true"
                     android:background="@drawable/selector_bg_doc"
                     android:orientation="vertical"
                     android:paddingTop="8dp"
@@ -152,7 +157,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|top"
-                        android:text="@string/cexd_front_side" />
+                        android:text="@string/cexd_front_side"
+                        android:visibility="@{model.userDocs.documentType == docType.PASSPORT ? View.GONE : View.VISIBLE }" />
 
                     <ImageView
                         android:id="@+id/fiDocument"
@@ -171,7 +177,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentFrontSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentFrontSizeValid ? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
