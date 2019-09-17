@@ -163,7 +163,6 @@
                     <ImageView
                         android:id="@+id/fiDocument"
                         style="@style/Direct.Document"
-                        app:isActivated="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID}"
                         app:pic="@{model.userDocs.documentImage}"
                         tools:src="@drawable/ic_pic_passport" />
 
@@ -216,7 +215,6 @@
                     <ImageView
                         android:id="@+id/fiDocumentBack"
                         style="@style/Direct.Document"
-                        android:layout_gravity="bottom"
                         app:pic="@{model.userDocs.documentImageBack}"
                         tools:src="@drawable/ic_pic_passport" />
 
@@ -268,6 +266,8 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/selector_bg_doc"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
                         android:src="@drawable/ic_pic_portrait"
                         app:isActivated="@{model.userDocs.selfieStatus == FieldStatus.INVALID}" />
 
