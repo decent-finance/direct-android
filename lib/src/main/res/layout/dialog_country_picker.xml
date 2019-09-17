@@ -95,6 +95,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="8dp"
                     android:layout_toStartOf="@id/dcpCloseSearch"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
                     android:text="@={model.countrySearch}"
                     android:textSize="14sp" />
             </RelativeLayout>
