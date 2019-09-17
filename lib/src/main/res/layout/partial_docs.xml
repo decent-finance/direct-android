@@ -176,7 +176,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentFrontSizeValid ? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentFrontSizeValid ? model.userDocs.documentFrontErrorText : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -227,7 +227,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentBackSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentBackSizeValid ? @string/cexd_no_back : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -278,9 +278,10 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@{model.userDocs.selfieSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                        android:text="@{model.userDocs.selfieSizeValid ? @string/cexd_no_photo : @string/cexd_file_too_big}"
                         android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
-                        tools:visibility="gone" />
+                        tools:text="@string/cexd_no_photo"
+                        tools:visibility="visible" />
 
                     <Button
                         android:id="@+id/fiSelfieUpl"

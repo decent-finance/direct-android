@@ -138,6 +138,13 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             notifyPropertyChanged(BR.documentBackSizeValid)
         }
 
+    @get:Bindable
+    var documentFrontErrorText = stringProvider.provideString(R.string.cexd_no_front)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentFrontErrorText)
+        }
+
     var imagesBase64 = ObservableArrayMap<String, String>()
 
     @get:Bindable
@@ -159,6 +166,13 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                         requiredImagesAmount = when (documentType) {
                             DocumentType.PASSPORT -> 1
                             DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD -> 2
+                            else -> error("Illegal document type $documentType")
+                        }
+                        documentFrontErrorText = when (documentType) {
+                            DocumentType.PASSPORT ->
+                                stringProvider.provideString(R.string.cexd_no_photo)
+                            DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD ->
+                                stringProvider.provideString(R.string.cexd_no_front)
                             else -> error("Illegal document type $documentType")
                         }
                     }
