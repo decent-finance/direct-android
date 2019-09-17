@@ -50,10 +50,7 @@ import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
-import com.cexdirect.lib.verification.identity.util.CreditCardFormatTextWatcher
-import com.cexdirect.lib.verification.identity.util.DateWatcher
-import com.cexdirect.lib.verification.identity.util.SsnWatcher
-import com.cexdirect.lib.verification.identity.util.convertAndSet
+import com.cexdirect.lib.verification.identity.util.*
 import com.cexdirect.lib.views.CollapsibleLayout
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
@@ -385,7 +382,12 @@ class IdentityFragment : BaseVerificationFragment() {
                                         .thumbnail(THUMBNAIL_SCALE_FACTOR)
                                         .into(targetView)
                                 },
-                                { model.setImageSizeInvalid() }
+                                {
+                                    when (it) {
+                                        FailType.SIZE_INVALID -> model.setImageSizeInvalid()
+                                        FailType.UNSUPPORTED_FORMAT -> toast(R.string.cexd_file_unsupported)
+                                    }
+                                }
                             )
                         }
                     } catch (e: FileNotFoundException) {

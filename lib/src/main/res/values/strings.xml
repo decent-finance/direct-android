@@ -160,4 +160,5 @@
     <string name="cexd_file_too_big">File size should be no more than 15 MB</string>
     <string name="cexd_front_side">Front Side</string>
     <string name="cexd_back_side">Back Side</string>
+    <string name="cexd_file_unsupported">Unsupported file format</string>
 </resources>

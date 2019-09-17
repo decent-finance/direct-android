@@ -25,6 +25,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 
+enum class FailType {
+    SIZE_INVALID, UNSUPPORTED_FORMAT
+}
+
 fun convertAndSet(imgFilePath: String, block: (imgBase64: String) -> Unit, failure: () -> Unit) {
     val imgFile = File(imgFilePath)
     if (fileSizeValid(imgFile.length())) {
@@ -40,16 +44,26 @@ fun convertAndSet(
     context: Context,
     uri: Uri,
     success: (imgBase64: String) -> Unit,
-    failure: () -> Unit
+    failure: (type: FailType) -> Unit
 ) {
-    val fileLength =
-        context.contentResolver.openTypedAssetFileDescriptor(uri, "*/*", null)!!.length
+    val resolver = context.contentResolver
+
+    val mimeType = resolver.getType(uri) ?: ""
+    if (!mimeType.startsWith("image/")) {
+        failure.invoke(FailType.UNSUPPORTED_FORMAT)
+        return
+    }
+
+    val fileDescriptor =
+        resolver.openTypedAssetFileDescriptor(uri, "*/*", null)!!
+
+    val fileLength = fileDescriptor.length
     if (fileSizeValid(fileLength)) {
-        context.contentResolver.openInputStream(uri)?.use { input ->
+        resolver.openInputStream(uri)?.use { input ->
             convertStreamToBase64(input)?.let { success.invoke(it) }
         }
     } else {
-        failure.invoke()
+        failure.invoke(FailType.SIZE_INVALID)
     }
 }
 
