@@ -93,6 +93,7 @@ jobs:
               --app app/build/outputs/apk/dev/debug/app-dev-debug.apk \
               --test app/build/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk \
               --device model=Pixel2,version=28,locale=en,orientation=portrait \
+              --num-flaky-test-attempts=1 \
               --use-orchestrator | tee -a ~/ftl.txt
       - store_artifacts:
           path: ~/ftl.txt
