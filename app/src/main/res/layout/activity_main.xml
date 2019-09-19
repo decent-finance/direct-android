@@ -37,6 +37,14 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
+        <CheckBox
+            android:id="@+id/cbLeakToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:checked="false"
+            android:text="@string/enable_leak_detection" />
+
         <TextView
             android:id="@+id/tvBranchName"
             android:layout_width="wrap_content"
