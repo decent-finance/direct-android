@@ -116,7 +116,7 @@ class DirectProgressView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         canvas.drawCircle(oval.centerX(), oval.centerY(), (oval.right - padding) / 2, paint)
-        canvas.drawArc(oval, startAngle, 310F, false, archPaint)
+        canvas.drawArc(oval, startAngle, angleProgress, false, archPaint)
     }
 
     inner class CircleAnimation : Animation() {
