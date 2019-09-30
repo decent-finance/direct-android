@@ -5,7 +5,17 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'io.fabric'
 apply plugin: 'org.ajoberstar.grgit'
+apply plugin: 'com.google.firebase.appdistribution'
 apply from: '../config.gradle'
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath 'com.google.firebase:firebase-appdistribution-gradle:1.0.0'
+    }
+}
 
 android {
     compileSdkVersion 28
@@ -18,7 +28,7 @@ android {
         targetSdkVersion 28
 
         versionCode 1
-        versionName "1.0"
+        versionName "${new Date().format("yyyyMMdd-HHmm")}-${grgit.head().abbreviatedId}"
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
 
@@ -67,6 +77,12 @@ android {
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['devSecret']}\"")
 
             applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+
+            firebaseAppDistribution {
+                releaseNotes="DEV/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
 
         uat {
@@ -74,11 +90,22 @@ android {
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['uatSecret']}\"")
 
             applicationIdSuffix '.uat'
+            versionNameSuffix '-uat'
+
+            firebaseAppDistribution {
+                releaseNotes="UAT/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
 
         prod {
             buildConfigField('String', 'PLACEMENT_ID', "\"${project.ext.configProperties['prodPlacementId']}\"")
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['prodSecret']}\"")
+
+            firebaseAppDistribution {
+                releaseNotes="PROD/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
     }
 
