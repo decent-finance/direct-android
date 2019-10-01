@@ -186,7 +186,7 @@ class VerificationActivityViewModel(
     }
 
     val extraPaymentData = orderApi.updatePaymentData(this) {
-        PaymentData(paymentData = null, additional = extras)
+        PaymentData(paymentData = null, additional = extras, termUrl = null)
     }
     // --- Requests --- //
 
