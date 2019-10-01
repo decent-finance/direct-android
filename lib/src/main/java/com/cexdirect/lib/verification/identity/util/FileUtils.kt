@@ -55,7 +55,7 @@ fun convertAndSet(
     }
 
     val fileDescriptor =
-        resolver.openTypedAssetFileDescriptor(uri, "*/*", null)!!
+        resolver.openTypedAssetFileDescriptor(uri, "image/*", null)!!
 
     val fileLength = fileDescriptor.length
     if (fileSizeValid(fileLength)) {
@@ -77,8 +77,7 @@ fun convertStreamToBase64(input: InputStream): String? {
     }
 }
 
-fun fileSizeValid(length: Long) =
-    (length / (BYTES_IN_KB * BYTES_IN_KB)) <= MAX_FILE_SIZE_MB
+fun fileSizeValid(length: Long) = (length / BYTES_IN_MB) <= MAX_FILE_SIZE_MB
 
 const val MAX_FILE_SIZE_MB = 15
-const val BYTES_IN_KB = 1024.0
+const val BYTES_IN_MB = 1024.0 * 1024
