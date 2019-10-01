@@ -26,6 +26,7 @@ import com.cexdirect.lib.verification.identity.IdentityFragment
 import com.cexdirect.lib.verification.identity.PhotoSourceDialog
 import com.cexdirect.lib.verification.identity.country.BaseCountryPickerDialog
 import com.cexdirect.lib.verification.receipt.ReceiptFragment
+import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import dagger.Subcomponent
 
 @Subcomponent(modules = [SharedStateModule::class, IdentityVmModule::class])
@@ -49,4 +50,6 @@ interface IdentitySubcomponent {
     fun inject(cvvInfoDialog: CvvInfoDialog)
 
     fun inject(countryPickerDialog: BaseCountryPickerDialog)
+
+    fun inject(qrScannerActivity: QrScannerActivity)
 }

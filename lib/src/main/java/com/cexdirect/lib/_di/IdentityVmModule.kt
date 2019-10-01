@@ -32,6 +32,7 @@ import com.cexdirect.lib.verification.VerificationActivityViewModel
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
 import com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel
 import com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel
+import com.cexdirect.lib.verification.scanner.QrScannerActivityViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -82,4 +83,11 @@ class IdentityVmModule {
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ) =
         ChangeEmailDialogViewModel.Factory(coroutineDispatcherProvider)
+
+    @Provides
+    @IdentityScope
+    fun provideQrScannerViewModelFactory(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ) =
+        QrScannerActivityViewModel.Factory(coroutineDispatcherProvider)
 }

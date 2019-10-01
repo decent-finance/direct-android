@@ -1,56 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.cexdirect.lib">
+    package="com.cexdirect.lib">
 
     <uses-feature
-            android:name="android.hardware.camera"
-            android:required="true"/>
+        android:name="android.hardware.camera"
+        android:required="true" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application>
         <activity
-                android:name="com.cexdirect.lib.stub.StubActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct.Stub"/>
+            android:name=".verification.scanner.QrScannerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct.Scanner" />
         <activity
-                android:name="com.cexdirect.lib.terms.TermsActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct"/>
+            android:name=".stub.StubActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct.Stub" />
         <activity
-                android:name="com.cexdirect.lib.check.CheckActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct"/>
+            android:name=".terms.TermsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
         <activity
-                android:name="com.cexdirect.lib.verification.VerificationActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct"/>
+            android:name=".check.CheckActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
         <activity
-                android:name="com.cexdirect.lib.error.ErrorActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct"/>
+            android:name=".verification.VerificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
         <activity
-                android:name="com.cexdirect.lib.buy.BuyActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Direct"/>
+            android:name=".error.ErrorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
+        <activity
+            android:name=".buy.BuyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
 
         <provider
-                android:name="com.cexdirect.lib.DirectAppInitProvider"
-                android:authorities="${applicationId}.directinit"
-                android:enabled="true"
-                android:exported="false"/>
+            android:name=".DirectAppInitProvider"
+            android:authorities="${applicationId}.directinit"
+            android:enabled="true"
+            android:exported="false" />
         <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}.directfile"
-                android:exported="false"
-                android:grantUriPermissions="true">
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.directfile"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths"/>
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

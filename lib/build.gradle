@@ -152,6 +152,7 @@ dependencies {
     api 'com.shopify:livedata-ktx:3.0.0'
     api 'com.github.amarjain07:StickyScrollView:1.0.2'
     api 'ru.noties.markwon:core:3.1.0'
+    api 'me.dm7.barcodescanner:zxing:1.9.13'
 
     api "com.squareup.okhttp3:okhttp:$okHttpVersion"
     api "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
