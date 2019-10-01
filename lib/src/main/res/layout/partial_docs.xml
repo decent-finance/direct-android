@@ -36,6 +36,8 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+
     </data>
 
     <merge>
@@ -75,6 +77,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="ID card" />
 
@@ -86,6 +89,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="Drivers Licence" />
 
@@ -96,6 +100,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="Passport" />
 
@@ -188,6 +193,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:onClick="@{() -> model.uploadPhoto(type.ID)}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_upload_photo" />
@@ -239,6 +245,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_upload_photo"
@@ -292,6 +299,7 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
                         android:elevation="8dp"
+                        android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                         android:onClick="@{() -> model.uploadPhoto(type.SELFIE)}"
                         android:outlineProvider="background"
                         android:text="@string/cexd_upload_photo" />

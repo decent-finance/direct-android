@@ -24,6 +24,8 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
@@ -68,6 +70,7 @@
                     style="@style/Direct.Input2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:inputType="number"
                     android:text="@={model.userCardData.number}"
                     tools:text="" />
@@ -128,6 +131,7 @@
                             style="@style/Direct.Input2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                             android:inputType="number"
                             android:text="@={model.userCardData.expiry}"
                             tools:text="" />
@@ -185,6 +189,7 @@
                                 style="@style/Direct.Input2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                                 android:hint="@string/cexd_cvv"
                                 android:inputType="numberPassword"
                                 android:text="@={model.userCardData.cvv}"
@@ -198,6 +203,7 @@
                             android:layout_gravity="center_vertical|end"
                             android:background="@null"
                             android:contentDescription="@string/cexd_show_cvv_info"
+                            android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                             android:onClick="@{() -> model.showCvvInfo()}"
                             app:srcCompat="@drawable/ic_help" />
 

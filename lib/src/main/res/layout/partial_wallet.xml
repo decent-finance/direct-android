@@ -29,6 +29,8 @@
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
 
         <import type="android.view.inputmethod.EditorInfo" />
+
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
     </data>
 
     <merge>
@@ -67,6 +69,7 @@
                     style="@style/Direct.Input2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
                     android:hint="@string/cexd_wallet"
                     android:imeOptions="@{model.userCountry.shouldShowState ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
                     android:inputType="text"

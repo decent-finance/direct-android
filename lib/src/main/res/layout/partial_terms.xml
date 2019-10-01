@@ -24,6 +24,8 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
+        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
@@ -47,7 +49,8 @@
                 style="@style/Direct.Checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@={model.userTerms.termsAccepted}" />
+                android:checked="@={model.userTerms.termsAccepted}"
+                android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}" />
 
             <TextView
                 android:layout_width="wrap_content"
