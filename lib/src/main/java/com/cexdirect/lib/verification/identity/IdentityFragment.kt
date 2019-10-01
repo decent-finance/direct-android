@@ -206,7 +206,6 @@ class IdentityFragment : BaseVerificationFragment() {
                             operationObserver.onChanged(it)
                         }
                     }
-                    is Success -> hideLoader()
                     is Loading -> showLoader()
                 }
             })
