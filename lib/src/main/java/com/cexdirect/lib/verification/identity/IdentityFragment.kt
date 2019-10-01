@@ -45,6 +45,7 @@ import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
 import com.cexdirect.lib.verification.identity.util.*
+import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import permissions.dispatcher.NeedsPermission
@@ -107,6 +108,9 @@ class IdentityFragment : BaseVerificationFragment() {
             })
             cvvInfoEvent.observe(this@IdentityFragment, Observer {
                 CvvInfoDialog().show(fragmentManager!!, "cvv")
+            })
+            scanQrEvent.observe(this@IdentityFragment, Observer {
+                scanQrCodeWithPermissionCheck()
             })
             nextClickEvent.observe(this@IdentityFragment, Observer { handleNextClick() })
             basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
@@ -233,6 +237,14 @@ class IdentityFragment : BaseVerificationFragment() {
         }
     }
 
+    @NeedsPermission(Manifest.permission.CAMERA)
+    fun scanQrCode() {
+        startActivityForResult(
+            Intent(context, QrScannerActivity::class.java),
+            RQ_SCAN_QR
+        )
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -244,59 +256,60 @@ class IdentityFragment : BaseVerificationFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            val targetView = when (model.userDocs.currentPhotoType) {
-                PhotoType.ID -> binding.fiDocs.fiDocument
-                PhotoType.ID_BACK -> binding.fiDocs.fiDocumentBack
-                PhotoType.SELFIE -> binding.fiDocs.fiSelfie
-            }
-
-            when (requestCode) {
-                RQ_CHOOSE_PIC -> {
-                    try {
-                        data?.data?.let { uri ->
-                            convertAndSet(
-                                context!!,
-                                uri,
-                                {
-                                    model.setImage(it)
-                                    Glide.with(this)
-                                        .load(uri)
-                                        .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                                        .into(targetView)
-                                },
-                                {
-                                    when (it) {
-                                        FailType.SIZE_INVALID -> model.setImageSizeInvalid()
-                                        FailType.UNSUPPORTED_FORMAT -> toast(R.string.cexd_file_unsupported)
-                                    }
-                                }
-                            )
-                        }
-                    } catch (e: FileNotFoundException) {
-                        toast(R.string.cexd_file_not_loaded)
-                    }
-                }
-                RQ_TAKE_PHOTO -> {
-                    try {
+        if (resultCode != Activity.RESULT_OK) return
+        when (requestCode) {
+            RQ_CHOOSE_PIC -> {
+                try {
+                    data?.data?.let { uri ->
                         convertAndSet(
-                            currentPhotoPath,
+                            context!!,
+                            uri,
                             {
                                 model.setImage(it)
                                 Glide.with(this)
-                                    .load(File(currentPhotoPath))
+                                    .load(uri)
                                     .thumbnail(THUMBNAIL_SCALE_FACTOR)
-                                    .into(targetView)
+                                    .into(getTargetView())
                             },
-                            { model.setImageSizeInvalid() }
+                            {
+                                when (it) {
+                                    FailType.SIZE_INVALID -> model.setImageSizeInvalid()
+                                    FailType.UNSUPPORTED_FORMAT -> toast(R.string.cexd_file_unsupported)
+                                }
+                            }
                         )
-                    } catch (e: FileNotFoundException) {
-                        toast(R.string.cexd_file_not_found)
                     }
+                } catch (e: FileNotFoundException) {
+                    toast(R.string.cexd_file_not_loaded)
                 }
             }
+            RQ_TAKE_PHOTO -> {
+                try {
+                    convertAndSet(
+                        currentPhotoPath,
+                        {
+                            model.setImage(it)
+                            Glide.with(this)
+                                .load(File(currentPhotoPath))
+                                .thumbnail(THUMBNAIL_SCALE_FACTOR)
+                                .into(getTargetView())
+                        },
+                        { model.setImageSizeInvalid() }
+                    )
+                } catch (e: FileNotFoundException) {
+                    toast(R.string.cexd_file_not_found)
+                }
+            }
+            RQ_SCAN_QR -> model.userWallet.address = data!!.getStringExtra("data")
         }
     }
+
+    private fun getTargetView() =
+        when (model.userDocs.currentPhotoType) {
+            PhotoType.ID -> binding.fiDocs.fiDocument
+            PhotoType.ID_BACK -> binding.fiDocs.fiDocumentBack
+            PhotoType.SELFIE -> binding.fiDocs.fiSelfie
+        }
 
     companion object {
         const val MAX_CARD_LENGTH = 16
@@ -306,6 +319,7 @@ class IdentityFragment : BaseVerificationFragment() {
         const val THUMBNAIL_SCALE_FACTOR = 0.25f
         const val RQ_TAKE_PHOTO = 1000
         const val RQ_CHOOSE_PIC = 1001
+        const val RQ_SCAN_QR = 1002
         const val COUNTRY_NOT_SUPPORTED = 475
     }
 }

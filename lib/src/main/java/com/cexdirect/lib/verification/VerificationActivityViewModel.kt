@@ -62,6 +62,7 @@ class VerificationActivityViewModel(
     val editEmailEvent = VoidLiveEvent()
     val buyMoreEvent = VoidLiveEvent()
     val txIdCopyEvent = StringLiveEvent()
+    val scanQrEvent = VoidLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()
@@ -392,6 +393,10 @@ class VerificationActivityViewModel(
 
     fun showCvvInfo() {
         cvvInfoEvent.call()
+    }
+
+    fun scanQrCode() {
+        scanQrEvent.call()
     }
 
     fun setImage(imageBase64: String) {

@@ -205,7 +205,7 @@
                             android:contentDescription="@string/cexd_show_cvv_info"
                             android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                             android:onClick="@{() -> model.showCvvInfo()}"
-                            app:srcCompat="@drawable/ic_help" />
+                            android:src="@drawable/ic_help" />
 
                     </FrameLayout>
 
