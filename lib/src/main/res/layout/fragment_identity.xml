@@ -21,7 +21,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <import type="com.cexdirect.lib.views.CollapsibleLayout.ContentState" />
 
@@ -48,7 +48,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="-1dp"
             android:onClick="@{() -> model.toggleLocationEmail()}"
-            android:visibility="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.orderStep == OrderStep.LOCATION_EMAIL ? View.GONE : View.VISIBLE}"
             app:arrowDirection="@{model.locationEmailContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
             app:title="Email and Country" />
 
@@ -59,7 +59,7 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             app:contentState="@{model.locationEmailContentState}"
-            app:layoutState="@{model.verificationStep == VerificationStep.LOCATION_EMAIL ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
+            app:layoutState="@{model.orderStep == OrderStep.LOCATION_EMAIL ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
 
             <include
                 layout="@layout/partial_email"
@@ -79,7 +79,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="-1dp"
             android:onClick="@{() -> model.togglePaymentBase()}"
-            android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.orderStep == OrderStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}"
             app:arrowDirection="@{model.paymentBaseContentState == ContentState.COLLAPSED ? CompleteSectionTitleLayout.DIRECTION_DOWN : CompleteSectionTitleLayout.DIRECTION_UP}"
             app:title="@string/cexd_identity_payment_data" />
 
@@ -90,7 +90,7 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             app:contentState="@{model.paymentBaseContentState}"
-            app:layoutState="@{model.verificationStep == VerificationStep.PAYMENT_BASE ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
+            app:layoutState="@{model.orderStep == OrderStep.PAYMENT_BASE ? LayoutState.EMPTY : LayoutState.ENCLOSED}">
 
             <include
                 android:id="@+id/fiDocs"

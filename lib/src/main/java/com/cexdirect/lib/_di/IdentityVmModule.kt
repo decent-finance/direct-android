@@ -23,7 +23,6 @@ import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib._di.annotation.IdentityScope
 import com.cexdirect.lib._di.annotation.PhotoSourceDialogFactory
-import com.cexdirect.lib._di.annotation.ReceiptFragmentFactory
 import com.cexdirect.lib._di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
@@ -33,7 +32,6 @@ import com.cexdirect.lib.verification.VerificationActivityViewModel
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
 import com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel
 import com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel
-import com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -62,15 +60,6 @@ class IdentityVmModule {
             emailChangedEvent,
             coroutineDispatcherProvider
         )
-
-    @Provides
-    @ReceiptFragmentFactory
-    @IdentityScope
-    fun provideReceiptFragmentViewModel(
-        messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        ReceiptFragmentViewModel.Factory(messenger, coroutineDispatcherProvider)
 
     @Provides
     @PhotoSourceDialogFactory

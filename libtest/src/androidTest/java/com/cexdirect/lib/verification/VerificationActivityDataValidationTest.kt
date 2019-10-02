@@ -36,7 +36,6 @@ import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.entryData
 import com.cexdirect.lib.util.hasVisibility
 import com.cexdirect.lib.verification.identity.PhotoType
-import com.cexdirect.lib.verification.identity.VerificationStep
 import com.cexdirect.lib.views.CollapsibleLayout
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -212,7 +211,7 @@ class VerificationActivityDataValidationTest {
         activityRule.activity.model.apply {
             locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
             paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
-            verificationStep.set(VerificationStep.PAYMENT_BASE)
+            orderStep.set(OrderStep.PAYMENT_BASE)
         }
     }
 
@@ -221,7 +220,7 @@ class VerificationActivityDataValidationTest {
         activityRule.activity.model.apply {
             locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
             paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
-            verificationStep.set(VerificationStep.PAYMENT_EXTRA)
+            orderStep.set(OrderStep.PAYMENT_EXTRA)
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,10 +14,14 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.identity
+package com.cexdirect.lib.verification
 
-enum class VerificationStep {
+enum class OrderStep {
     LOCATION_EMAIL,
     PAYMENT_BASE,
-    PAYMENT_EXTRA
+    PAYMENT_EXTRA,
+    TDS,
+    EMAIL_CONFIRMATION,
+    CHECK_CODE,
+    CONFIRMED
 }

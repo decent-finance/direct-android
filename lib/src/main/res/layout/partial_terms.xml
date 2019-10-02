@@ -24,7 +24,7 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <variable
             name="model"
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="@={model.userTerms.termsAccepted}"
-                android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}" />
+                android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}" />
 
             <TextView
                 android:layout_width="wrap_content"

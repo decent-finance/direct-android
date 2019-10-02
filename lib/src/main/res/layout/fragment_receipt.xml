@@ -22,7 +22,7 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel" />
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
 
         <import type="android.view.View" />
     </data>

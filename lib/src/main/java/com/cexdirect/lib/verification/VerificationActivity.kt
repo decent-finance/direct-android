@@ -92,12 +92,14 @@ class VerificationActivity : BaseActivity() {
                 binding.avScroll.initFooterView(it)
             } else {
                 binding.avScroll.freeFooter()
+                binding.avScroll.requestLayout()
             }
         })
         replaceFragment(0)
     }
 
-    private fun replaceFragment(position: Int) {
+    @VisibleForTesting
+    fun replaceFragment(position: Int) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.avFragmentFrame, fragments[position])
                 .commit()
@@ -106,6 +108,7 @@ class VerificationActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Direct.releaseIdentitySubcomponent()
+        Direct.directComponent.socket().stop()
     }
 
     companion object {

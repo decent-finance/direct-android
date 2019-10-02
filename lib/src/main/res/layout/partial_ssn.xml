@@ -28,7 +28,7 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
     </data>
 
     <merge>
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="0123456789-"
-                    android:enabled="@{model.verificationStep == VerificationStep.PAYMENT_BASE}"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:hint="@string/cexd_ssn"
                     android:imeOptions="actionDone"
                     android:inputType="number"

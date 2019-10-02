@@ -22,7 +22,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.confirmation.ConfirmationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <variable
             name="model"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cexd_we_are_processing_your_order"
-            android:visibility="@{model.confirmationStep == ConfirmationStep.CHECK_CODE ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{model.orderStep == OrderStep.CHECK_CODE ? View.VISIBLE : View.GONE}" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp"
-            android:visibility="@{model.confirmationStep == ConfirmationStep.CONFIRMED ? View.VISIBLE : View.GONE}">
+            android:visibility="@{model.orderStep == OrderStep.CONFIRMED ? View.VISIBLE : View.GONE}">
 
             <TextView
                 style="@style/Direct.Textfield.M2"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:visibility="@{model.confirmationStep == ConfirmationStep.TDS ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.orderStep == OrderStep.TDS ? View.VISIBLE : View.GONE}"
             app:_3dsData="@{model._3dsData}" />
 
         <LinearLayout
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="@{model.confirmationStep == ConfirmationStep.EMAIL_CONFIRMATION ? View.VISIBLE : View.GONE}">
+            android:visibility="@{model.orderStep == OrderStep.EMAIL_CONFIRMATION ? View.VISIBLE : View.GONE}">
 
             <TextView
                 style="@style/Direct.Textfield.Purchase"

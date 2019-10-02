@@ -29,7 +29,6 @@ import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
-import com.cexdirect.lib.verification.confirmation.ConfirmationStep
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
@@ -59,6 +58,10 @@ class VerificationActivityViewModel(
     val countryClickEvent = CountryClickEvent()
     val countryPickerExitEvent = VoidLiveEvent()
     val toggleSearchEvent = BooleanLiveEvent()
+    val resendCodeEvent = VoidLiveEvent()
+    val editEmailEvent = VoidLiveEvent()
+    val buyMoreEvent = VoidLiveEvent()
+    val txIdCopyEvent = StringLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()
@@ -81,7 +84,7 @@ class VerificationActivityViewModel(
     var extras = ObservableArrayMap<String, String>()
     val validationMap = ObservableArrayMap<String, FieldStatus>()
 
-    val verificationStep = ObservableField(VerificationStep.LOCATION_EMAIL)
+    val orderStep = ObservableField(OrderStep.LOCATION_EMAIL)
     val locationEmailContentState = ObservableField(CollapsibleLayout.ContentState.EXPANDED)
     val paymentBaseContentState = ObservableField(CollapsibleLayout.ContentState.COLLAPSED)
     val paymentExtraContentState = ObservableField(CollapsibleLayout.ContentState.COLLAPSED)
@@ -93,7 +96,13 @@ class VerificationActivityViewModel(
     val countrySearch = ObservableField("")
     val showCountrySearch = ObservableBoolean(false)
 
-    private val statusHolder = StatusHolder()
+    val confirmationCode = ObservableField("")
+    val _3dsData = com.cexdirect.lib.verification.confirmation._3dsData()
+
+    val paymentInfo = ObservableField<PaymentInfo>()
+    val txId = ObservableField("")
+
+    val statusHolder = StatusHolder()
 
     // --- Requests --- //
     val createOrder = orderApi.createNewOrder(this) {
@@ -191,6 +200,17 @@ class VerificationActivityViewModel(
 
     val extraPaymentData = orderApi.updatePaymentData(this) {
         PaymentData(paymentData = null, additional = extras, termUrl = null)
+    }
+
+    val changeEmail = Transformations.switchMap(emailChangedEvent) {
+        orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
+    }
+
+    val resendCheckCode =
+        orderApi.resendCheckCode(this, orderId.get()!!)
+
+    val checkCode = orderApi.checkCode(this) {
+        CheckCodeData(orderId.get()!!, confirmationCode.get()!!)
     }
     // --- Requests --- //
 
@@ -329,7 +349,7 @@ class VerificationActivityViewModel(
 
     fun setPaymentBase() {
         getOrderInfo.execute()
-        verificationStep.set(VerificationStep.PAYMENT_BASE)
+        orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
     }
@@ -429,7 +449,7 @@ class VerificationActivityViewModel(
                         .takeIf { it.filter { it.value.req }.isNotEmpty() }
                         .let {
                             additionalFields.set(it.orEmpty())
-                            verificationStep.set(VerificationStep.PAYMENT_EXTRA)
+                            orderStep.set(OrderStep.PAYMENT_EXTRA)
                             paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
                             paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
                         }
@@ -440,7 +460,6 @@ class VerificationActivityViewModel(
             OrderStatus.PSS_PENDING -> statusHolder.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusHolder.updateAndDo(data.orderStatus) {
-                    unsubscribeFromOrderInfo()
                     hideAction.invoke()
                     next()
                 }
@@ -450,37 +469,18 @@ class VerificationActivityViewModel(
     }
 
     fun handleNextClick() {
-        when (verificationStep.get()) {
-            VerificationStep.LOCATION_EMAIL -> createOrder()
-            VerificationStep.PAYMENT_BASE -> {
+        when (orderStep.get()) {
+            OrderStep.LOCATION_EMAIL -> createOrder()
+            OrderStep.PAYMENT_BASE -> {
                 if (statusHolder.currentStatus.get() == OrderStatus.INCOMPLETE) {
                     uploadBasePaymentData()
                 } else if (statusHolder.currentStatus.get() == OrderStatus.IVS_READY) {
                     startVerificationChain()
                 }
             }
-            VerificationStep.PAYMENT_EXTRA -> uploadExtraPaymentData()
+            OrderStep.PAYMENT_EXTRA -> uploadExtraPaymentData()
+            else -> error("Illegal step: $orderStep")
         }
-    }
-
-    val confirmationCode = ObservableField("")
-
-    val confirmationStep = ObservableField<ConfirmationStep>()
-
-    val resendCodeEvent = VoidLiveEvent()
-    val editEmailEvent = VoidLiveEvent()
-
-    val _3dsData = com.cexdirect.lib.verification.confirmation._3dsData()
-
-    val changeEmail = Transformations.switchMap(emailChangedEvent) {
-        orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
-    }
-
-    val resendCheckCode =
-        orderApi.resendCheckCode(this, orderId.get()!!)
-
-    val checkCode = orderApi.checkCode(this) {
-        CheckCodeData(orderId.get()!!, confirmationCode.get()!!)
     }
 
 
@@ -505,7 +505,7 @@ class VerificationActivityViewModel(
         Direct.userEmail = email
     }
 
-    fun updatePaymentStatus(data: OrderInfoData, rejectAction: () -> Unit) {
+    fun updateConfirmationStatus(data: OrderInfoData, rejectAction: () -> Unit) {
         when (data.orderStatus) {
             OrderStatus.PSS_3DS_REQUIRED -> statusHolder.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
                 askFor3ds(data.threeDS!!)
@@ -523,7 +523,7 @@ class VerificationActivityViewModel(
     }
 
     private fun askFor3ds(threeDS: _3Ds) {
-        confirmationStep.set(ConfirmationStep.TDS)
+        orderStep.set(OrderStep.TDS)
         _3dsData.apply {
             _3dsUrl = threeDS.url
             _3dsExtras = threeDS.data
@@ -532,13 +532,34 @@ class VerificationActivityViewModel(
     }
 
     private fun askForEmailConfirmation() {
-        confirmationStep.set(ConfirmationStep.EMAIL_CONFIRMATION)
+        orderStep.set(OrderStep.EMAIL_CONFIRMATION)
     }
 
     private fun confirmOrder() {
-        confirmationStep.set(ConfirmationStep.CONFIRMED)
-        unsubscribeFromOrderInfo()
+        orderStep.set(OrderStep.CONFIRMED)
         next()
+    }
+
+    fun buyMore() {
+        buyMoreEvent.call()
+    }
+
+    fun updatePaymentInfo(data: OrderInfoData) {
+        when (data.orderStatus) {
+            OrderStatus.COMPLETE -> statusHolder.updateAndDo(OrderStatus.COMPLETE) {
+                paymentInfo.set(data.paymentInfo)
+            }
+            OrderStatus.FINISHED -> statusHolder.updateAndDo(OrderStatus.FINISHED) {
+                paymentInfo.set(data.paymentInfo)
+                txId.set(data.paymentInfo!!.txId!!)
+            }
+            else -> { // do nothing
+            }
+        }
+    }
+
+    fun copyTxId(txId: String) {
+        txIdCopyEvent.postValue(txId)
     }
 
     class Factory(

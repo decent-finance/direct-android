@@ -23,14 +23,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.ReceiptFragmentFactory
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
-import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.StickyViewEvent
@@ -40,62 +39,50 @@ import javax.inject.Inject
 
 class ReceiptFragment : BaseVerificationFragment() {
 
-    @field:[Inject ReceiptFragmentFactory]
-    lateinit var fragmentModelFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
 
-    private val fragmentModel by fragmentViewModelProvider<ReceiptFragmentViewModel> { fragmentModelFactory }
-
     private lateinit var binding: FragmentReceiptBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            FragmentReceiptBinding.inflate(inflater, container, false).apply { binding = this }.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
+        DataBindingUtil.inflate<FragmentReceiptBinding>(
+            inflater,
+            R.layout.fragment_receipt,
+            container,
+            false
+        ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
-        binding.model = fragmentModel
+        binding.model = model
 
-        fragmentModel.apply {
-            subscribeToOrderInfo().observe(this@ReceiptFragment, Observer {
-                if (it is Success) {
-                    val data = it.data!!
-                    when (data.orderStatus) {
-                        OrderStatus.COMPLETE -> {
-                            fragmentModel.updatePaymentInfo(data.paymentInfo!!)
-                        }
-                        OrderStatus.FINISHED -> {
-                            fragmentModel.updatePaymentInfo(data.paymentInfo!!)
-                            Direct.directComponent.socket().stop()
-                        }
-                        else -> {
-                            // do nothing
-                        }
-                    }
-                }
-            })
+        model.apply {
+            model.statusHolder.currentStatus.set(OrderStatus.INCOMPLETE)
+            subscribeToOrderInfo().observe(this@ReceiptFragment, socketObserver(
+                onOk = { model.updatePaymentInfo(it!!) },
+                onFail = { purchaseFailed(it.message) }
+            ))
             buyMoreEvent.observe(this@ReceiptFragment, Observer {
                 context!!.startBuyActivity()
                 finish()
             })
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
-                if (!txId.isNullOrBlank()) {
-                    (context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
-                            ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
-                    toast(getString(R.string.cexd_order_id_copied))
-                }
+                copyTxId(txId)
             })
         }
-
-        stickyViewEvent.value = R.id.ffBuyMore
+        stickyViewEvent.value = View.NO_ID
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (activity!!.isFinishing) {
-            Direct.directComponent.socket().stop()
+    private fun copyTxId(txId: String?) {
+        if (!txId.isNullOrBlank()) {
+            (context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
+                ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
+            toast(getString(R.string.cexd_order_id_copied))
         }
     }
 }

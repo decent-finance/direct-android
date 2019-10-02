@@ -34,16 +34,12 @@ import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 class PaymentConfirmationFragment : BaseVerificationFragment() {
 
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
-
-    @Inject
-    lateinit var currentOrderStatus: AtomicReference<OrderStatus>
 
     @Inject
     lateinit var webViewClient: Client
@@ -65,9 +61,12 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
         setup3dsWebView()
 
         model.apply {
+            // todo This line is here so that we can update status further
+            // after moving from IdentityFragment
+            statusHolder.currentStatus.set(OrderStatus.INCOMPLETE)
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
-                    updatePaymentStatus(it!!) {
+                    updateConfirmationStatus(it!!) {
                         context!!.verificationError("Rejected")
                         finish()
                     }

@@ -142,7 +142,8 @@ class IdentityFragment : BaseVerificationFragment() {
                     } else {
                         purchaseFailed(it.message)
                     }
-                }
+                },
+                final = {}
             ))
         }.let { binding.model = it }
         stickyViewEvent.postValue(R.id.fiNext)
