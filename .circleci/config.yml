@@ -175,6 +175,40 @@ jobs:
       - store_artifacts:
           path: ~/apk
 
+  assemble_prod:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Assemble uat
+          command: ./gradlew assembleProdDebug
+      - run:
+          name: Upload to Firebase
+          command: ./gradlew appDistributionUploadProdDebug
+      - run:
+          name: Rename apk
+          command: |
+            mkdir ~/apk
+            mv app/build/outputs/apk/prod/debug/app-prod-debug.apk ~/apk/direct-prod-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.apk
+      - store_artifacts:
+          path: ~/apk
+
   publish:
     executor: android
     environment:
@@ -223,6 +257,10 @@ workflows:
             - test
             - test_instrumented
       - assemble_uat:
+          requires:
+            - test
+            - test_instrumented
+      - assemble_prod:
           requires:
             - test
             - test_instrumented
