@@ -22,10 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.PaymentConfirmationFragmentFactory
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
@@ -41,9 +39,6 @@ import javax.inject.Inject
 
 class PaymentConfirmationFragment : BaseVerificationFragment() {
 
-    @field:[Inject PaymentConfirmationFragmentFactory]
-    lateinit var fragmentFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
 
@@ -54,8 +49,6 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
     lateinit var webViewClient: Client
 
     private lateinit var binding: FragmentPaymentConfirmationBinding
-
-    private val fragmentModel by fragmentViewModelProvider<PaymentConfirmationFragmentViewModel> { fragmentFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,17 +64,13 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
         Direct.identitySubcomponent?.inject(this)
         setup3dsWebView()
 
-        fragmentModel.apply {
-            userEmail.set(Direct.userEmail)
+        model.apply {
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
-                    updatePaymentStatus(
-                        it!!,
-                        {
-                            context!!.verificationError("Rejected")
-                            finish()
-                        },
-                        { model.next() })
+                    updatePaymentStatus(it!!) {
+                        context!!.verificationError("Rejected")
+                        finish()
+                    }
                 },
                 onFail = { purchaseFailed(it.message) }
             ))
@@ -107,7 +96,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
-                    fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value ?: it!!)
+                    updateUserEmail(emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)
                 },
                 onFail = { purchaseFailed(it.message) }
