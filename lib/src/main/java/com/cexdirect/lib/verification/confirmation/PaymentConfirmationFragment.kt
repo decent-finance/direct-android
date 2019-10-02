@@ -29,9 +29,6 @@ import com.cexdirect.lib._di.annotation.PaymentConfirmationFragmentFactory
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
-import com.cexdirect.lib.network.Failure
-import com.cexdirect.lib.network.Loading
-import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
@@ -60,17 +57,68 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
 
     private val fragmentModel by fragmentViewModelProvider<PaymentConfirmationFragmentViewModel> { fragmentFactory }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
-                binding = this
-            }.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
+        FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
+            binding = this
+        }.root
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
-        binding.model = fragmentModel
+        setup3dsWebView()
 
+        fragmentModel.apply {
+            userEmail.set(Direct.userEmail)
+            subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
+                onOk = {
+                    updatePaymentStatus(
+                        it!!,
+                        {
+                            context!!.verificationError("Rejected")
+                            finish()
+                        },
+                        { model.next() })
+                },
+                onFail = { purchaseFailed(it.message) }
+            ))
+            resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
+                requestCheckCode()
+            })
+            editEmailEvent.observe(this@PaymentConfirmationFragment, Observer {
+                ChangeEmailDialog().show(childFragmentManager, "changeEmail")
+            })
+            checkCode.observe(this@PaymentConfirmationFragment, restObserver(
+                onOk = { /* Don't do anything here, because order status will be updated via WS */ },
+                onFail = {
+                    if (it.code == CODE_BAD_REQUEST) {
+                        toast(R.string.cexd_wrong_code)
+                    } else {
+                        purchaseFailed(it.message)
+                    }
+                }
+            ))
+            resendCheckCode.observe(this@PaymentConfirmationFragment, restObserver(
+                onOk = { toast(R.string.cexd_check_mail) },
+                onFail = { purchaseFailed(it.message) }
+            ))
+            changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
+                onOk = {
+                    fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value ?: it)
+                    toast(R.string.cexd_email_updated)
+                },
+                onFail = { purchaseFailed(it.message) }
+            ))
+        }.let { binding.model = it }
+
+        stickyViewEvent.value = R.id.fpcSubmit
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setup3dsWebView() {
         binding.fpc3ds.apply {
             webViewClient = this@PaymentConfirmationFragment.webViewClient
             settings.apply {
@@ -80,104 +128,5 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 domStorageEnabled = true
             }
         }
-
-        fragmentModel.apply {
-            userEmail.set(Direct.userEmail)
-            subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, Observer {
-                when (it) {
-                    is Success -> {
-                        val data = it.data!!
-                        when (data.orderStatus) {
-                            OrderStatus.PSS_3DS_REQUIRED -> {
-                                if (currentOrderStatus.get() != OrderStatus.PSS_3DS_REQUIRED) {
-                                    currentOrderStatus.set(OrderStatus.PSS_3DS_REQUIRED)
-                                    fragmentModel.askFor3ds(data.threeDS!!)
-                                }
-                            }
-                            OrderStatus.WAITING_FOR_CONFIRMATION -> {
-                                if (currentOrderStatus.get() != OrderStatus.WAITING_FOR_CONFIRMATION) {
-                                    currentOrderStatus.set(OrderStatus.WAITING_FOR_CONFIRMATION)
-                                    fragmentModel.askForEmailConfirmation()
-                                }
-                            }
-                            OrderStatus.COMPLETE -> {
-                                if (currentOrderStatus.get() != OrderStatus.COMPLETE) {
-                                    currentOrderStatus.set(OrderStatus.COMPLETE)
-                                    fragmentModel.confirmOrder { model.next() }
-                                }
-                            }
-                            OrderStatus.REJECTED -> {
-                                if (currentOrderStatus.get() != OrderStatus.REJECTED) {
-                                    currentOrderStatus.set(OrderStatus.REJECTED)
-                                    context!!.verificationError("Rejected")
-                                    finish()
-                                }
-                            }
-                            else -> {
-                                // do nothing
-                            }
-                        }
-                    }
-                    is Failure -> {
-                        purchaseFailed(it.message)
-                    }
-                }
-            })
-            checkCode.observe(this@PaymentConfirmationFragment, Observer {
-                when (it) {
-                    is Loading -> showLoader()
-                    is Success -> {
-                        hideLoader()
-                        // Don't do anything else here, because order status will be updated via WS
-                    }
-                    is Failure -> {
-                        hideLoader()
-                        if (it.code == CODE_BAD_REQUEST) {
-                            toast(R.string.cexd_wrong_code)
-                        } else {
-                            purchaseFailed(it.message)
-                        }
-                    }
-                }
-            })
-            resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
-                requestCheckCode()
-            })
-            resendCheckCode.observe(this@PaymentConfirmationFragment, Observer {
-                when (it) {
-                    is Loading -> showLoader()
-                    is Success -> {
-                        hideLoader()
-                        toast(R.string.cexd_check_mail)
-                    }
-                    is Failure -> {
-                        hideLoader()
-                        purchaseFailed(it.message)
-                    }
-                }
-            })
-            editEmailEvent.observe(this@PaymentConfirmationFragment, Observer {
-                ChangeEmailDialog().show(childFragmentManager, "changeEmail")
-            })
-            changeEmail.observe(this@PaymentConfirmationFragment, Observer {
-                when (it) {
-                    is Loading -> {
-                        showLoader()
-                    }
-                    is Failure -> {
-                        hideLoader()
-                        purchaseFailed(it.message)
-                    }
-                    is Success -> {
-                        hideLoader()
-                        fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value
-                                ?: it.data!!)
-                        toast(R.string.cexd_email_updated)
-                    }
-                }
-            })
-        }
-
-        stickyViewEvent.value = R.id.fpcSubmit
     }
 }

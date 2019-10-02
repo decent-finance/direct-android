@@ -22,10 +22,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
 import com.cexdirect.lib.network.OrderApi
-import com.cexdirect.lib.network.models.ChangeEmailRequest
-import com.cexdirect.lib.network.models.CheckCodeData
-import com.cexdirect.lib.network.models._3Ds
+import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.verification.StatusHolder
 
 class PaymentConfirmationFragmentViewModel(
     private val orderApi: OrderApi,
@@ -52,16 +51,18 @@ class PaymentConfirmationFragmentViewModel(
     val resendCheckCode =
         orderApi.resendCheckCode(this@PaymentConfirmationFragmentViewModel, orderId)
 
+    val checkCode = orderApi.checkCode(this) {
+        CheckCodeData(orderId, confirmationCode.get()!!)
+    }
+
+    private val statusHolder = StatusHolder()
+
     fun resendCheckCode() {
         resendCodeEvent.call()
     }
 
     fun editEmail() {
         editEmailEvent.call()
-    }
-
-    val checkCode = orderApi.checkCode(this) {
-        CheckCodeData(orderId, confirmationCode.get()!!)
     }
 
     fun submitCode() {
@@ -74,16 +75,37 @@ class PaymentConfirmationFragmentViewModel(
 
     fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
 
-    private fun unsubscribeFromOrderInfo() {
-        messenger.removeOrderInfoSubscription()
-    }
-
     fun updateUserEmail(email: String) {
         userEmail.set(email)
         Direct.userEmail = email
     }
 
-    fun askFor3ds(threeDS: _3Ds) {
+    private fun unsubscribeFromOrderInfo() {
+        messenger.removeOrderInfoSubscription()
+    }
+
+    fun updatePaymentStatus(
+        data: OrderInfoData,
+        rejectAction: () -> Unit,
+        confirmAction: () -> Unit
+    ) {
+        when (data.orderStatus) {
+            OrderStatus.PSS_3DS_REQUIRED -> statusHolder.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
+                askFor3ds(data.threeDS!!)
+            }
+            OrderStatus.WAITING_FOR_CONFIRMATION -> statusHolder.updateAndDo(OrderStatus.WAITING_FOR_CONFIRMATION) {
+                askForEmailConfirmation()
+            }
+            OrderStatus.COMPLETE -> {
+                statusHolder.updateAndDo(OrderStatus.COMPLETE) { confirmOrder { confirmAction.invoke() } }
+            }
+            OrderStatus.REJECTED -> statusHolder.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            else -> { /* do nothing */
+            }
+        }
+    }
+
+    private fun askFor3ds(threeDS: _3Ds) {
         confirmationStep.set(ConfirmationStep.TDS)
         _3dsData.apply {
             _3dsUrl = threeDS.url
@@ -92,11 +114,11 @@ class PaymentConfirmationFragmentViewModel(
         }
     }
 
-    fun askForEmailConfirmation() {
+    private fun askForEmailConfirmation() {
         confirmationStep.set(ConfirmationStep.EMAIL_CONFIRMATION)
     }
 
-    fun confirmOrder(block: () -> Unit) {
+    private fun confirmOrder(block: () -> Unit) {
         confirmationStep.set(ConfirmationStep.CONFIRMED)
         unsubscribeFromOrderInfo()
         block.invoke()
@@ -111,6 +133,11 @@ class PaymentConfirmationFragmentViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            PaymentConfirmationFragmentViewModel(orderApi, emailChangedEvent, messenger, dispatcherProvider) as T
+            PaymentConfirmationFragmentViewModel(
+                orderApi,
+                emailChangedEvent,
+                messenger,
+                dispatcherProvider
+            ) as T
     }
 }
