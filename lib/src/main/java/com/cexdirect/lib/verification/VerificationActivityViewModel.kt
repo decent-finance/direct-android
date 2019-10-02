@@ -91,6 +91,8 @@ class VerificationActivityViewModel(
     val countrySearch = ObservableField("")
     val showCountrySearch = ObservableBoolean(false)
 
+    private val statusHolder = StatusHolder()
+
     // --- Requests --- //
     val createOrder = orderApi.createNewOrder(this) {
         NewOrderData(
@@ -129,7 +131,7 @@ class VerificationActivityViewModel(
             })
         }
 
-    val processingKey =
+    private val processingKey =
         orderApi.getProcessingKey(this) {
             PublicKeyData(userCardData.getPublicKey())
         }
@@ -147,7 +149,7 @@ class VerificationActivityViewModel(
         })
     }
 
-    val orderInfo = orderApi.checkOrderInfo(this)
+    val getOrderInfo = orderApi.checkOrderInfo(this)
 
     val uploadImage = orderApi.uploadImage(this) {
         when (userDocs.currentPhotoType) {
@@ -297,7 +299,7 @@ class VerificationActivityViewModel(
 
     fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
 
-    fun unsubscribeFromOrderInfo() {
+    private fun unsubscribeFromOrderInfo() {
         messenger.removeOrderInfoSubscription()
     }
 
@@ -324,13 +326,13 @@ class VerificationActivityViewModel(
     }
 
     fun setPaymentBase() {
-        orderInfo.execute()
+        getOrderInfo.execute()
         verificationStep.set(VerificationStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
     }
 
-    fun uploadBasePaymentData() {
+    private fun uploadBasePaymentData() {
         userDocs.forceValidate()
         userCardData.forceValidate()
         userTerms.forceValidate()
@@ -350,7 +352,7 @@ class VerificationActivityViewModel(
             && userWallet.isValid()
             && ssnPresent()
 
-    fun startVerificationChain() {
+    private fun startVerificationChain() {
         walletVerification.execute()
     }
 
@@ -405,6 +407,58 @@ class VerificationActivityViewModel(
 
     fun setImageSizeInvalid() {
         userDocs.setImageSizeInvalid()
+    }
+
+    fun updateOrderStatus(
+        data: OrderInfoData,
+        rejectAction: () -> Unit,
+        hideAction: () -> Unit
+    ) {
+        when (data.orderStatus) {
+            OrderStatus.REJECTED -> statusHolder.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            OrderStatus.IVS_READY -> {
+                statusHolder.updateAndDo(OrderStatus.IVS_READY) {
+                    startVerificationChain()
+                }
+            }
+            OrderStatus.PSS_WAITDATA -> {
+                statusHolder.updateAndDo(OrderStatus.PSS_WAITDATA) {
+                    data.additional
+                        .takeIf { it.filter { it.value.req }.isNotEmpty() }
+                        .let {
+                            additionalFields.set(it.orEmpty())
+                            verificationStep.set(VerificationStep.PAYMENT_EXTRA)
+                            paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
+                            paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
+                        }
+                    hideAction.invoke()
+                }
+            }
+            OrderStatus.PSS_READY -> statusHolder.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
+            OrderStatus.PSS_PENDING -> statusHolder.updateAndDo(OrderStatus.PSS_PENDING) {}
+            OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
+                statusHolder.updateAndDo(data.orderStatus) {
+                    unsubscribeFromOrderInfo()
+                    hideAction.invoke()
+                    next()
+                }
+            else -> {
+            }
+        }
+    }
+
+    fun handleNextClick() {
+        when (verificationStep.get()) {
+            VerificationStep.LOCATION_EMAIL -> createOrder()
+            VerificationStep.PAYMENT_BASE -> {
+                if (statusHolder.currentStatus.get() == OrderStatus.INCOMPLETE) {
+                    uploadBasePaymentData()
+                } else if (statusHolder.currentStatus.get() == OrderStatus.IVS_READY) {
+                    startVerificationChain()
+                }
+            }
+            VerificationStep.PAYMENT_EXTRA -> uploadExtraPaymentData()
+        }
     }
 
     class Factory(

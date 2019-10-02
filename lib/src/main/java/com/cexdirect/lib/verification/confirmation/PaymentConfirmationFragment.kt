@@ -107,7 +107,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
-                    fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value ?: it)
+                    fragmentModel.updateUserEmail(fragmentModel.emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)
                 },
                 onFail = { purchaseFailed(it.message) }

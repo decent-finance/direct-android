@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Resource
@@ -61,15 +62,15 @@ abstract class BaseFragment : Fragment() {
 
     protected fun <T> restObserver(
         onLoading: () -> Unit = { showLoader() },
-        onOk: (res: T) -> Unit,
-        onFail: (res: Failure<T>) -> Unit,
+        onOk: (res: T?) -> Unit,
+        onFail: (res: Failure<T>) -> Unit = { purchaseFailed(it.message) },
         final: () -> Unit = { hideLoader() }
     ) = Observer<Resource<T>> {
         when (it) {
             is Loading -> onLoading.invoke()
             is Success -> {
                 final.invoke()
-                onOk.invoke(it.data!!)
+                onOk.invoke(it.data)
             }
             is Failure -> {
                 final.invoke()

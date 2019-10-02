@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,12 +37,7 @@ import com.cexdirect.lib.databinding.FragmentIdentityBinding
 import com.cexdirect.lib.error.locationNotSupported
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
-import com.cexdirect.lib.network.Failure
-import com.cexdirect.lib.network.Loading
-import com.cexdirect.lib.network.Resource
-import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.OrderInfoData
-import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
@@ -51,7 +45,6 @@ import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
 import com.cexdirect.lib.verification.identity.util.*
-import com.cexdirect.lib.views.CollapsibleLayout
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import permissions.dispatcher.NeedsPermission
@@ -61,7 +54,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -73,30 +65,14 @@ class IdentityFragment : BaseVerificationFragment() {
     @Inject
     lateinit var stickyViewEvent: StickyViewEvent
 
-    @Inject
-    lateinit var currentOrderStatus: AtomicReference<OrderStatus>
-
     private lateinit var binding: FragmentIdentityBinding
 
     private var currentPhotoPath: String = ""
 
-    private val operationObserver = Observer<Resource<*>> { resource ->
-        when (resource) {
-            is Loading -> showLoader()
-            is Success -> hideLoader()
-            is Failure -> {
-                hideLoader()
-                purchaseFailed(resource.message)
-            }
-        }
-    }
-
-    private val paymentDataObserver = Observer<Resource<OrderInfoData>> { resource ->
-        when (resource) {
-            is Loading -> showLoader()
-            is Failure -> operationObserver.onChanged(resource)
-        }
-    }
+    private val paymentDataObserver = restObserver<OrderInfoData>(
+        onOk = { /* Order status will be updated via WS connection */ },
+        onFail = { purchaseFailed(it.message) }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,15 +83,78 @@ class IdentityFragment : BaseVerificationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Direct.identitySubcomponent?.inject(this)
         super.onViewCreated(view, savedInstanceState)
+        setupInputs()
 
+        event.observe(this, Observer {
+            when (it!!) {
+                SourceClickType.PHOTO -> choosePhotoFromGalleryWithPermissionCheck()
+                SourceClickType.CAMERA -> takePhotoWithPermissionCheck()
+                SourceClickType.CANCEL -> {
+                    // ignore. event is handled within dialog
+                }
+            }
+        })
+
+        model.apply {
+            chooseCountryEvent.observe(this@IdentityFragment, Observer {
+                CountryPickerDialog().show(fragmentManager!!, "country")
+            })
+            chooseStateEvent.observe(this@IdentityFragment, Observer {
+                StatePickerDialog().show(fragmentManager!!, "state")
+            })
+            uploadPhotoEvent.observe(this@IdentityFragment, Observer {
+                PhotoSourceDialog().show(fragmentManager!!, "choose")
+            })
+            cvvInfoEvent.observe(this@IdentityFragment, Observer {
+                CvvInfoDialog().show(fragmentManager!!, "cvv")
+            })
+            nextClickEvent.observe(this@IdentityFragment, Observer { handleNextClick() })
+            basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
+            extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
+            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}))
+            createOrder.observe(this@IdentityFragment, restObserver(
+                onOk = {
+                    model.updateOrderId(it!!.orderId)
+                    setPaymentBase()
+                    subscribeToOrderInfoUpdates()
+                },
+                onFail = {
+                    if (it.code == COUNTRY_NOT_SUPPORTED) {
+                        context!!.locationNotSupported()
+                        finish()
+                    } else {
+                        purchaseFailed(it.message)
+                    }
+                }
+            ))
+            getOrderInfo.observe(this@IdentityFragment, restObserver(
+                onOk = { setRequiredImages(it!!.basic.images) }
+            ))
+            uploadImage.observe(this@IdentityFragment, restObserver(
+                onOk = { setDocumentStatusToValid() },
+                onFail = { purchaseFailed(it.message) }
+            ))
+            verificationResult.observe(this@IdentityFragment, restObserver(
+                onOk = {},
+                onFail = {
+                    if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
+                        userWallet.walletStatus = FieldStatus.INVALID
+                    } else {
+                        purchaseFailed(it.message)
+                    }
+                }
+            ))
+        }.let { binding.model = it }
+        stickyViewEvent.postValue(R.id.fiNext)
+    }
+
+    private fun setupInputs() {
         binding.apply {
             fiCard.fiInputCardNumber.apply {
                 addTextChangedListener(CreditCardFormatTextWatcher(this))
                 filters = arrayOf(InputFilter.LengthFilter(MAX_CARD_LENGTH))
             }
-            fiCard.fiInputCvv.apply {
-                filters = arrayOf(InputFilter.LengthFilter(MAX_CVV_LENGTH))
-            }
+            fiCard.fiInputCvv.filters = arrayOf(InputFilter.LengthFilter(MAX_CVV_LENGTH))
             fiCard.fiInputDate.apply {
                 filters = arrayOf(InputFilter.LengthFilter(MAX_EXP_DATE_LENGTH))
                 addTextChangedListener(DateWatcher(this))
@@ -129,177 +168,22 @@ class IdentityFragment : BaseVerificationFragment() {
                 addTextChangedListener(SsnWatcher(this))
             }
         }
-
-        event.observe(this, Observer {
-            when (it!!) {
-                SourceClickType.PHOTO -> choosePhotoFromGalleryWithPermissionCheck()
-                SourceClickType.CAMERA -> takePhotoWithPermissionCheck()
-                SourceClickType.CANCEL -> {
-                    // ignore. event is handled within dialog
-                }
-            }
-        })
-
-        model.apply {
-            uploadImage.observe(this@IdentityFragment, Observer {
-                if (it is Success) setDocumentStatusToValid()
-                operationObserver.onChanged(it)
-            })
-            basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            processingResult.observe(this@IdentityFragment, operationObserver)
-            createOrder.observe(this@IdentityFragment, Observer {
-                when (it) {
-                    is Failure -> {
-                        hideLoader()
-                        if (it.code == COUNTRY_NOT_SUPPORTED) {
-                            context!!.locationNotSupported()
-                            finish()
-                        } else {
-                            purchaseFailed(it.message)
-                        }
-                    }
-                    is Success -> {
-                        it.data!!.orderId.let { model.updateOrderId(it) }
-                        setPaymentBase()
-                        subscribeToOrderInfoUpdates()
-                        hideLoader()
-                    }
-                    is Loading -> showLoader()
-                }
-            })
-            nextClickEvent.observe(this@IdentityFragment, Observer {
-                when (verificationStep.get()) {
-                    VerificationStep.LOCATION_EMAIL -> createOrder()
-                    VerificationStep.PAYMENT_BASE -> {
-                        if (currentOrderStatus.get() == OrderStatus.INCOMPLETE) {
-                            uploadBasePaymentData()
-                        } else if (currentOrderStatus.get() == OrderStatus.IVS_READY) {
-                            startVerificationChain()
-                        }
-                    }
-                    VerificationStep.PAYMENT_EXTRA -> uploadExtraPaymentData()
-                }
-            })
-            orderInfo.observe(this@IdentityFragment, Observer {
-                when (it) {
-                    is Failure -> purchaseFailed(it.message)
-                    is Success -> setRequiredImages(it.data!!.basic.images)
-                }
-            })
-            chooseCountryEvent.observe(this@IdentityFragment, Observer {
-                CountryPickerDialog().show(fragmentManager!!, "country")
-            })
-            chooseStateEvent.observe(this@IdentityFragment, Observer {
-                StatePickerDialog().show(fragmentManager!!, "state")
-            })
-            uploadPhotoEvent.observe(this@IdentityFragment, Observer {
-                PhotoSourceDialog().show(fragmentManager!!, "choose")
-            })
-            verificationResult.observe(this@IdentityFragment, Observer {
-                when (it) {
-                    is Failure -> {
-                        if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
-                            userWallet.walletStatus = FieldStatus.INVALID
-                            hideLoader()
-                        } else {
-                            operationObserver.onChanged(it)
-                        }
-                    }
-                    is Loading -> showLoader()
-                }
-            })
-            cvvInfoEvent.observe(this@IdentityFragment, Observer {
-                CvvInfoDialog().show(fragmentManager!!, "cvv")
-            })
-        }.let { binding.model = it }
-        stickyViewEvent.postValue(R.id.fiNext)
     }
 
     private fun subscribeToOrderInfoUpdates() {
-        currentOrderStatus.set(OrderStatus.INCOMPLETE)
-
-        model.subscribeToOrderInfo().observe(this, Observer {
-            if (it is Success) {
-                val data = it.data!!
-                when (data.orderStatus) {
-                    OrderStatus.REJECTED -> {
-                        if (currentOrderStatus.get() != OrderStatus.REJECTED) {
-                            currentOrderStatus.set(OrderStatus.REJECTED)
-                            context!!.verificationError("Rejected")
-                            finish()
-                        }
-                    }
-                    OrderStatus.IVS_READY -> {
-                        if (currentOrderStatus.get() != OrderStatus.IVS_READY) {
-                            currentOrderStatus.set(OrderStatus.IVS_READY)
-                            model.startVerificationChain()
-                        }
-                    }
-                    OrderStatus.PSS_WAITDATA -> {
-                        if (currentOrderStatus.get() != OrderStatus.PSS_WAITDATA) {
-                            currentOrderStatus.set(OrderStatus.PSS_WAITDATA)
-                            hideLoader()
-                            model.apply {
-                                it.data.additional
-                                    .takeIf { it.filter { it.value.req }.isNotEmpty() }
-                                    .let {
-                                        additionalFields.set(it.orEmpty())
-                                        verificationStep.set(VerificationStep.PAYMENT_EXTRA)
-                                        paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
-                                        paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
-                                    }
-                            }
-                        }
-                    }
-                    OrderStatus.PSS_READY -> {
-                        if (currentOrderStatus.get() != OrderStatus.PSS_READY) {
-                            currentOrderStatus.set(OrderStatus.PSS_READY)
-                            model.apply {
-                                processingKey.execute()
-                            }
-                        }
-                    }
-                    OrderStatus.PSS_PENDING -> {
-                        if (currentOrderStatus.get() != OrderStatus.PSS_PENDING) {
-                            currentOrderStatus.set(OrderStatus.PSS_PENDING)
-                        }
-                    }
-                    OrderStatus.PSS_3DS_REQUIRED -> {
-                        if (currentOrderStatus.get() != OrderStatus.PSS_3DS_REQUIRED) {
-                            currentOrderStatus.set(OrderStatus.PSS_3DS_REQUIRED)
-                            model.unsubscribeFromOrderInfo()
-                            requestNextStep()
-                            currentOrderStatus.set(OrderStatus.INCOMPLETE)
-                        }
-                    }
-                    OrderStatus.WAITING_FOR_CONFIRMATION -> {
-                        if (currentOrderStatus.get() != OrderStatus.WAITING_FOR_CONFIRMATION) {
-                            currentOrderStatus.set(OrderStatus.WAITING_FOR_CONFIRMATION)
-                            model.unsubscribeFromOrderInfo()
-                            requestNextStep()
-                            currentOrderStatus.set(OrderStatus.INCOMPLETE)
-                        }
-                    }
-                    OrderStatus.COMPLETE -> {
-                        if (currentOrderStatus.get() != OrderStatus.COMPLETE) {
-                            currentOrderStatus.set(OrderStatus.COMPLETE)
-                            model.unsubscribeFromOrderInfo()
-                            requestNextStep()
-                            currentOrderStatus.set(OrderStatus.INCOMPLETE)
-                        }
-                    }
-                    else -> {
-                        Log.d("STATUS", data.orderStatus.name)
-                    }
-                }
-            }
-        })
-    }
-
-    private fun requestNextStep() {
-        hideLoader()
-        model.next()
+        model.subscribeToOrderInfo().observe(this, socketObserver(
+            onOk = {
+                model.updateOrderStatus(
+                    it!!,
+                    {
+                        context!!.verificationError("Rejected")
+                        finish()
+                    },
+                    { hideLoader() }
+                )
+            },
+            onFail = { purchaseFailed(it.message) }
+        ))
     }
 
     @Throws(IOException::class)
@@ -315,13 +199,12 @@ class IdentityFragment : BaseVerificationFragment() {
     fun takePhoto() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).let { takePictureIntent ->
             takePictureIntent.resolveActivity(context!!.packageManager)?.let {
-                val photoFile: File? = try {
+                try {
                     createImageFile()
                 } catch (ex: IOException) {
                     toast("Cannot take photo. ${ex.message ?: ""}")
                     null
-                }
-                photoFile?.let {
+                }?.let {
                     val photoURI: Uri = FileProvider.getUriForFile(
                         context!!,
                         "${Direct.context.packageName}.directfile",
