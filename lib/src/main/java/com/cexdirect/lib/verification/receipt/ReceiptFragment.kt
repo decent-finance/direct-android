@@ -72,7 +72,7 @@ class ReceiptFragment : BaseVerificationFragment() {
                 finish()
             })
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
-                copyTxId(txId)
+                this@ReceiptFragment.copyTxId(txId)
             })
         }
         stickyViewEvent.value = View.NO_ID
