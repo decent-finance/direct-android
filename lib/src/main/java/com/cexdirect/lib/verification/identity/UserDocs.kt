@@ -21,6 +21,7 @@ import androidx.databinding.*
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.network.models.Base64Image
 import com.cexdirect.lib.network.models.Images
 import com.cexdirect.lib.util.FieldStatus
 
@@ -312,9 +313,11 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     fun getDocumentPhotosArray() =
         Array(requiredImagesAmount) {
             when (it) {
-                0 -> imagesBase64["front"]!!
-                1 -> imagesBase64["back"]!!
-                else -> "Illegal index $it"
+                0 -> Base64Image(0, imagesBase64["front"]!!)
+                1 -> Base64Image(1, imagesBase64["back"]!!)
+                else -> error("Illegal index $it")
             }
         }
+
+    fun getSelfieArray() = arrayOf(Base64Image(0, selfieBase64))
 }

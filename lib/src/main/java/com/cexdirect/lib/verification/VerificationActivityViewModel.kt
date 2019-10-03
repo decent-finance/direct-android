@@ -169,7 +169,7 @@ class VerificationActivityViewModel(
                 ImageBody(
                     ImageData(
                         documentType = DocumentType.SELFIE.value,
-                        base64image = arrayOf(userDocs.selfieBase64)
+                        base64image = userDocs.getSelfieArray()
                     )
                 )
             }

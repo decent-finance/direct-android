@@ -22,7 +22,8 @@ import com.cexdirect.lib.util.sha512
 class ImageBody(data: ImageData) : BaseBody<ImageData>(data = data) {
 
     init {
-        data.orderSecret = "${Direct.userEmail}${Direct.pendingOrderId}${serviceData.nonce}".sha512()
+        data.orderSecret =
+            "${Direct.userEmail}${Direct.pendingOrderId}${serviceData.nonce}".sha512()
     }
 }
 
@@ -31,5 +32,7 @@ data class ImageData(
     val orderId: String = Direct.pendingOrderId,
     var orderSecret: String = "",
     val documentType: String,
-    val base64image: Array<String>
+    val base64image: Array<Base64Image>
 )
+
+data class Base64Image(val index: Int, val content: String)
