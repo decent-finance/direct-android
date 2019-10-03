@@ -122,7 +122,6 @@ allOpen {
 }
 
 ext {
-    lifecycleVersion = '2.1.0'
     okHttpVersion = '4.2.0'
     hyperionVersion = '0.9.27'
 }
