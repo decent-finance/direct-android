@@ -160,7 +160,8 @@
     <string name="cexd_front_side">Front Side</string>
     <string name="cexd_back_side">Back Side</string>
     <string name="cexd_file_unsupported">Unsupported file format</string>
-    <string name="cexd_no_front">Document front is missing</string>
-    <string name="cexd_no_back">Document back is missing</string>
+    <string name="cexd_no_front">Document front side is missing</string>
+    <string name="cexd_no_back">Document back side is missing</string>
     <string name="cexd_no_photo">Document is missing</string>
+    <string name="cexd_no_selfie">Selfie is missing</string>
 </resources>

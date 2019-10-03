@@ -285,9 +285,9 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@{model.userDocs.selfieSizeValid ? @string/cexd_no_photo : @string/cexd_file_too_big}"
+                        android:text="@{model.userDocs.selfieSizeValid ? @string/cexd_no_selfie : @string/cexd_file_too_big}"
                         android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
-                        tools:text="@string/cexd_no_photo"
+                        tools:text="@string/cexd_no_selfie"
                         tools:visibility="visible" />
 
                     <Button
