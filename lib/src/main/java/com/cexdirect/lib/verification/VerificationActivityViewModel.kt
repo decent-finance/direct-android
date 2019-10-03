@@ -200,7 +200,12 @@ class VerificationActivityViewModel(
     }
 
     val extraPaymentData = orderApi.updatePaymentData(this) {
-        PaymentData(paymentData = null, additional = extras, termUrl = null)
+        extras.apply {
+            // Do not send the following entries
+            remove("userResidentialCountry")
+            remove("billingCountry")
+            remove("billingState")
+        }.let { PaymentData(paymentData = null, additional = it, termUrl = null) }
     }
 
     val changeEmail = Transformations.switchMap(emailChangedEvent) {
@@ -453,7 +458,7 @@ class VerificationActivityViewModel(
                     data.additional
                         .takeIf { it.filter { it.value.req }.isNotEmpty() }
                         .let {
-                            additionalFields.set(it.orEmpty())
+                            additionalFields.set(addCrutchedData(it))
                             orderStep.set(OrderStep.PAYMENT_EXTRA)
                             paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
                             paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -472,6 +477,30 @@ class VerificationActivityViewModel(
             }
         }
     }
+
+    /**
+     * Handle BE issues
+     */
+    private fun addCrutchedData(additional: Map<String, Additional>?): Map<String, Additional> =
+        additional?.let {
+            HashMap(it).apply {
+                this["userResidentialCountry"] = Additional(
+                    userCountry.selectedCountry.code,
+                    this["userResidentialCountry"]!!.req,
+                    false
+                )
+                this["billingCountry"] = Additional(
+                    userCountry.selectedCountry.code,
+                    this["billingCountry"]!!.req,
+                    false
+                )
+                this["billingState"] = Additional(
+                    userCountry.selectedState.code.ifEmpty { null },
+                    this["billingState"]!!.req,
+                    false
+                )
+            }
+        } ?: emptyMap()
 
     fun handleNextClick() {
         when (orderStep.get()) {
