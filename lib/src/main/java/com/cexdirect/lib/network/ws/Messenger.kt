@@ -63,5 +63,10 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
             UnsubscribeMessage(data = UnsubscribeData(event = UnsubscribeType.CURRENCIES.raw))
         }
     }
+
+    fun clear() {
+        cexdSocket.stop()
+        cexdSocket.removeAllSubscriptions()
+    }
 }
 

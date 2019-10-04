@@ -77,7 +77,7 @@ class ErrorActivity : BaseActivity() {
                 .commit()
         }
 
-        Direct.directComponent.socket().stop()
+        model.stopSubscriptions()
     }
 }
 

@@ -22,12 +22,17 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
+import com.cexdirect.lib.Direct
 import com.cexdirect.lib.LegalViewModel
 import com.cexdirect.lib.VoidLiveEvent
+import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.checkEmailStatus
 
-class ErrorActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) : LegalViewModel(dispatcherProvider) {
+class ErrorActivityViewModel(
+    private val messenger: Messenger,
+    dispatcherProvider: CoroutineDispatcherProvider
+) : LegalViewModel(dispatcherProvider) {
 
     var emailStatus = FieldStatus.EMPTY
         private set
@@ -53,9 +58,18 @@ class ErrorActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) : 
         informMeEvent.call()
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    fun stopSubscriptions() {
+        messenger.clear()
+        Direct.clear()
+    }
+
+    class Factory(
+        private val messenger: Messenger,
+        private val dispatcherProvider: CoroutineDispatcherProvider
+    ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = ErrorActivityViewModel(dispatcherProvider) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            ErrorActivityViewModel(messenger, dispatcherProvider) as T
     }
 }

@@ -84,4 +84,9 @@ class ReceiptFragment : BaseVerificationFragment() {
             toast(getString(R.string.cexd_order_id_copied))
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        model.stopSubscriptions()
+    }
 }

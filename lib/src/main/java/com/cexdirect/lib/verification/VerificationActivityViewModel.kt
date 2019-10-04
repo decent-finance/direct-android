@@ -327,8 +327,8 @@ class VerificationActivityViewModel(
 
     fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
 
-    private fun unsubscribeFromOrderInfo() {
-        messenger.removeOrderInfoSubscription()
+    fun stopSubscriptions() {
+        messenger.clear()
     }
 
     fun toggleLocationEmail() {
@@ -547,9 +547,7 @@ class VerificationActivityViewModel(
             OrderStatus.WAITING_FOR_CONFIRMATION -> statusWatcher.updateAndDo(OrderStatus.WAITING_FOR_CONFIRMATION) {
                 askForEmailConfirmation()
             }
-            OrderStatus.COMPLETE -> {
-                statusWatcher.updateAndDo(OrderStatus.COMPLETE) { confirmOrder() }
-            }
+            OrderStatus.COMPLETE -> statusWatcher.updateAndDo(OrderStatus.COMPLETE) { confirmOrder() }
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
             else -> { /* do nothing */
             }

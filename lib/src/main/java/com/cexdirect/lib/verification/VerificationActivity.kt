@@ -108,7 +108,6 @@ class VerificationActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Direct.releaseIdentitySubcomponent()
-        Direct.directComponent.socket().stop()
     }
 
     companion object {
