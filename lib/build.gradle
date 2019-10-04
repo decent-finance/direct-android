@@ -5,6 +5,7 @@ apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.cmgapps.licenses'
 apply from: '../config.gradle'
+apply from: 'jacoco.gradle'
 
 import com.cmgapps.license.OutputType
 
