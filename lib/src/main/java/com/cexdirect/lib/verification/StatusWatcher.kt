@@ -17,16 +17,30 @@
 package com.cexdirect.lib.verification
 
 import com.cexdirect.lib.network.models.OrderStatus
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
-class StatusHolder(initial: OrderStatus = OrderStatus.INCOMPLETE) {
+class StatusWatcher(initial: OrderStatus = OrderStatus.INCOMPLETE) {
 
-    var currentStatus = AtomicReference(initial)
+    private val currentStatus = AtomicReference(initial)
+    private val screenChanged = AtomicBoolean(false)
 
     fun updateAndDo(newStatus: OrderStatus, updateAction: () -> Unit) {
-        if (currentStatus.get() != newStatus) {
+        if (isUpdatedStatus(newStatus) or screenWasChanged(newStatus)) {
             currentStatus.set(newStatus)
             updateAction.invoke()
         }
     }
+
+    private fun screenWasChanged(newStatus: OrderStatus) =
+        currentStatus.get() == newStatus && screenChanged.getAndSet(false)
+
+    private fun isUpdatedStatus(newStatus: OrderStatus) =
+        currentStatus.get() != newStatus
+
+    fun setScreenChanged() {
+        screenChanged.compareAndSet(false, true)
+    }
+
+    fun getStatus(): OrderStatus = currentStatus.get()
 }

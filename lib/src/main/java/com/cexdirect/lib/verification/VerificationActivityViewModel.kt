@@ -103,7 +103,7 @@ class VerificationActivityViewModel(
     val paymentInfo = ObservableField<PaymentInfo>()
     val txId = ObservableField("")
 
-    val statusHolder = StatusHolder()
+    val statusWatcher = StatusWatcher()
 
     // --- Requests --- //
     val createOrder = orderApi.createNewOrder(this) {
@@ -447,14 +447,14 @@ class VerificationActivityViewModel(
         hideAction: () -> Unit
     ) {
         when (data.orderStatus) {
-            OrderStatus.REJECTED -> statusHolder.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
             OrderStatus.IVS_READY -> {
-                statusHolder.updateAndDo(OrderStatus.IVS_READY) {
+                statusWatcher.updateAndDo(OrderStatus.IVS_READY) {
                     startVerificationChain()
                 }
             }
             OrderStatus.PSS_WAITDATA -> {
-                statusHolder.updateAndDo(OrderStatus.PSS_WAITDATA) {
+                statusWatcher.updateAndDo(OrderStatus.PSS_WAITDATA) {
                     data.additional
                         .takeIf { it.filter { it.value.req }.isNotEmpty() }
                         .let {
@@ -466,10 +466,10 @@ class VerificationActivityViewModel(
                     hideAction.invoke()
                 }
             }
-            OrderStatus.PSS_READY -> statusHolder.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
-            OrderStatus.PSS_PENDING -> statusHolder.updateAndDo(OrderStatus.PSS_PENDING) {}
+            OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
+            OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
-                statusHolder.updateAndDo(data.orderStatus) {
+                statusWatcher.updateAndDo(data.orderStatus) {
                     hideAction.invoke()
                     next()
                 }
@@ -506,9 +506,9 @@ class VerificationActivityViewModel(
         when (orderStep.get()) {
             OrderStep.LOCATION_EMAIL -> createOrder()
             OrderStep.PAYMENT_BASE -> {
-                if (statusHolder.currentStatus.get() == OrderStatus.INCOMPLETE) {
+                if (statusWatcher.getStatus() == OrderStatus.INCOMPLETE) {
                     uploadBasePaymentData()
-                } else if (statusHolder.currentStatus.get() == OrderStatus.IVS_READY) {
+                } else if (statusWatcher.getStatus() == OrderStatus.IVS_READY) {
                     startVerificationChain()
                 }
             }
@@ -541,16 +541,16 @@ class VerificationActivityViewModel(
 
     fun updateConfirmationStatus(data: OrderInfoData, rejectAction: () -> Unit) {
         when (data.orderStatus) {
-            OrderStatus.PSS_3DS_REQUIRED -> statusHolder.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
+            OrderStatus.PSS_3DS_REQUIRED -> statusWatcher.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
                 askFor3ds(data.threeDS!!)
             }
-            OrderStatus.WAITING_FOR_CONFIRMATION -> statusHolder.updateAndDo(OrderStatus.WAITING_FOR_CONFIRMATION) {
+            OrderStatus.WAITING_FOR_CONFIRMATION -> statusWatcher.updateAndDo(OrderStatus.WAITING_FOR_CONFIRMATION) {
                 askForEmailConfirmation()
             }
             OrderStatus.COMPLETE -> {
-                statusHolder.updateAndDo(OrderStatus.COMPLETE) { confirmOrder() }
+                statusWatcher.updateAndDo(OrderStatus.COMPLETE) { confirmOrder() }
             }
-            OrderStatus.REJECTED -> statusHolder.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
             else -> { /* do nothing */
             }
         }
@@ -580,10 +580,10 @@ class VerificationActivityViewModel(
 
     fun updatePaymentInfo(data: OrderInfoData) {
         when (data.orderStatus) {
-            OrderStatus.COMPLETE -> statusHolder.updateAndDo(OrderStatus.COMPLETE) {
+            OrderStatus.COMPLETE -> statusWatcher.updateAndDo(OrderStatus.COMPLETE) {
                 paymentInfo.set(data.paymentInfo)
             }
-            OrderStatus.FINISHED -> statusHolder.updateAndDo(OrderStatus.FINISHED) {
+            OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
             }

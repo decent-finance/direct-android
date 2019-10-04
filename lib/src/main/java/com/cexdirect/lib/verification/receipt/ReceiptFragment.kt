@@ -30,7 +30,6 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
 import com.cexdirect.lib.error.purchaseFailed
-import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
@@ -62,7 +61,7 @@ class ReceiptFragment : BaseVerificationFragment() {
         binding.model = model
 
         model.apply {
-            model.statusHolder.currentStatus.set(OrderStatus.INCOMPLETE)
+            statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@ReceiptFragment, socketObserver(
                 onOk = { model.updatePaymentInfo(it!!) },
                 onFail = { purchaseFailed(it.message) }

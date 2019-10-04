@@ -27,7 +27,6 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.error.verificationError
-import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
@@ -61,9 +60,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
         setup3dsWebView()
 
         model.apply {
-            // todo This line is here so that we can update status further
-            // after moving from IdentityFragment
-            statusHolder.currentStatus.set(OrderStatus.INCOMPLETE)
+            statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
                     updateConfirmationStatus(it!!) {
