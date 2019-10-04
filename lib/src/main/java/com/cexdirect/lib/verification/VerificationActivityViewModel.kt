@@ -212,8 +212,7 @@ class VerificationActivityViewModel(
         orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
     }
 
-    val resendCheckCode =
-        orderApi.resendCheckCode(this, orderId.get()!!)
+    val resendCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
 
     val checkCode = orderApi.checkCode(this) {
         CheckCodeData(orderId.get()!!, confirmationCode.get()!!)
