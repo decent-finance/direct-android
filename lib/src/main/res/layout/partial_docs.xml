@@ -30,7 +30,13 @@
             alias="type"
             type="com.cexdirect.lib.verification.identity.PhotoType" />
 
+        <import
+            alias="docType"
+            type="com.cexdirect.lib.verification.identity.DocumentType" />
+
         <import type="com.cexdirect.lib.util.FieldStatus" />
+
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
     </data>
 
@@ -71,6 +77,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="ID card" />
 
@@ -82,6 +89,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="Drivers Licence" />
 
@@ -92,6 +100,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:elevation="4dp"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
                     app:text="Passport" />
 
@@ -141,6 +150,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:animateLayoutChanges="true"
                     android:background="@drawable/selector_bg_doc"
                     android:orientation="vertical"
                     android:paddingTop="8dp"
@@ -152,12 +162,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|top"
-                        android:text="@string/cexd_front_side" />
+                        android:text="@string/cexd_front_side"
+                        android:visibility="@{model.userDocs.documentType == docType.PASSPORT ? View.GONE : View.VISIBLE }" />
 
                     <ImageView
                         android:id="@+id/fiDocument"
                         style="@style/Direct.Document"
-                        app:isActivated="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID}"
                         app:pic="@{model.userDocs.documentImage}"
                         tools:src="@drawable/ic_pic_passport" />
 
@@ -171,7 +181,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentFrontSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentFrontSizeValid ? model.userDocs.documentFrontErrorText : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -183,6 +193,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:onClick="@{() -> model.uploadPhoto(type.ID)}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_upload_photo" />
@@ -210,7 +221,6 @@
                     <ImageView
                         android:id="@+id/fiDocumentBack"
                         style="@style/Direct.Document"
-                        android:layout_gravity="bottom"
                         app:pic="@{model.userDocs.documentImageBack}"
                         tools:src="@drawable/ic_pic_passport" />
 
@@ -223,7 +233,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentBackSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentBackSizeValid ? @string/cexd_no_back : @string/cexd_file_too_big}"
                     android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -235,6 +245,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:onClick="@{() -> model.uploadPhoto(type.ID_BACK)}"
                     android:outlineProvider="background"
                     android:text="@string/cexd_upload_photo"
@@ -262,6 +273,8 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/selector_bg_doc"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
                         android:src="@drawable/ic_pic_portrait"
                         app:isActivated="@{model.userDocs.selfieStatus == FieldStatus.INVALID}" />
 
@@ -272,9 +285,10 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@{model.userDocs.selfieSizeValid? @string/cexd_no_photo_uploaded : @string/cexd_file_too_big}"
+                        android:text="@{model.userDocs.selfieSizeValid ? @string/cexd_no_selfie : @string/cexd_file_too_big}"
                         android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
-                        tools:visibility="gone" />
+                        tools:text="@string/cexd_no_selfie"
+                        tools:visibility="visible" />
 
                     <Button
                         android:id="@+id/fiSelfieUpl"
@@ -285,6 +299,7 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="10dp"
                         android:elevation="8dp"
+                        android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                         android:onClick="@{() -> model.uploadPhoto(type.SELFIE)}"
                         android:outlineProvider="background"
                         android:text="@string/cexd_upload_photo" />

@@ -36,9 +36,9 @@ class OrderApi(private val service: OrderService) {
             service.checkCode(CheckCodeBody(block.invoke()))
         }
 
-    fun resendCheckCode(scope: CoroutineScope, orderId: String) =
+    fun resendCheckCode(scope: CoroutineScope, block: () -> String) =
         ExecutableLiveData(scope) {
-            service.resendCheckCode(ResendCheckCodeBody(ResendCheckCodeData(orderId = orderId)))
+            service.resendCheckCode(ResendCheckCodeBody(ResendCheckCodeData(orderId = block.invoke())))
         }
 
     fun checkOrderInfo(scope: CoroutineScope) =

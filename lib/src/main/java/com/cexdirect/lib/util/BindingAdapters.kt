@@ -151,8 +151,8 @@ fun TextView.loadContent(content: String) {
 }
 
 @BindingAdapter("coinIcon")
-fun ImageView.applyCoinIcon(data: MonetaryData) {
-    setImageResource(symbolMap[data.currency].orDefault().iconId)
+fun ImageView.applyCoinIcon(data: MonetaryData?) {
+    data?.let { setImageResource(symbolMap[it.currency].orDefault().iconId) }
 }
 
 @BindingAdapter("legal")

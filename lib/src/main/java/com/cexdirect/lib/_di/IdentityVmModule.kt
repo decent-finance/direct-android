@@ -21,17 +21,18 @@ import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._di.annotation.*
+import com.cexdirect.lib._di.annotation.IdentityScope
+import com.cexdirect.lib._di.annotation.PhotoSourceDialogFactory
+import com.cexdirect.lib._di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.verification.VerificationActivityViewModel
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
-import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragmentViewModel
 import com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel
 import com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel
-import com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel
+import com.cexdirect.lib.verification.scanner.QrScannerActivityViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -48,6 +49,7 @@ class IdentityVmModule {
         stringProvider: StringProvider,
         messenger: Messenger,
         dh: DH,
+        emailChangedEvent: StringLiveEvent,
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ): ViewModelProvider.Factory =
         VerificationActivityViewModel.Factory(
@@ -56,31 +58,7 @@ class IdentityVmModule {
             stringProvider,
             messenger,
             dh,
-            coroutineDispatcherProvider
-        )
-
-    @Provides
-    @ReceiptFragmentFactory
-    @IdentityScope
-    fun provideReceiptFragmentViewModel(
-        messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        ReceiptFragmentViewModel.Factory(messenger, coroutineDispatcherProvider)
-
-    @Provides
-    @PaymentConfirmationFragmentFactory
-    @IdentityScope
-    fun providePaymentConfirmationFragmentViewModel(
-        orderApi: OrderApi,
-        emailChangedEvent: StringLiveEvent,
-        messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        PaymentConfirmationFragmentViewModel.Factory(
-            orderApi,
             emailChangedEvent,
-            messenger,
             coroutineDispatcherProvider
         )
 
@@ -105,4 +83,11 @@ class IdentityVmModule {
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ) =
         ChangeEmailDialogViewModel.Factory(coroutineDispatcherProvider)
+
+    @Provides
+    @IdentityScope
+    fun provideQrScannerViewModelFactory(
+        coroutineDispatcherProvider: CoroutineDispatcherProvider
+    ) =
+        QrScannerActivityViewModel.Factory(coroutineDispatcherProvider)
 }

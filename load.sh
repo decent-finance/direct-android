@@ -16,5 +16,6 @@ if [ ! -f "$CONFIG" ]; then
     echo "uatSecret=$UAT_SECRET" >> ${CONFIG}
     echo "prodPlacementId=$PROD_PLACEMENT_ID" >> ${CONFIG}
     echo "prodSecret=$PROD_SECRET" >> ${CONFIG}
+    echo "testers=$TESTERS" >> ${CONFIG}
 
 fi

@@ -22,31 +22,18 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.receipt.ReceiptFragmentViewModel" />
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
 
         <import type="android.view.View" />
     </data>
 
     <FrameLayout
-        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <ImageView
-            android:id="@+id/ffCoinIcon"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
-            android:layout_gravity="top|center_horizontal"
-            android:contentDescription="@string/cexd_currency_icon"
-            android:elevation="10dp"
-            android:scaleType="fitXY"
-            app:coinIcon="@{model.paymentInfo.crypto}"
-            tools:srcCompat="@drawable/ic_btc" />
-
         <LinearLayout
-            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -178,6 +165,16 @@
                 android:text="@string/cexd_buy_more_crypto" />
 
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_gravity="top|center_horizontal"
+            android:contentDescription="@string/cexd_currency_icon"
+            android:elevation="10dp"
+            android:scaleType="fitXY"
+            app:coinIcon="@{model.paymentInfo.crypto}"
+            tools:srcCompat="@drawable/ic_btc" />
 
     </FrameLayout>
 

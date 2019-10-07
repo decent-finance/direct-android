@@ -17,7 +17,9 @@
 package com.cexdirect.sample
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.cexdirect.lib.Direct
@@ -38,5 +40,15 @@ class MainActivity : AppCompatActivity() {
             R.string.build_date,
             BuildConfig.BUILD_DATE
         )
+
+        findViewById<CheckBox>(R.id.cbLeakToggle).apply {
+            if (BuildConfig.DEBUG) {
+                setOnCheckedChangeListener { _, isChecked ->
+                    toggleWatcher(isChecked)
+                }
+            } else {
+                visibility = View.GONE
+            }
+        }
     }
 }

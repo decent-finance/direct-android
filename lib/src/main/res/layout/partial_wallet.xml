@@ -29,6 +29,8 @@
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
 
         <import type="android.view.inputmethod.EditorInfo" />
+
+        <import type="com.cexdirect.lib.verification.OrderStep" />
     </data>
 
     <merge>
@@ -56,24 +58,44 @@
                 android:contentDescription="@string/cexd_wallet_icon"
                 android:src="@drawable/ic_wallet" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:clipChildren="false"
-                app:hintTextAppearance="@style/Direct.TextHint">
+                android:addStatesFromChildren="true"
+                android:clipChildren="false">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/Direct.Input2"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/cexd_wallet"
-                    android:imeOptions="@{model.userCountry.shouldShowState ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
-                    android:inputType="text"
-                    android:text="@={model.userWallet.address}"
-                    tools:text="" />
+                    android:clipChildren="false"
+                    app:hintTextAppearance="@style/Direct.TextHint">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/Direct.Input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
+                        android:hint="@string/cexd_wallet"
+                        android:imeOptions="@{model.userCountry.shouldShowState ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
+                        android:inputType="text"
+                        android:paddingEnd="28dp"
+                        android:text="@={model.userWallet.address}"
+                        tools:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:background="@null"
+                    android:contentDescription="@string/cexd_show_cvv_info"
+                    android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
+                    android:onClick="@{() -> model.scanQrCode()}"
+                    android:src="@drawable/ic_qr_code" />
+
+            </FrameLayout>
         </LinearLayout>
 
         <TextView

@@ -118,6 +118,10 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
         subscriptions.remove(key)
     }
 
+    fun removeAllSubscriptions() {
+        subscriptions.clear()
+    }
+
     companion object {
         const val PING_PONG_DELAY = 10_000L
         const val CLOSE_STATUS = 1000

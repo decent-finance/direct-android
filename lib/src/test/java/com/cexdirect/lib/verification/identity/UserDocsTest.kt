@@ -49,6 +49,8 @@ class UserDocsTest {
 
     @Test
     fun setOneReqPhotoForPassport() {
+        whenever(stringProvider.provideString(anyInt())).thenReturn("")
+
         userDocs.documentType = DocumentType.PASSPORT
 
         assertThat(userDocs.requiredImagesAmount).isEqualTo(1)
@@ -56,6 +58,8 @@ class UserDocsTest {
 
     @Test
     fun setTwoReqPhotosForIdCard() {
+        whenever(stringProvider.provideString(anyInt())).thenReturn("")
+
         userDocs.documentType = DocumentType.ID_CARD
 
         assertThat(userDocs.requiredImagesAmount).isEqualTo(2)
@@ -63,6 +67,8 @@ class UserDocsTest {
 
     @Test
     fun setTwoReqPhotosForDriverLicence() {
+        whenever(stringProvider.provideString(anyInt())).thenReturn("")
+
         userDocs.documentType = DocumentType.DRIVER_LICENCE
 
         assertThat(userDocs.requiredImagesAmount).isEqualTo(2)

@@ -24,7 +24,7 @@
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <variable
             name="model"
@@ -58,7 +58,7 @@
                     style="@style/Direct.Input2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
+                    android:enabled="@{model.orderStep == OrderStep.LOCATION_EMAIL}"
                     android:imeOptions="actionDone"
                     android:inputType="textEmailAddress"
                     android:text="@={model.userEmail.email}"

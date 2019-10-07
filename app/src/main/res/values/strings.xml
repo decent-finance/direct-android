@@ -18,4 +18,5 @@
     <string name="app_name">CEX Direct</string>
     <string name="launch_direct">Launch Direct</string>
     <string name="build_date">Built on %s</string>
+    <string name="enable_leak_detection">Enable leak detection</string>
 </resources>

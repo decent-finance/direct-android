@@ -93,6 +93,7 @@ jobs:
               --app app/build/outputs/apk/dev/debug/app-dev-debug.apk \
               --test app/build/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk \
               --device model=Pixel2,version=28,locale=en,orientation=portrait \
+              --num-flaky-test-attempts=1 \
               --use-orchestrator | tee -a ~/ftl.txt
       - store_artifacts:
           path: ~/ftl.txt
@@ -130,6 +131,9 @@ jobs:
           name: Assemble debug
           command: ./gradlew assembleDevDebug
       - run:
+          name: Upload to Firebase
+          command: ./gradlew appDistributionUploadDevDebug
+      - run:
           name: Rename apk
           command: |
             mkdir ~/apk
@@ -161,10 +165,47 @@ jobs:
           name: Assemble uat
           command: ./gradlew assembleUatDebug
       - run:
+          name: Upload to Firebase
+          command: ./gradlew appDistributionUploadUatDebug
+      - run:
           name: Rename apk
           command: |
             mkdir ~/apk
             mv app/build/outputs/apk/uat/debug/app-uat-debug.apk ~/apk/direct-uat-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.apk
+      - store_artifacts:
+          path: ~/apk
+
+  assemble_prod:
+    executor: android
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/direct
+      - run:
+          name: Make gradlew executable
+          command: chmod +x gradlew
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Assemble uat
+          command: ./gradlew assembleProdDebug
+      - run:
+          name: Upload to Firebase
+          command: ./gradlew appDistributionUploadProdDebug
+      - run:
+          name: Rename apk
+          command: |
+            mkdir ~/apk
+            mv app/build/outputs/apk/prod/debug/app-prod-debug.apk ~/apk/direct-prod-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.apk
       - store_artifacts:
           path: ~/apk
 
@@ -216,6 +257,10 @@ workflows:
             - test
             - test_instrumented
       - assemble_uat:
+          requires:
+            - test
+            - test_instrumented
+      - assemble_prod:
           requires:
             - test
             - test_instrumented

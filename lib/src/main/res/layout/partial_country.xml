@@ -22,7 +22,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
@@ -41,7 +41,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_bg_input"
             android:elevation="4dp"
-            android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
+            android:enabled="@{model.orderStep == OrderStep.LOCATION_EMAIL}"
             android:gravity="center"
             android:onClick="@{() -> model.chooseCountry()}"
             android:orientation="horizontal"
@@ -104,7 +104,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_bg_input"
             android:elevation="4dp"
-            android:enabled="@{model.verificationStep == VerificationStep.LOCATION_EMAIL}"
+            android:enabled="@{model.orderStep == OrderStep.LOCATION_EMAIL}"
             android:gravity="center"
             android:onClick="@{() -> model.chooseState()}"
             android:orientation="horizontal"

@@ -58,7 +58,10 @@ abstract class BaseCountryPickerDialog : BaseBottomSheetDialog() {
         super.onViewCreated(view, savedInstanceState)
         binding.title = getTitle()
         model.apply {
-            countryAdapter.set(getCountryAdapter().apply { items = getCountries() })
+            countryAdapter.set(getCountryAdapter().apply {
+                items = getCountries()
+                selectedCountry = getSelectedCountry()
+            })
             currentCountryData = getCountries()
             countryClickEvent.observe(this@BaseCountryPickerDialog, Observer {
                 selectCountry(it)
@@ -92,6 +95,8 @@ abstract class BaseCountryPickerDialog : BaseBottomSheetDialog() {
     protected abstract fun selectCountry(countryData: CountryData)
 
     protected abstract fun getCountries(): List<CountryData>
+
+    protected abstract fun getSelectedCountry(): CountryData
 }
 
 class CountryPickerDialog : BaseCountryPickerDialog() {
@@ -105,6 +110,8 @@ class CountryPickerDialog : BaseCountryPickerDialog() {
     }
 
     override fun getCountries() = Direct.countries.sortByName()
+
+    override fun getSelectedCountry() = model.userCountry.selectedCountry
 }
 
 class StatePickerDialog : BaseCountryPickerDialog() {
@@ -119,6 +126,8 @@ class StatePickerDialog : BaseCountryPickerDialog() {
 
     override fun getCountries() =
         Direct.countries.find { it.states != null }?.states?.sortByName() ?: emptyList()
+
+    override fun getSelectedCountry() = model.userCountry.selectedState
 }
 
 fun List<CountryData>.sortByName() = this.sortedBy { it.name }

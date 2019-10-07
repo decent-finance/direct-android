@@ -71,9 +71,10 @@ class VmModule {
     @ErrorActivityFactory
     @Singleton
     fun provideErrorActivityViewModel(
+        messenger: Messenger,
         coroutineDispatcherProvider: CoroutineDispatcherProvider
     ): ViewModelProvider.Factory =
-        ErrorActivityViewModel.Factory(coroutineDispatcherProvider)
+        ErrorActivityViewModel.Factory(messenger, coroutineDispatcherProvider)
 
     @Provides
     @CheckActivityFactory

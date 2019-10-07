@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,23 +14,15 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.util
+package com.cexdirect.sample
 
-import java.util.regex.Pattern
+import leakcanary.AppWatcher
 
-val emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
+@Suppress("unused")
+class DebugDirectSample : DirectSample() {
 
-fun checkEmailStatus(email: String?) =
-    if (email.isNullOrBlank()) {
-        FieldStatus.EMPTY
-    } else {
-        if (emailPattern.matcher(email).matches()) {
-            FieldStatus.VALID
-        } else {
-            FieldStatus.INVALID
-        }
+    override fun onCreate() {
+        super.onCreate()
+        AppWatcher.config = AppWatcher.config.copy(enabled = false)
     }
-
-enum class FieldStatus {
-    EMPTY, INVALID, VALID
 }

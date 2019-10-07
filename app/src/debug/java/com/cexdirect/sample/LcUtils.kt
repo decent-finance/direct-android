@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.identity
+package com.cexdirect.sample
 
-enum class VerificationStep {
-    LOCATION_EMAIL,
-    PAYMENT_BASE,
-    PAYMENT_EXTRA
+import leakcanary.AppWatcher
+
+fun toggleWatcher(enabled: Boolean) {
+    AppWatcher.config = AppWatcher.config.copy(enabled = enabled)
 }

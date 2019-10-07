@@ -16,13 +16,15 @@
 
 package com.cexdirect.sample
 
+import android.annotation.SuppressLint
 import android.app.Application
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.Theme
 
+@SuppressLint("Registered")
 @Suppress("unused")
-class DirectSample : Application() {
+open class DirectSample : Application() {
 
     override fun onCreate() {
         super.onCreate()

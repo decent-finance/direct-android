@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.identity._util
+package com.cexdirect.lib.verification.identity.util
 
 import android.content.Context
 import android.net.Uri
@@ -24,6 +24,10 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
+
+enum class FailType {
+    SIZE_INVALID, UNSUPPORTED_FORMAT
+}
 
 fun convertAndSet(imgFilePath: String, block: (imgBase64: String) -> Unit, failure: () -> Unit) {
     val imgFile = File(imgFilePath)
@@ -40,16 +44,26 @@ fun convertAndSet(
     context: Context,
     uri: Uri,
     success: (imgBase64: String) -> Unit,
-    failure: () -> Unit
+    failure: (type: FailType) -> Unit
 ) {
-    val fileLength =
-        context.contentResolver.openTypedAssetFileDescriptor(uri, "*/*", null)!!.length
+    val resolver = context.contentResolver
+
+    val mimeType = resolver.getType(uri) ?: ""
+    if (!mimeType.startsWith("image/")) {
+        failure.invoke(FailType.UNSUPPORTED_FORMAT)
+        return
+    }
+
+    val fileDescriptor =
+        resolver.openTypedAssetFileDescriptor(uri, "image/*", null)!!
+
+    val fileLength = fileDescriptor.length
     if (fileSizeValid(fileLength)) {
-        context.contentResolver.openInputStream(uri)?.use { input ->
+        resolver.openInputStream(uri)?.use { input ->
             convertStreamToBase64(input)?.let { success.invoke(it) }
         }
     } else {
-        failure.invoke()
+        failure.invoke(FailType.SIZE_INVALID)
     }
 }
 
@@ -63,8 +77,7 @@ fun convertStreamToBase64(input: InputStream): String? {
     }
 }
 
-fun fileSizeValid(length: Long) =
-    (length / (BYTES_IN_KB * BYTES_IN_KB)) <= MAX_FILE_SIZE_MB
+fun fileSizeValid(length: Long) = (length / BYTES_IN_MB) <= MAX_FILE_SIZE_MB
 
 const val MAX_FILE_SIZE_MB = 15
-const val BYTES_IN_KB = 1024.0
+const val BYTES_IN_MB = 1024.0 * 1024

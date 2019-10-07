@@ -21,7 +21,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.identity.VerificationStep" />
+        <import type="com.cexdirect.lib.verification.OrderStep" />
 
         <variable
             name="model"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="@{model.verificationStep == VerificationStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}">
+            android:visibility="@{model.orderStep == OrderStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}">
 
             <TextView
                 style="@style/Direct.IdentityTitle"

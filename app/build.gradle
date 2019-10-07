@@ -5,7 +5,17 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'io.fabric'
 apply plugin: 'org.ajoberstar.grgit'
+apply plugin: 'com.google.firebase.appdistribution'
 apply from: '../config.gradle'
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath 'com.google.firebase:firebase-appdistribution-gradle:1.0.0'
+    }
+}
 
 android {
     compileSdkVersion 28
@@ -18,7 +28,7 @@ android {
         targetSdkVersion 28
 
         versionCode 1
-        versionName "1.0"
+        versionName "${new Date().format("yyyyMMdd-HHmm")}-${grgit.head().abbreviatedId}"
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
 
@@ -67,6 +77,12 @@ android {
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['devSecret']}\"")
 
             applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+
+            firebaseAppDistribution {
+                releaseNotes="DEV/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
 
         uat {
@@ -74,11 +90,22 @@ android {
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['uatSecret']}\"")
 
             applicationIdSuffix '.uat'
+            versionNameSuffix '-uat'
+
+            firebaseAppDistribution {
+                releaseNotes="UAT/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
 
         prod {
             buildConfigField('String', 'PLACEMENT_ID', "\"${project.ext.configProperties['prodPlacementId']}\"")
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['prodSecret']}\"")
+
+            firebaseAppDistribution {
+                releaseNotes="PROD/${grgit.branch.current().name}"
+                testers="${project.ext.configProperties['testers']}"
+            }
         }
     }
 
@@ -95,17 +122,8 @@ allOpen {
 }
 
 ext {
-    lifecycleVersion = '2.1.0'
-    okHttpVersion = '4.1.0'
-
+    okHttpVersion = '4.2.0'
     hyperionVersion = '0.9.27'
-
-    // test deps versions
-    junitVersion = '5.4.0'
-    espressoVersion = '3.2.0'
-    assertjVersion = '2.9.1'
-    daggerMockVersion = '0.8.5'
-    mockitoKotlinVersion = '2.1.0'
 }
 
 dependencies {
@@ -128,20 +146,20 @@ dependencies {
 //    debugImplementation "com.willowtreeapps.hyperion:hyperion-crash:$hyperionVersion"
 
     androidTestImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.test:core:$testCoreVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
+    androidTestImplementation "androidx.test:rules:$testRulesVersion"
     androidTestImplementation "org.assertj:assertj-core:$assertjVersion"
     androidTestImplementation "com.github.fabioCollini.DaggerMock:daggermock:$daggerMockVersion"
-    androidTestImplementation 'org.mockito:mockito-android:3.0.0'
+    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
-    androidTestUtil 'androidx.test:orchestrator:1.2.0'
+    androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
-    kaptAndroidTest 'androidx.databinding:databinding-compiler:3.5.0'
+    kaptAndroidTest "androidx.databinding:databinding-compiler:$databindVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

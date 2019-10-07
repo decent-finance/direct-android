@@ -23,9 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.ItemCountryBinding
 import com.cexdirect.lib.network.models.CountryData
+import com.cexdirect.lib.network.models.emptyCountry
 
 class CountryAdapter(private val clickEvent: CountryClickEvent) :
     RecyclerView.Adapter<CountryViewHolder>(), CountryClickListener {
+
+    var selectedCountry = emptyCountry()
 
     var items: List<CountryData> = emptyList()
         set(value) {
@@ -47,7 +50,7 @@ class CountryAdapter(private val clickEvent: CountryClickEvent) :
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
-        holder.bind(items[position], this)
+        holder.bind(items[position], this, items[position] == selectedCountry)
     }
 
     override fun onCountrySelected(country: CountryData) {
@@ -58,9 +61,14 @@ class CountryAdapter(private val clickEvent: CountryClickEvent) :
 class CountryViewHolder(private val binding: ItemCountryBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(country: CountryData, listener: CountryAdapter) {
+    fun bind(
+        country: CountryData,
+        listener: CountryAdapter,
+        isSelected: Boolean
+    ) {
         binding.country = country
         binding.listener = listener
+        binding.isSelected = isSelected
     }
 }
 
