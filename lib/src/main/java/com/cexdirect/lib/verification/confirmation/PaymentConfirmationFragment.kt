@@ -49,10 +49,8 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) =
-        FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
-            binding = this
-        }.root
+    ) = FragmentPaymentConfirmationBinding.inflate(inflater, container, false)
+        .apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,12 +69,13 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 onFail = { purchaseFailed(it.message) }
             ))
             resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
-                requestCheckCode()
+                requestNewCheckCode()
             })
             editEmailEvent.observe(this@PaymentConfirmationFragment, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCode.observe(this@PaymentConfirmationFragment, restObserver(
+            checkCodeResult.observe(
+                this@PaymentConfirmationFragment, restObserver(
                 onOk = { /* Don't do anything here, because order status will be updated via WS */ },
                 onFail = {
                     if (it.code == CODE_BAD_REQUEST) {
@@ -86,8 +85,12 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                     }
                 }
             ))
-            resendCheckCode.observe(this@PaymentConfirmationFragment, restObserver(
-                onOk = { toast(R.string.cexd_check_mail) },
+            newCheckCode.observe(
+                this@PaymentConfirmationFragment, restObserver(
+                    onOk = {
+                        toast(R.string.cexd_check_mail)
+                        restartResendTimer()
+                    },
                 onFail = { purchaseFailed(it.message) }
             ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(

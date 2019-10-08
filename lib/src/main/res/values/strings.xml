@@ -165,4 +165,5 @@
     <string name="cexd_no_photo">Document is missing</string>
     <string name="cexd_no_selfie">Selfie is missing</string>
     <string name="cexd_wrong_format">Wrong file type</string>
+    <string name="cexd_remaining">%1s</string>
 </resources>

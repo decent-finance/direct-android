@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.verification
 
+import androidx.annotation.VisibleForTesting
 import androidx.databinding.*
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -29,6 +30,7 @@ import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.verification.confirmation.CheckCode
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
@@ -97,7 +99,7 @@ class VerificationActivityViewModel(
     val countrySearch = ObservableField("")
     val showCountrySearch = ObservableBoolean(false)
 
-    val confirmationCode = ObservableField("")
+    val checkCode = CheckCode()
     val _3dsData = com.cexdirect.lib.verification.confirmation._3dsData()
 
     val paymentInfo = ObservableField<PaymentInfo>()
@@ -212,10 +214,10 @@ class VerificationActivityViewModel(
         orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
     }
 
-    val resendCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
+    val newCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
 
-    val checkCode = orderApi.checkCode(this) {
-        CheckCodeData(orderId.get()!!, confirmationCode.get()!!)
+    val checkCodeResult = orderApi.checkCode(this) {
+        CheckCodeData(orderId.get()!!, checkCode.code)
     }
     // --- Requests --- //
 
@@ -526,11 +528,11 @@ class VerificationActivityViewModel(
     }
 
     fun submitCode() {
-        checkCode.execute()
+        checkCodeResult.execute()
     }
 
-    fun requestCheckCode() {
-        resendCheckCode.execute()
+    fun requestNewCheckCode() {
+        newCheckCode.execute()
     }
 
     fun updateUserEmail(email: String) {
@@ -562,8 +564,14 @@ class VerificationActivityViewModel(
         }
     }
 
-    private fun askForEmailConfirmation() {
+    @VisibleForTesting
+    fun askForEmailConfirmation() {
         orderStep.set(OrderStep.EMAIL_CONFIRMATION)
+        checkCode.startTimer()
+    }
+
+    fun restartResendTimer() {
+        checkCode.restartTimer()
     }
 
     private fun confirmOrder() {
