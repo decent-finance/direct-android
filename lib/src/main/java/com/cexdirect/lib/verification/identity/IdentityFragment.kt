@@ -48,6 +48,7 @@ import com.cexdirect.lib.verification.identity.util.*
 import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
+import kotlinx.android.synthetic.main.partial_docs.view.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import java.io.File
