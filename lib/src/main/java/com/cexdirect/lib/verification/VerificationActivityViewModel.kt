@@ -593,6 +593,10 @@ class VerificationActivityViewModel(
         txIdCopyEvent.postValue(txId)
     }
 
+    fun setUnsupportedFormat() {
+        userDocs.setUnsupportedFormat()
+    }
+
     class Factory(
         private val paymentApi: PaymentApi,
         private val orderApi: OrderApi,

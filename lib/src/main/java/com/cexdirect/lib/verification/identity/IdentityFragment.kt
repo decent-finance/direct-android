@@ -48,7 +48,6 @@ import com.cexdirect.lib.verification.identity.util.*
 import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
-import kotlinx.android.synthetic.main.partial_docs.view.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import java.io.File
@@ -275,7 +274,7 @@ class IdentityFragment : BaseVerificationFragment() {
                             {
                                 when (it) {
                                     FailType.SIZE_INVALID -> model.setImageSizeInvalid()
-                                    FailType.UNSUPPORTED_FORMAT -> toast(R.string.cexd_file_unsupported)
+                                    FailType.UNSUPPORTED_FORMAT -> model.setUnsupportedFormat()
                                 }
                             }
                         )

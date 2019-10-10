@@ -181,7 +181,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentFrontSizeValid ? model.userDocs.documentFrontErrorText : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentFrontErrorText}"
                     android:visibility="@{model.userDocs.documentFrontStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -233,7 +233,7 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{model.userDocs.documentBackSizeValid ? @string/cexd_no_back : @string/cexd_file_too_big}"
+                    android:text="@{model.userDocs.documentBackErrorText}"
                     android:visibility="@{model.userDocs.documentBackStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
@@ -285,7 +285,7 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@{model.userDocs.selfieSizeValid ? @string/cexd_no_selfie : @string/cexd_file_too_big}"
+                        android:text="@{model.userDocs.selfieErrorText}"
                         android:visibility="@{model.userDocs.selfieStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}"
                         tools:text="@string/cexd_no_selfie"
                         tools:visibility="visible" />

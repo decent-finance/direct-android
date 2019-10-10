@@ -105,24 +105,10 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
-    var selfieSizeValid = true
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.selfieSizeValid)
-        }
-
-    @get:Bindable
     var documentFrontStatus = FieldStatus.EMPTY
         set(value) {
             field = value
             notifyPropertyChanged(BR.documentFrontStatus)
-        }
-
-    @get:Bindable
-    var documentFrontSizeValid = true
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.documentFrontSizeValid)
         }
 
     @get:Bindable
@@ -133,17 +119,24 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
-    var documentBackSizeValid = true
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.documentBackSizeValid)
-        }
-
-    @get:Bindable
     var documentFrontErrorText = stringProvider.provideString(R.string.cexd_no_front)
         set(value) {
             field = value
             notifyPropertyChanged(BR.documentFrontErrorText)
+        }
+
+    @get:Bindable
+    var documentBackErrorText = stringProvider.provideString(R.string.cexd_no_front)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.documentBackErrorText)
+        }
+
+    @get:Bindable
+    var selfieErrorText = stringProvider.provideString(R.string.cexd_no_front)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selfieErrorText)
         }
 
     var imagesBase64 = ObservableArrayMap<String, String>()
@@ -167,13 +160,6 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                         requiredImagesAmount = when (documentType) {
                             DocumentType.PASSPORT -> 1
                             DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD -> 2
-                            else -> error("Illegal document type $documentType")
-                        }
-                        documentFrontErrorText = when (documentType) {
-                            DocumentType.PASSPORT ->
-                                stringProvider.provideString(R.string.cexd_no_photo)
-                            DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD ->
-                                stringProvider.provideString(R.string.cexd_no_front)
                             else -> error("Illegal document type $documentType")
                         }
                     }
@@ -211,9 +197,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                             else -> error("Illegal doc type")
                         }
                         documentFrontStatus = FieldStatus.EMPTY
-                        documentFrontSizeValid = true
                         documentBackStatus = FieldStatus.EMPTY
-                        documentBackSizeValid = true
                     }
                     BR.documentTypeSelected -> documentSelectionStatus = FieldStatus.VALID
                 }
@@ -234,17 +218,14 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     fun setImage(imageBase64: String) {
         when (currentPhotoType) {
             PhotoType.SELFIE -> {
-                selfieSizeValid = true
                 selfieStatus = FieldStatus.VALID
                 selfieBase64 = imageBase64
             }
             PhotoType.ID -> {
-                selfieSizeValid = true
                 documentFrontStatus = FieldStatus.VALID
                 imagesBase64["front"] = imageBase64
             }
             PhotoType.ID_BACK -> {
-                selfieSizeValid = true
                 documentBackStatus = FieldStatus.VALID
                 imagesBase64["back"] = imageBase64
             }
@@ -259,15 +240,25 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
 
         if (requiredImages.isSelfieRequired) {
             if (selfieStatus == FieldStatus.EMPTY) {
+                selfieErrorText = stringProvider.provideString(R.string.cexd_no_selfie)
                 selfieStatus = FieldStatus.INVALID
             }
         }
 
         if (requiredImages.isIdentityDocumentsRequired) {
             if (documentFrontStatus == FieldStatus.EMPTY) {
+                val text = when (documentType) {
+                    DocumentType.PASSPORT ->
+                        stringProvider.provideString(R.string.cexd_no_photo)
+                    DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD ->
+                        stringProvider.provideString(R.string.cexd_no_front)
+                    else -> error("Illegal type")
+                }
+                documentFrontErrorText = text
                 documentFrontStatus = FieldStatus.INVALID
             }
             if (requiredImagesAmount == 2 /* id card, licence */ && documentBackStatus == FieldStatus.EMPTY) {
+                documentBackErrorText = stringProvider.provideString(R.string.cexd_no_back)
                 documentBackStatus = FieldStatus.INVALID
             }
         }
@@ -296,15 +287,32 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     fun setImageSizeInvalid() {
         when (currentPhotoType) {
             PhotoType.ID -> {
-                documentFrontSizeValid = false
+                documentFrontErrorText = stringProvider.provideString(R.string.cexd_file_too_big)
                 documentFrontStatus = FieldStatus.INVALID
             }
             PhotoType.ID_BACK -> {
-                documentBackSizeValid = false
+                documentBackErrorText = stringProvider.provideString(R.string.cexd_file_too_big)
                 documentBackStatus = FieldStatus.INVALID
             }
             PhotoType.SELFIE -> {
-                selfieSizeValid = false
+                selfieErrorText = stringProvider.provideString(R.string.cexd_file_too_big)
+                selfieStatus = FieldStatus.INVALID
+            }
+        }
+    }
+
+    fun setUnsupportedFormat() {
+        when (currentPhotoType) {
+            PhotoType.ID -> {
+                documentFrontErrorText = stringProvider.provideString(R.string.cexd_wrong_format)
+                documentFrontStatus = FieldStatus.INVALID
+            }
+            PhotoType.ID_BACK -> {
+                documentBackErrorText = stringProvider.provideString(R.string.cexd_wrong_format)
+                documentBackStatus = FieldStatus.INVALID
+            }
+            PhotoType.SELFIE -> {
+                selfieErrorText = stringProvider.provideString(R.string.cexd_wrong_format)
                 selfieStatus = FieldStatus.INVALID
             }
         }
@@ -320,4 +328,5 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     fun getSelfieArray() = arrayOf(Base64Image(0, selfieBase64))
+
 }
