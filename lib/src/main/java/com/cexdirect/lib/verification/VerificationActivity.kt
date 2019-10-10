@@ -50,7 +50,7 @@ class VerificationActivity : BaseActivity() {
     val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
 
     private val fragments =
-            listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
+        listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
     private lateinit var binding: ActivityVerificationBinding
 
@@ -62,15 +62,21 @@ class VerificationActivity : BaseActivity() {
 
         model.apply {
             intent.let {
-                orderAmounts.selectedCryptoCurrency = it.getStringExtra("crypto")
-                orderAmounts.selectedCryptoAmount = it.getStringExtra("cryptoAmount")
-                orderAmounts.selectedFiatCurrency = it.getStringExtra("fiat")
-                orderAmounts.selectedFiatAmount = it.getStringExtra("fiatAmount")
+                setOrderAmounts(
+                    it.getStringExtra("crypto"),
+                    it.getStringExtra("cryptoAmount"),
+                    it.getStringExtra("fiat"),
+                    it.getStringExtra("fiatAmount")
+                )
             }
             applyLegalObservers()
-            nextClickEvent2.observe(this@VerificationActivity, Observer {
+            stepChangeEvent.observe(this@VerificationActivity, Observer {
                 model.proceed()
                 replaceFragment(model.currentStep.get() - 1)
+            })
+            editClickEvent.observe(this@VerificationActivity, Observer {
+                startBuyActivity()
+                finish()
             })
             returnEvent.observe(this@VerificationActivity, Observer {
                 startBuyActivity()
@@ -79,7 +85,7 @@ class VerificationActivity : BaseActivity() {
             copyEvent.observe(this@VerificationActivity, Observer { orderId ->
                 if (!orderId.isNullOrBlank()) {
                     (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
-                            ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
+                        ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
                     toast(getString(R.string.cexd_order_id_copied))
                 }
             })
@@ -101,8 +107,8 @@ class VerificationActivity : BaseActivity() {
     @VisibleForTesting
     fun replaceFragment(position: Int) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.avFragmentFrame, fragments[position])
-                .commit()
+            .replace(R.id.avFragmentFrame, fragments[position])
+            .commit()
     }
 
     override fun onDestroy() {

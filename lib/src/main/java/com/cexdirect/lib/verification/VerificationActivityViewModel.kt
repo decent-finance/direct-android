@@ -21,7 +21,6 @@ import androidx.databinding.*
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.PagerAdapter
 import com.cexdirect.lib.*
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
@@ -50,7 +49,7 @@ class VerificationActivityViewModel(
 
     // --- Events --- //
     val nextClickEvent = VoidLiveEvent()
-    val nextClickEvent2 = VoidLiveEvent()
+    val stepChangeEvent = VoidLiveEvent()
     val returnEvent = VoidLiveEvent()
     val copyEvent = StringLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
@@ -65,12 +64,13 @@ class VerificationActivityViewModel(
     val buyMoreEvent = VoidLiveEvent()
     val txIdCopyEvent = StringLiveEvent()
     val scanQrEvent = VoidLiveEvent()
+    val editClickEvent = VoidLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()
     val orderId = ObservableField("")
     val currentStep = ObservableInt(1)
-    val pagerAdapter = ObservableField<PagerAdapter>(StepsPagerAdapter())
+    val pagerAdapter = ObservableField(StepsPagerAdapter(stringProvider, editClickEvent))
 
     val additionalFields = ObservableField<Map<String, Additional>>(emptyMap())
 
@@ -256,13 +256,21 @@ class VerificationActivityViewModel(
         })
     }
 
+    fun setOrderAmounts(crypto: String, cryptoAmount: String, fiat: String, fiatAmount: String) {
+        orderAmounts.selectedCryptoCurrency = crypto
+        orderAmounts.selectedCryptoAmount = cryptoAmount
+        orderAmounts.selectedFiatCurrency = fiat
+        orderAmounts.selectedFiatAmount = fiatAmount
+        pagerAdapter.get()!!.setOrderAmounts(cryptoAmount, crypto, fiatAmount, fiat)
+    }
+
     fun returnToStart() {
         returnEvent.call()
     }
 
-    fun next() {
+    private fun changeOrderStep() {
         if (currentStep.get() < 3) {
-            nextClickEvent2.call()
+            stepChangeEvent.call()
         } else {
             returnEvent.call()
         }
@@ -472,7 +480,7 @@ class VerificationActivityViewModel(
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
                     hideAction.invoke()
-                    next()
+                    changeOrderStep()
                 }
             else -> {
             }
@@ -576,7 +584,7 @@ class VerificationActivityViewModel(
 
     private fun confirmOrder() {
         orderStep.set(OrderStep.CONFIRMED)
-        next()
+        changeOrderStep()
     }
 
     fun buyMore() {

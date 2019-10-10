@@ -15,89 +15,89 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cexdirect.lib.verification.VerificationActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cexdirect.lib.verification.VerificationActivity">
 
     <data>
 
         <variable
-                name="footerId"
-                type="Integer"/>
+            name="footerId"
+            type="Integer" />
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.verification.VerificationActivityViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
     </data>
 
     <com.amar.library.ui.StickyScrollView
-            android:id="@+id/avScroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:scrollbars="none">
+        android:id="@+id/avScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:scrollbars="none">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="36dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="36dp">
 
             <include
-                    layout="@layout/layout_title_detailed"
-                    app:model="@{model}"/>
+                layout="@layout/layout_title_detailed"
+                app:model="@{model}" />
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="16dp">
 
                 <TextView
-                        android:id="@+id/avCexdPurchase"
-                        style="@style/Direct.Textfield.L"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
+                    android:id="@+id/avCexdPurchase"
+                    style="@style/Direct.Textfield.L"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="@{@string/cexd_purchase(model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatCurrency)}" />
 
                 <com.cexdirect.lib.views.SuperDuperViewPager
-                        android:id="@+id/avStepsViewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="16dp"
-                        android:clipToPadding="false"
-                        android:paddingLeft="48dp"
-                        android:paddingRight="48dp"
-                        app:currentPosition="@{model.currentStep}"
-                        app:onExit="@{() -> model.returnToStart()}"
-                        app:pagerAdapter="@{model.pagerAdapter}"/>
+                    android:id="@+id/avStepsViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="16dp"
+                    android:clipToPadding="false"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="48dp"
+                    app:currentPosition="@{model.currentStep}"
+                    app:orderStep="@{model.orderStep}"
+                    app:pagerAdapter="@{model.pagerAdapter}" />
 
                 <com.cexdirect.lib.verification.PageIndicatorView
-                        android:id="@+id/avIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:currentStep="@{model.currentStep}"/>
+                    android:id="@+id/avIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:currentStep="@{model.currentStep}" />
 
                 <FrameLayout
-                        android:id="@+id/avFragmentFrame"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"/>
+                    android:id="@+id/avFragmentFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" />
 
             </LinearLayout>
 
             <include
-                    android:id="@+id/abLegal"
-                    layout="@layout/layout_legal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    app:model="@{model}"/>
+                android:id="@+id/abLegal"
+                layout="@layout/layout_legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:model="@{model}" />
 
         </LinearLayout>
 

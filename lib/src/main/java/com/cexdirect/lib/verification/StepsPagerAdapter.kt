@@ -19,24 +19,57 @@ package com.cexdirect.lib.verification
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.PagerAdapter
+import com.cexdirect.lib.R
+import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.VoidLiveEvent
+import com.cexdirect.lib.databinding.ItemReturnBinding
 import com.cexdirect.lib.databinding.ItemStepBinding
 
-class StepsPagerAdapter : PagerAdapter() {
+class StepsPagerAdapter(
+    private val stringProvider: StringProvider,
+    private val editClickEvent: VoidLiveEvent
+) : PagerAdapter(), EditClickListener {
+
+    private var title = ""
 
     private val steps = listOf(
-        "Buy Crypto",
         "Fill Information",
         "Payment Confirmation",
         "Finish"
     )
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val binding = ItemStepBinding.inflate(LayoutInflater.from(container.context), container, false)
-        binding.text = steps[position]
-        container.addView(binding.root)
-        return binding.root
-    }
+    override fun instantiateItem(container: ViewGroup, position: Int) =
+        when (position) {
+            0 -> DataBindingUtil.inflate<ItemReturnBinding>(
+                LayoutInflater.from(container.context),
+                R.layout.item_return,
+                container,
+                false
+            )
+                .apply {
+                    text = title
+                    editVisible = true
+                    listener = this@StepsPagerAdapter
+                }
+                .let {
+                    it.root.tag = "return"
+                    container.addView(it.root)
+                    it.root
+                }
+            else -> DataBindingUtil.inflate<ItemStepBinding>(
+                LayoutInflater.from(container.context),
+                R.layout.item_step,
+                container,
+                false
+            )
+                .apply { text = steps[position - 1] }
+                .let {
+                    container.addView(it.root)
+                    it.root
+                }
+        }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
@@ -45,4 +78,23 @@ class StepsPagerAdapter : PagerAdapter() {
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
     override fun getCount() = 4
+
+    override fun onClick() {
+        editClickEvent.call()
+    }
+
+    fun setOrderAmounts(cryptoAmount: String, crypto: String, fiatAmount: String, fiat: String) {
+        title = stringProvider.provideString(
+            R.string.cexd_title_get,
+            cryptoAmount,
+            crypto,
+            fiatAmount,
+            fiat
+        )
+    }
+}
+
+interface EditClickListener {
+
+    fun onClick()
 }

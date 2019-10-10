@@ -166,4 +166,6 @@
     <string name="cexd_no_selfie">Selfie is missing</string>
     <string name="cexd_wrong_format">Wrong file type</string>
     <string name="cexd_remaining">%1s</string>
+    <string name="cexd_title_get">Get %1s %2s for %3s %4s</string>
+    <string name="cexd_edit">Edit</string>
 </resources>

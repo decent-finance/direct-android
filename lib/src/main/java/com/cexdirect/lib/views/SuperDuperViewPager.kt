@@ -19,6 +19,7 @@ package com.cexdirect.lib.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
+import com.cexdirect.lib.verification.OrderStep
 
 
 class SuperDuperViewPager @JvmOverloads constructor(
@@ -27,4 +28,6 @@ class SuperDuperViewPager @JvmOverloads constructor(
 ) : ViewPager(context, attrs) {
 
     var currentPos = 0
+
+    var orderStep = OrderStep.LOCATION_EMAIL
 }
