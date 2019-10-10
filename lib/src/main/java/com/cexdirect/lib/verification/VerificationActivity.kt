@@ -52,6 +52,11 @@ class VerificationActivity : BaseActivity() {
     private val fragments =
         listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
+    private val goToBuyActivityObserver = Observer<Void> {
+        startBuyActivity(model.orderAmounts.selectedFiatAmount)
+        finish()
+    }
+
     private lateinit var binding: ActivityVerificationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,14 +79,8 @@ class VerificationActivity : BaseActivity() {
                 model.proceed()
                 replaceFragment(model.currentStep.get() - 1)
             })
-            editClickEvent.observe(this@VerificationActivity, Observer {
-                startBuyActivity()
-                finish()
-            })
-            returnEvent.observe(this@VerificationActivity, Observer {
-                startBuyActivity()
-                finish()
-            })
+            editClickEvent.observe(this@VerificationActivity, goToBuyActivityObserver)
+            returnEvent.observe(this@VerificationActivity, goToBuyActivityObserver)
             copyEvent.observe(this@VerificationActivity, Observer { orderId ->
                 if (!orderId.isNullOrBlank()) {
                     (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
@@ -89,9 +88,7 @@ class VerificationActivity : BaseActivity() {
                     toast(getString(R.string.cexd_order_id_copied))
                 }
             })
-        }.let {
-            binding.model = it
-        }
+        }.let { binding.model = it }
 
         stickyViewEvent.observe(this, Observer {
             if (it != View.NO_ID) {

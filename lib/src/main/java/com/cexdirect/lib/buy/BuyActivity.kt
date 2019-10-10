@@ -88,7 +88,10 @@ class BuyActivity : BaseActivity() {
             currencies.observe(this@BuyActivity, Observer {
                 when (it) {
                     is Loading -> showLoader()
-                    is Success -> model.initRates(it.data!!) {
+                    is Success -> model.initRates(
+                        it.data!!,
+                        intent.getStringExtra("lastFiatAmount")
+                    ) {
                         hideLoader()
                         subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
                     }
@@ -117,6 +120,8 @@ class BuyActivity : BaseActivity() {
     }
 }
 
-fun Context.startBuyActivity() {
-    startActivity(Intent(this, BuyActivity::class.java))
+fun Context.startBuyActivity(fiatAmount: String? = null) {
+    val intent = Intent(this, BuyActivity::class.java)
+    fiatAmount?.let { intent.putExtra("lastFiatAmount", it) }
+    startActivity(intent)
 }

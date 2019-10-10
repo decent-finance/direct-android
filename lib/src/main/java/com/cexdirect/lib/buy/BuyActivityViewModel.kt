@@ -153,9 +153,9 @@ class BuyActivityViewModel(
         action.invoke()
     }
 
-    fun initRates(data: List<ExchangeRate>, action: () -> Unit) {
+    fun initRates(data: List<ExchangeRate>, lastAmount: String?, action: () -> Unit) {
         amount.rates = data
-        amount.fiatAmount = "250" // for now, this value is hardcoded
+        amount.fiatAmount = lastAmount ?: "250" // for now, this value is hardcoded
         amount.inputMode = InputMode.FIAT
         dataLoaded.set(true)
         action.invoke()

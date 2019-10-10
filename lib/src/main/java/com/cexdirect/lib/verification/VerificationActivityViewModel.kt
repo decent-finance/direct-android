@@ -264,10 +264,6 @@ class VerificationActivityViewModel(
         pagerAdapter.get()!!.setOrderAmounts(cryptoAmount, crypto, fiatAmount, fiat)
     }
 
-    fun returnToStart() {
-        returnEvent.call()
-    }
-
     private fun changeOrderStep() {
         if (currentStep.get() < 3) {
             stepChangeEvent.call()
