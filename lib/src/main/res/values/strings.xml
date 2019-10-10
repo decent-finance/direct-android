@@ -155,7 +155,7 @@
     <string name="cexd_invalid_generic_field">Please fill in this field</string>
     <string name="cexd_no_email_apps">No e-mail apps found</string>
     <string name="cexd_docs_note">Make sure photo details are clear to read.\nMaximum file size is 15 Mb.</string>
-    <string name="cexd_no_doc_type_selected">Please, select document type</string>
+    <string name="cexd_no_doc_type_selected">Please select document type</string>
     <string name="cexd_file_too_big">File size should be no more than 15 MB</string>
     <string name="cexd_front_side">Front Side</string>
     <string name="cexd_back_side">Back Side</string>
@@ -164,4 +164,5 @@
     <string name="cexd_no_back">Document back side is missing</string>
     <string name="cexd_no_photo">Document is missing</string>
     <string name="cexd_no_selfie">Selfie is missing</string>
+    <string name="cexd_wrong_format">Wrong file type</string>
 </resources>
