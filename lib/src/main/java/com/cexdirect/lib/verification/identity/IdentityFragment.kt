@@ -72,7 +72,8 @@ class IdentityFragment : BaseVerificationFragment() {
 
     private val paymentDataObserver = restObserver<OrderInfoData>(
         onOk = { /* Order status will be updated via WS connection */ },
-        onFail = { purchaseFailed(it.message) }
+        onFail = { purchaseFailed(it.message) },
+        final = { /* do not hide loader here */ }
     )
 
     override fun onCreateView(
