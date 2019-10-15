@@ -27,6 +27,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
+import com.cexdirect.lib.buy.OrderData
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
 import com.cexdirect.lib.error.purchaseFailed
@@ -67,7 +68,13 @@ class ReceiptFragment : BaseVerificationFragment() {
                 onFail = { purchaseFailed(it.message) }
             ))
             buyMoreEvent.observe(this@ReceiptFragment, Observer {
-                context!!.startBuyActivity()
+                context!!.startBuyActivity(
+                    OrderData(
+                        model.orderAmounts.selectedFiatAmount,
+                        model.orderAmounts.selectedFiatCurrency,
+                        model.orderAmounts.selectedCryptoCurrency
+                    )
+                )
                 finish()
             })
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->

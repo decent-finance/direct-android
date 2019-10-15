@@ -29,6 +29,7 @@ import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.VerificationActivityFactory
+import com.cexdirect.lib.buy.OrderData
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityVerificationBinding
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
@@ -53,7 +54,13 @@ class VerificationActivity : BaseActivity() {
         listOf(IdentityFragment(), PaymentConfirmationFragment(), ReceiptFragment())
 
     private val goToBuyActivityObserver = Observer<Void> {
-        startBuyActivity(model.orderAmounts.selectedFiatAmount)
+        startBuyActivity(
+            OrderData(
+                model.orderAmounts.selectedFiatAmount,
+                model.orderAmounts.selectedFiatCurrency,
+                model.orderAmounts.selectedCryptoCurrency
+            )
+        )
         finish()
     }
 
