@@ -26,7 +26,9 @@ class CheckCodeTimeTest(private val given: Long, private val expected: String) {
 
     @Test
     fun formatTime() {
-        val checkCode = CheckCode()
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
         checkCode.timer.onTick(given)
 
         assertThat(checkCode.remaining).isEqualTo(expected)

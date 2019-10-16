@@ -27,20 +27,7 @@ import com.cexdirect.lib.OpenForTesting
 class CheckCode() : BaseObservable() {
 
     @VisibleForTesting
-    var timer: CountDownTimer =
-        object : CountDownTimer(RESEND_TIMEOUT_MILLIS, TICK_INTERVAL_MILLIS) {
-
-            override fun onFinish() {
-                canResend = true
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-                val mins = (millisUntilFinished / 1000) / 60
-                val secs = ((millisUntilFinished / 1000) % 60)
-                remaining = "$mins:${secs.toString().padStart(2, '0')}"
-            }
-        }
-
+    lateinit var timer: CountDownTimer
 
     @get:Bindable
     var remaining = ""
@@ -67,7 +54,24 @@ class CheckCode() : BaseObservable() {
         this.timer = timer
     }
 
+    @VisibleForTesting
+    fun createTimer(): CountDownTimer {
+        return object : CountDownTimer(RESEND_TIMEOUT_MILLIS, TICK_INTERVAL_MILLIS) {
+
+            override fun onFinish() {
+                canResend = true
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                val mins = (millisUntilFinished / 1000) / 60
+                val secs = ((millisUntilFinished / 1000) % 60)
+                remaining = "$mins:${secs.toString().padStart(2, '0')}"
+            }
+        }
+    }
+
     fun startTimer() {
+        timer = createTimer()
         timer.start()
     }
 
