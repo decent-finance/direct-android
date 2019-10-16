@@ -475,8 +475,8 @@ class VerificationActivityViewModel(
             OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
-                    hideAction.invoke()
                     changeOrderStep()
+                    hideAction.invoke()
                 }
             else -> {
             }
