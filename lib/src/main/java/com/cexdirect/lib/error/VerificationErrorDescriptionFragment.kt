@@ -14,28 +14,33 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification
+package com.cexdirect.lib.error
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.cexdirect.lib.BaseFragment
-import com.cexdirect.lib.Direct
-import com.cexdirect.lib._di.annotation.VerificationActivityFactory
-import javax.inject.Inject
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import com.cexdirect.lib.R
+import com.cexdirect.lib.databinding.FragmentVerificationErrorBinding
 
-abstract class BaseVerificationFragment : BaseFragment() {
+class VerificationErrorDescriptionFragment : BaseErrorDescriptionFragment() {
 
-    @field:[Inject VerificationActivityFactory]
-    lateinit var modelFactory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentVerificationErrorBinding
 
-    protected val model: VerificationActivityViewModel by activityViewModelProvider { modelFactory }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = DataBindingUtil.inflate<FragmentVerificationErrorBinding>(
+        inflater,
+        R.layout.fragment_verification_error,
+        container,
+        false
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Direct.identitySubcomponent?.inject(this)
         super.onViewCreated(view, savedInstanceState)
+        binding.model = model
     }
-
-    protected fun parentNavController() = requireParentFragment().findNavController()
 }

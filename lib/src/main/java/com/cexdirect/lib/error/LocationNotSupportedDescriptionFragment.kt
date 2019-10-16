@@ -21,28 +21,47 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentPurchaseFailedBinding
+import com.cexdirect.lib.databinding.FragmentLocationNotSupportedBinding
+import com.cexdirect.lib.util.FieldStatus
+import com.mcxiaoke.koi.ext.finish
+import com.mcxiaoke.koi.ext.toast
 
-class PurchaseFailedFragment : BaseErrorFragment() {
+class LocationNotSupportedDescriptionFragment : BaseErrorDescriptionFragment() {
 
-    private lateinit var binding: FragmentPurchaseFailedBinding
+    private lateinit var binding: FragmentLocationNotSupportedBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentPurchaseFailedBinding>(
+    ) = DataBindingUtil.inflate<FragmentLocationNotSupportedBinding>(
         inflater,
-        R.layout.fragment_purchase_failed,
+        R.layout.fragment_location_not_supported,
         container,
         false
-    ).apply {
-        binding = this
-    }.root
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        model.informMeEvent.observe(this, Observer {
+            if (model.emailStatus == FieldStatus.EMPTY) {
+                toast("Please, enter your e-mail address")
+                return@Observer
+            } else if (model.emailStatus == FieldStatus.INVALID) {
+                toast("Please, enter valid e-mail address")
+                return@Observer
+            }
+            if (!model.emailNotificationChecked.get()) {
+                toast("Please, check the checkbox below")
+                return@Observer
+            }
+            // todo subscribe
+            finish()
+        })
+
         binding.model = model
     }
 }

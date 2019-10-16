@@ -25,15 +25,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib.buy.OrderData
-import com.cexdirect.lib.buy.startBuyActivity
+import com.cexdirect.lib.buy.BuyFragmentArgs
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.StickyViewEvent
-import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
@@ -48,13 +47,12 @@ class ReceiptFragment : BaseVerificationFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) =
-        DataBindingUtil.inflate<FragmentReceiptBinding>(
-            inflater,
-            R.layout.fragment_receipt,
-            container,
-            false
-        ).apply { binding = this }.root
+    ) = DataBindingUtil.inflate<FragmentReceiptBinding>(
+        inflater,
+        R.layout.fragment_receipt,
+        container,
+        false
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,17 +63,15 @@ class ReceiptFragment : BaseVerificationFragment() {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@ReceiptFragment, socketObserver(
                 onOk = { model.updatePaymentInfo(it!!) },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { findNavController().purchaseFailed(it.message) }
             ))
             buyMoreEvent.observe(this@ReceiptFragment, Observer {
-                context!!.startBuyActivity(
-                    OrderData(
-                        model.orderAmounts.selectedFiatAmount,
-                        model.orderAmounts.selectedFiatCurrency,
-                        model.orderAmounts.selectedCryptoCurrency
-                    )
-                )
-                finish()
+                val args = BuyFragmentArgs(
+                    orderAmounts.selectedFiatAmount,
+                    orderAmounts.selectedFiatCurrency,
+                    orderAmounts.selectedCryptoCurrency
+                ).toBundle()
+                parentNavController().navigate(R.id.action_global_buyFragment, args)
             })
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
                 this@ReceiptFragment.copyTxId(txId)

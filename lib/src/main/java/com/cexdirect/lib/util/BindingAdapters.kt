@@ -29,6 +29,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.cexdirect.lib.R
@@ -36,7 +37,7 @@ import com.cexdirect.lib.buy.TradeInputFilter
 import com.cexdirect.lib.databinding.ItemReturnBinding
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
-import com.cexdirect.lib.terms.showTerms
+import com.cexdirect.lib.terms.TermsFragmentArgs
 import com.cexdirect.lib.verification.OrderStep
 import com.cexdirect.lib.verification.StepsPagerAdapter
 import com.cexdirect.lib.verification.confirmation._3dsData
@@ -96,7 +97,7 @@ fun SuperDuperViewPager.applyAdapter(position: Int, adapter: StepsPagerAdapter, 
     if (orderStep != step) {
         orderStep = step
         val binding = DataBindingUtil.findBinding<ItemReturnBinding>(
-                findViewWithTag<View>("return")
+            findViewWithTag<View>("return")
         ) ?: error("Could not find binding. Child count: $childCount")
         when (orderStep) {
             OrderStep.LOCATION_EMAIL, OrderStep.PAYMENT_BASE -> binding.editVisible = true
@@ -152,23 +153,23 @@ fun EditText.setCurrentText(text: String?, filter: TradeInputFilter?) {
 @BindingAdapter("_3dsData")
 fun WebView.apply3DsData(_3dsData: _3dsData?) {
     _3dsData?.takeIf { it.hasData() }
-            ?._3dsExtras
-            ?.apply { this["TermUrl"] = _3dsData.termUrl }
-            ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
-            ?.asIterable()
-            ?.joinToString("&") { (key, value) -> "$key=$value" }
-            ?.toByteArray()
-            ?.let { this.postUrl(_3dsData._3dsUrl, it) }
+        ?._3dsExtras
+        ?.apply { this["TermUrl"] = _3dsData.termUrl }
+        ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
+        ?.asIterable()
+        ?.joinToString("&") { (key, value) -> "$key=$value" }
+        ?.toByteArray()
+        ?.let { this.postUrl(_3dsData._3dsUrl, it) }
 }
 
 @BindingAdapter("content")
 fun TextView.loadContent(content: String) {
     Markwon.create(context)
-            .let {
-                val node = it.parse(content)
-                val spanned = it.render(node)
-                it.setParsedMarkdown(this, spanned)
-            }
+        .let {
+            val node = it.parse(content)
+            val spanned = it.render(node)
+            it.setParsedMarkdown(this, spanned)
+        }
 }
 
 @BindingAdapter("coinIcon")
@@ -183,14 +184,15 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
         val spannableString = SpannableString(ruleData.formattedName())
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                context.showTerms(ruleData.formattedName(), ruleData.value)
+                val args = TermsFragmentArgs(ruleData.formattedName(), ruleData.value).toBundle()
+                widget.findNavController().navigate(R.id.action_global_termsFragment, args)
             }
         }
         spannableString.setSpan(
-                clickableSpan,
-                0,
-                spannableString.length,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            clickableSpan,
+            0,
+            spannableString.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
         )
         acc.apply {
             append(" ")

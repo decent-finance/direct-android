@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cexd_nav_graph"
+    app:startDestination="@id/checkFragment">
+    <fragment
+        android:id="@+id/stubFragment"
+        android:name="com.cexdirect.lib.stub.StubFragment"
+        android:label="StubFragment" />
+    <fragment
+        android:id="@+id/checkFragment"
+        android:name="com.cexdirect.lib.check.CheckFragment"
+        android:label="CheckFragment">
+        <action
+            android:id="@+id/action_checkFragment_to_buyFragment"
+            app:destination="@id/buyFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_checkFragment_to_stubFragment"
+            app:destination="@id/stubFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/buyFragment"
+        android:name="com.cexdirect.lib.buy.BuyFragment"
+        android:label="BuyFragment">
+        <argument
+            android:name="lastFiatAmount"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="lastFiatCurrency"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="lastCryptoCurrency"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_buyFragment_to_verificationFragment"
+            app:destination="@id/verificationFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_buyFragment_to_stubFragment"
+            app:destination="@id/stubFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/errorFragment"
+        android:name="com.cexdirect.lib.error.ErrorFragment"
+        android:label="ErrorFragment">
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="error"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_errorFragment_to_checkFragment"
+            app:destination="@id/checkFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_errorFragment"
+        app:destination="@id/errorFragment" />
+    <fragment
+        android:id="@+id/termsFragment"
+        android:name="com.cexdirect.lib.terms.TermsFragment"
+        android:label="TermsFragment">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_termsFragment_pop"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/termsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_termsFragment"
+        app:destination="@id/termsFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    <action
+        android:id="@+id/action_global_buyFragment"
+        app:destination="@id/buyFragment" />
+    <fragment
+        android:id="@+id/verificationFragment"
+        android:name="com.cexdirect.lib.verification.VerificationFragment"
+        android:label="VerificationFragment" >
+        <argument
+            android:name="crypto"
+            app:argType="string" />
+        <argument
+            android:name="cryptoAmount"
+            app:argType="string" />
+        <argument
+            android:name="fiat"
+            app:argType="string" />
+        <argument
+            android:name="fiatAmount"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_verificationFragment_to_checkFragment"
+            app:destination="@id/checkFragment" />
+    </fragment>
+</navigation>

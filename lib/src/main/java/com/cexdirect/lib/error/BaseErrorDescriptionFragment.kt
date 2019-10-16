@@ -24,12 +24,12 @@ import com.cexdirect.lib.Direct
 import com.cexdirect.lib._di.annotation.ErrorActivityFactory
 import javax.inject.Inject
 
-abstract class BaseErrorFragment : BaseFragment() {
+abstract class BaseErrorDescriptionFragment : BaseFragment() {
 
     @field:[Inject ErrorActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    protected val model: ErrorActivityViewModel by activityViewModelProvider { modelFactory }
+    protected val model: ErrorActivityViewModel by parentFragmentViewModelProvider { modelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Direct.directComponent.inject(this)

@@ -17,13 +17,13 @@
 package com.cexdirect.lib._di
 
 import com.cexdirect.lib.ExitDialog
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.BuyFragment
 import com.cexdirect.lib.buy.PairSelectionBottomSheetDialog
-import com.cexdirect.lib.check.CheckActivity
-import com.cexdirect.lib.error.BaseErrorFragment
-import com.cexdirect.lib.error.ErrorActivity
+import com.cexdirect.lib.check.CheckFragment
+import com.cexdirect.lib.error.BaseErrorDescriptionFragment
+import com.cexdirect.lib.error.ErrorFragment
 import com.cexdirect.lib.network.ws.CexdSocket
-import com.cexdirect.lib.terms.TermsActivity
+import com.cexdirect.lib.terms.TermsFragment
 import com.google.gson.Gson
 import dagger.Component
 import javax.inject.Singleton
@@ -34,15 +34,7 @@ interface DirectComponent {
 
     fun identitySubcomponent(): IdentitySubcomponent
 
-    fun inject(checkActivity: CheckActivity)
-
-    fun inject(termsActivity: TermsActivity)
-
-    fun inject(buyActivity: BuyActivity)
-
-    fun inject(errorActivity: ErrorActivity)
-
-    fun inject(baseErrorFragment: BaseErrorFragment)
+    fun inject(baseErrorFragment: BaseErrorDescriptionFragment)
 
     fun inject(pairSelectionBottomSheetDialog: PairSelectionBottomSheetDialog)
 
@@ -51,4 +43,12 @@ interface DirectComponent {
     fun inject(exitDialog: ExitDialog)
 
     fun gson(): Gson
+
+    fun inject(checkFragment: CheckFragment)
+
+    fun inject(termsFragment: TermsFragment)
+
+    fun inject(errorFragment: ErrorFragment)
+
+    fun inject(buyFragment: BuyFragment)
 }

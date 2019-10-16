@@ -18,7 +18,7 @@ package com.cexdirect.lib._di
 
 import com.cexdirect.lib._di.annotation.IdentityScope
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.VerificationActivity
+import com.cexdirect.lib.verification.VerificationFragment
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialog
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
 import com.cexdirect.lib.verification.identity.CvvInfoDialog
@@ -39,8 +39,6 @@ interface IdentitySubcomponent {
 
     fun inject(dialog: PhotoSourceDialog)
 
-    fun inject(verificationActivity: VerificationActivity)
-
     fun inject(paymentConfirmationFragment: PaymentConfirmationFragment)
 
     fun inject(finishFragment: ReceiptFragment)
@@ -52,4 +50,5 @@ interface IdentitySubcomponent {
     fun inject(countryPickerDialog: BaseCountryPickerDialog)
 
     fun inject(qrScannerActivity: QrScannerActivity)
+    fun inject(verificationFragment: VerificationFragment)
 }

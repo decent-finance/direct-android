@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.error
+package com.cexdirect.lib.terms
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,46 +22,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.cexdirect.lib.BaseFragment
+import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentLocationNotSupportedBinding
-import com.cexdirect.lib.util.FieldStatus
-import com.mcxiaoke.koi.ext.finish
-import com.mcxiaoke.koi.ext.toast
+import com.cexdirect.lib._di.annotation.TermsActivityFactory
+import com.cexdirect.lib.databinding.FragmentTermsBinding
+import javax.inject.Inject
 
-class LocationNotSupportedFragment : BaseErrorFragment() {
+class TermsFragment : BaseFragment() {
 
-    private lateinit var binding: FragmentLocationNotSupportedBinding
+    @field:[Inject TermsActivityFactory]
+    lateinit var modelFactory: ViewModelProvider.Factory
+
+    private val args by navArgs<TermsFragmentArgs>()
+
+    private val viewModel: TermsFragmentViewModel by fragmentViewModelProvider { modelFactory }
+
+    private lateinit var binding: FragmentTermsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentLocationNotSupportedBinding>(
+    ) = DataBindingUtil.inflate<FragmentTermsBinding>(
         inflater,
-        R.layout.fragment_location_not_supported,
+        R.layout.fragment_terms,
         container,
         false
     ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        model.informMeEvent.observe(this, Observer {
-            if (model.emailStatus == FieldStatus.EMPTY) {
-                toast("Please, enter your e-mail address")
-                return@Observer
-            } else if (model.emailStatus == FieldStatus.INVALID) {
-                toast("Please, enter valid e-mail address")
-                return@Observer
-            }
-            if (!model.emailNotificationChecked.get()) {
-                toast("Please, check the checkbox below")
-                return@Observer
-            }
-            // todo subscribe
-            finish()
-        })
-
-        binding.model = model
+        Direct.directComponent.inject(this)
+        viewModel.apply {
+            title.set(args.title)
+            content.set(args.content)
+            okEvent.observe(this@TermsFragment, Observer {
+                findNavController().navigate(R.id.action_termsFragment_pop)
+            })
+        }.let { binding.model = it }
     }
 }

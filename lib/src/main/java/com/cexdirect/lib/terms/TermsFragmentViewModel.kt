@@ -23,7 +23,7 @@ import com.cexdirect.lib.BaseObservableViewModel
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.VoidLiveEvent
 
-class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
+class TermsFragmentViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
     BaseObservableViewModel(dispatcherProvider) {
 
     val title = ObservableField("")
@@ -35,8 +35,10 @@ class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
         okEvent.call()
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) :
+        ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) = TermsActivityViewModel(dispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            TermsFragmentViewModel(dispatcherProvider) as T
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,51 +16,66 @@
 
 package com.cexdirect.lib.check
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.BaseActivity
+import androidx.navigation.fragment.findNavController
+import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib._di.annotation.CheckActivityFactory
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.BuyFragmentArgs
 import com.cexdirect.lib.databinding.ActivityCheckBinding
 import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Success
 import javax.inject.Inject
 
-class CheckActivity : BaseActivity() {
+class CheckFragment : BaseFragment() {
 
     @field:[Inject CheckActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    private val model: CheckActivityViewModel by viewModelProvider { modelFactory }
+    private val model: CheckFragmentViewModel by fragmentViewModelProvider { modelFactory }
 
     private lateinit var binding: ActivityCheckBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Direct.directComponent.inject(this)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_check)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = DataBindingUtil.inflate<ActivityCheckBinding>(
+        inflater,
+        R.layout.activity_check,
+        container,
+        false
+    ).apply {
+        binding = this
+    }.root
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Direct.directComponent.inject(this)
+        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
         model.apply {
-            checkResult.observe(this@CheckActivity, Observer {
+            checkResult.observe(this@CheckFragment, Observer {
                 when (it) {
                     is Loading -> showLoader()
                     is Success -> processPlacementInfo(it.data!!) { showStubScreen() }
                     is Failure -> showStubScreen()
                 }
             })
-            countryResult.observe(this@CheckActivity, Observer {
+            countryResult.observe(this@CheckFragment, Observer {
                 when (it) {
                     is Success -> saveCountriesAndLoadRules(it.data!!)
                     is Failure -> showStubScreen()
                 }
             })
-            ruleResult.observe(this@CheckActivity, Observer {
+            ruleResult.observe(this@CheckFragment, Observer {
                 when (it) {
                     is Success -> saveRuleAndLoadNext(it.data!!) { launchDirect() }
                     is Failure -> showStubScreen()
@@ -73,7 +88,13 @@ class CheckActivity : BaseActivity() {
     }
 
     private fun launchDirect() {
-        startActivity(Intent(this, BuyActivity::class.java))
-        finish()
+        hideLoader()
+        val args = BuyFragmentArgs(null, null, null).toBundle()
+        findNavController().navigate(R.id.action_checkFragment_to_buyFragment, args)
+    }
+
+    private fun showStubScreen() {
+        hideLoader()
+        findNavController().navigate(R.id.action_checkFragment_to_stubFragment)
     }
 }

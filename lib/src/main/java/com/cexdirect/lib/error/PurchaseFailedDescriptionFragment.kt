@@ -22,22 +22,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentVerificationErrorBinding
+import com.cexdirect.lib.databinding.FragmentPurchaseFailedBinding
 
-class VerificationErrorFragment : BaseErrorFragment() {
+class PurchaseFailedDescriptionFragment : BaseErrorDescriptionFragment() {
 
-    private lateinit var binding: FragmentVerificationErrorBinding
+    private lateinit var binding: FragmentPurchaseFailedBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentVerificationErrorBinding>(
+    ) = DataBindingUtil.inflate<FragmentPurchaseFailedBinding>(
         inflater,
-        R.layout.fragment_verification_error,
+        R.layout.fragment_purchase_failed,
         container,
         false
-    ).apply { binding = this }.root
+    ).apply {
+        binding = this
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

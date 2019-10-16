@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
@@ -31,7 +32,6 @@ import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.StickyViewEvent
-import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
@@ -61,12 +61,9 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
-                    updateConfirmationStatus(it!!) {
-                        context!!.verificationError("Rejected")
-                        finish()
-                    }
+                    updateConfirmationStatus(it!!) { findNavController().verificationError("Rejected") }
                 },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { findNavController().purchaseFailed(it.message) }
             ))
             resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
                 requestNewCheckCode()
@@ -76,29 +73,29 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             })
             checkCodeResult.observe(
                 this@PaymentConfirmationFragment, restObserver(
-                onOk = { /* Don't do anything here, because order status will be updated via WS */ },
-                onFail = {
-                    if (it.code == CODE_BAD_REQUEST) {
-                        toast(R.string.cexd_wrong_code)
-                    } else {
-                        purchaseFailed(it.message)
+                    onOk = { /* Don't do anything here, because order status will be updated via WS */ },
+                    onFail = {
+                        if (it.code == CODE_BAD_REQUEST) {
+                            toast(R.string.cexd_wrong_code)
+                        } else {
+                            findNavController().purchaseFailed(it.message)
+                        }
                     }
-                }
-            ))
+                ))
             newCheckCode.observe(
                 this@PaymentConfirmationFragment, restObserver(
                     onOk = {
                         toast(R.string.cexd_check_mail)
                         restartResendTimer()
                     },
-                onFail = { purchaseFailed(it.message) }
-            ))
+                    onFail = { findNavController().purchaseFailed(it.message) }
+                ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)
                 },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { findNavController().purchaseFailed(it.message) }
             ))
         }.let { binding.model = it }
 

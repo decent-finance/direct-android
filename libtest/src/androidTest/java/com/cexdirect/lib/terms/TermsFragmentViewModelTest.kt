@@ -24,16 +24,16 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class TermsActivityViewModelTest {
+class TermsFragmentViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var model: TermsActivityViewModel
+    lateinit var model: TermsFragmentViewModel
 
     @Before
     fun setUp() {
-        model = TermsActivityViewModel(MockCoroutineDispatcherProvider())
+        model = TermsFragmentViewModel(MockCoroutineDispatcherProvider())
     }
 
     @Test

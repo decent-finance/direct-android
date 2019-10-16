@@ -13,34 +13,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application android:largeHeap="true">
+        <activity android:name=".terms.TermsActivity"></activity>
+        <activity
+            android:name=".DirectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Direct" />
         <activity
             android:name=".verification.scanner.QrScannerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Direct.Scanner" />
-        <activity
-            android:name=".stub.StubActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct.Stub" />
-        <activity
-            android:name=".terms.TermsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
-        <activity
-            android:name=".check.CheckActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
-        <activity
-            android:name=".verification.VerificationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
-        <activity
-            android:name=".error.ErrorActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
-        <activity
-            android:name=".buy.BuyActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
 
         <provider
             android:name=".DirectAppInitProvider"

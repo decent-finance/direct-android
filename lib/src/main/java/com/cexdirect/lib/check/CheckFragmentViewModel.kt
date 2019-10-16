@@ -28,7 +28,7 @@ import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.util.PlacementValidator
 
-class CheckActivityViewModel(
+class CheckFragmentViewModel(
     merchantApi: MerchantApi,
     paymentApi: PaymentApi,
     private val placementValidator: PlacementValidator,
@@ -102,7 +102,7 @@ class CheckActivityViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            CheckActivityViewModel(
+            CheckFragmentViewModel(
                 merchantApi,
                 paymentApi,
                 placementValidator,

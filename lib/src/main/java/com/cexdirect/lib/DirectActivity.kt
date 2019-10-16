@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.stub
+package com.cexdirect.lib
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.cexdirect.lib.R
 
-class StubActivity : AppCompatActivity() {
+class DirectActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_stub)
+        setContentView(R.layout.activity_direct)
     }
 }

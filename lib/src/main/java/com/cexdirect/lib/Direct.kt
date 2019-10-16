@@ -25,9 +25,7 @@ import com.cexdirect.lib._di.CoreModule
 import com.cexdirect.lib._di.DaggerDirectComponent
 import com.cexdirect.lib._di.DirectComponent
 import com.cexdirect.lib._di.IdentitySubcomponent
-import com.cexdirect.lib.check.CheckActivity
 import com.cexdirect.lib.network.models.CountryData
-import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
 import java.util.*
 import kotlin.collections.HashSet
@@ -42,8 +40,6 @@ object Direct {
     var credentials: Credentials = Credentials("", "")
     var userEmail = ""
 
-    var pendingFiatAmount = MonetaryData("", "")
-    var pendingCryptoAmount = MonetaryData("", "")
     var pendingOrderId = ""
 
     var countries: List<CountryData> = emptyList()
@@ -80,21 +76,13 @@ object Direct {
 
     fun startDirect() {
         check(credentials.placementId.isNotBlank() && credentials.secret.isNotBlank())
-        Intent(context, CheckActivity::class.java)
+        Intent(context, DirectActivity::class.java)
             .apply { flags = FLAG_ACTIVITY_NEW_TASK }
             .let { context.startActivity(it) }
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun setPendingAmounts(fiat: MonetaryData, crypto: MonetaryData) {
-        pendingFiatAmount = fiat
-        pendingCryptoAmount = crypto
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun clear() {
-        pendingFiatAmount = MonetaryData("", "")
-        pendingCryptoAmount = MonetaryData("", "")
         pendingOrderId = ""
         userEmail = ""
     }

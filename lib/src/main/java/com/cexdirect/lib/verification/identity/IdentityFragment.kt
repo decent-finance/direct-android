@@ -30,6 +30,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
@@ -72,7 +73,7 @@ class IdentityFragment : BaseVerificationFragment() {
 
     private val paymentDataObserver = restObserver<OrderInfoData>(
         onOk = { /* Order status will be updated via WS connection */ },
-        onFail = { purchaseFailed(it.message) },
+        onFail = { findNavController().purchaseFailed(it.message) },
         final = { /* do not hide loader here */ }
     )
 
@@ -125,10 +126,10 @@ class IdentityFragment : BaseVerificationFragment() {
                 },
                 onFail = {
                     if (it.code == COUNTRY_NOT_SUPPORTED) {
-                        context!!.locationNotSupported()
+                        findNavController().locationNotSupported()
                         finish()
                     } else {
-                        purchaseFailed(it.message)
+                        findNavController().purchaseFailed(it.message)
                     }
                 }
             ))
@@ -137,7 +138,7 @@ class IdentityFragment : BaseVerificationFragment() {
             ))
             uploadImage.observe(this@IdentityFragment, restObserver(
                 onOk = { setDocumentStatusToValid() },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { findNavController().purchaseFailed(it.message) }
             ))
             verificationResult.observe(this@IdentityFragment, restObserver(
                 onOk = {},
@@ -145,7 +146,7 @@ class IdentityFragment : BaseVerificationFragment() {
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
                         userWallet.walletStatus = FieldStatus.INVALID
                     } else {
-                        purchaseFailed(it.message)
+                        findNavController().purchaseFailed(it.message)
                     }
                 },
                 final = {}
@@ -181,14 +182,11 @@ class IdentityFragment : BaseVerificationFragment() {
             onOk = {
                 model.updateOrderStatus(
                     it!!,
-                    {
-                        context!!.verificationError("Rejected")
-                        finish()
-                    },
+                    { findNavController().verificationError("Rejected") },
                     { hideLoader() }
                 )
             },
-            onFail = { purchaseFailed(it.message) }
+            onFail = { findNavController().purchaseFailed(it.message) }
         ))
     }
 

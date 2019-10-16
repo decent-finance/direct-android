@@ -14,16 +14,17 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.terms
+package com.cexdirect.lib.stub
 
 import android.os.Bundle
-import com.cexdirect.lib.BaseActivity
+import android.view.View
+import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.R
 
-class TermsActivity : BaseActivity() {
+class StubFragment : BaseFragment(R.layout.activity_stub) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_terms)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
     }
 }

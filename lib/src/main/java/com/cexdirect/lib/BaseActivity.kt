@@ -16,19 +16,13 @@
 
 package com.cexdirect.lib
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.cexdirect.lib.stub.StubActivity
-import com.cexdirect.lib.terms.showTerms
 import com.cexdirect.lib.views.LoaderView
-import com.mcxiaoke.koi.ext.toast
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -42,21 +36,6 @@ abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified VM : BaseObservableViewModel> viewModelProvider(crossinline factory: () -> ViewModelProvider.Factory) =
         lazy { ViewModelProviders.of(this, factory()).get(VM::class.java) }
 
-    protected fun LegalViewModel.applyLegalObservers() {
-        supportClickEvent.observe(this@BaseActivity, Observer {
-            Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse(SUPPORT_EMAIL)
-            }.let {
-                it.resolveActivity(packageManager)?.run { startActivity(it) }
-                        ?: toast(R.string.cexd_no_email_apps)
-            }
-        })
-        legalClickEvent.observe(this@BaseActivity, Observer {
-            showTerms(it.formattedName(), it.value)
-        })
-        exitClickEvent.observe(this@BaseActivity, Observer { ExitDialog().show(supportFragmentManager, "exit") })
-    }
-
     fun showLoader() {
         if (loader == null) {
             loader = LoaderView(this)
@@ -67,11 +46,6 @@ abstract class BaseActivity : AppCompatActivity() {
     fun hideLoader() {
         loader?.hide()
         loader = null
-    }
-
-    protected fun showStubScreen() {
-        startActivity(Intent(this, StubActivity::class.java))
-        finish()
     }
 
     companion object {

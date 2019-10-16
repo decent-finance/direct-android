@@ -38,7 +38,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class CheckActivityViewModelTest {
+class CheckFragmentViewModelTest {
 
     @get:Rule
     val activityRule = ActivityTestRule(TermsActivity::class.java, true, false)
@@ -54,13 +54,13 @@ class CheckActivityViewModelTest {
 
     lateinit var ruleIds: RuleIds
 
-    lateinit var model: CheckActivityViewModel
+    lateinit var model: CheckFragmentViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         ruleIds = RuleIds()
-        model = CheckActivityViewModel(
+        model = CheckFragmentViewModel(
             MerchantApi(merchantService),
             PaymentApi(paymentService),
             placementValidator,
