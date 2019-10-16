@@ -20,6 +20,7 @@ import android.os.CountDownTimer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Test
 
@@ -38,10 +39,12 @@ class CheckCodeTest {
     fun start() {
         val timer = mock<CountDownTimer>()
 
-        val checkCode = CheckCode(timer)
+        val checkCode = spy(CheckCode(timer))
+        whenever(checkCode.createTimer()).thenReturn(timer)
+
         checkCode.startTimer()
 
-        verify(timer).start()
+        verify(checkCode).createTimer()
     }
 
     @Test
