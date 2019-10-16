@@ -72,6 +72,7 @@
                     android:paddingLeft="48dp"
                     android:paddingRight="48dp"
                     app:currentPosition="@{model.currentStep}"
+                    app:offscreenPages="@{4}"
                     app:orderStep="@{model.orderStep}"
                     app:pagerAdapter="@{model.pagerAdapter}" />
 
