@@ -559,7 +559,8 @@ class VerificationActivityViewModel(
         }
     }
 
-    private fun askFor3ds(threeDS: _3Ds) {
+    @VisibleForTesting
+    fun askFor3ds(threeDS: _3Ds) {
         orderStep.set(OrderStep.TDS)
         _3dsData.apply {
             _3dsUrl = threeDS.url

@@ -18,6 +18,7 @@ package com.cexdirect.lib.verification
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.Direct
@@ -29,7 +30,8 @@ abstract class BaseVerificationFragment : BaseFragment() {
     @field:[Inject VerificationActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    protected val model: VerificationActivityViewModel by activityViewModelProvider { modelFactory }
+    @VisibleForTesting
+    val model: VerificationActivityViewModel by activityViewModelProvider { modelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Direct.identitySubcomponent?.inject(this)

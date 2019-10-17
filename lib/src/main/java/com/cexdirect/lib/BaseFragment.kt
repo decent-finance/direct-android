@@ -16,6 +16,8 @@
 
 package com.cexdirect.lib
 
+import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.PROTECTED
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -38,11 +40,13 @@ abstract class BaseFragment : Fragment() {
     ) =
         lazy { ViewModelProviders.of(this, factory()).get(VM::class.java) }
 
-    protected fun showLoader() {
+    @VisibleForTesting(otherwise = PROTECTED)
+    open fun showLoader() {
         (activity as BaseActivity).showLoader()
     }
 
-    protected fun hideLoader() {
+    @VisibleForTesting(otherwise = PROTECTED)
+    open fun hideLoader() {
         (activity as BaseActivity).hideLoader()
     }
 

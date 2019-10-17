@@ -164,7 +164,7 @@ dependencies {
 
     api 'org.bouncycastle:bcprov-jdk15on:1.63'
 
-//    debugApi 'androidx.fragment:fragment-testing:1.2.0-alpha01'
+    debugApi 'androidx.fragment:fragment-testing:1.2.0-beta02'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:$assertjVersion"

@@ -61,6 +61,10 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     sourceSets {
 
         androidTest {
@@ -141,6 +145,7 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+    debugImplementation 'androidx.fragment:fragment-testing:1.2.0-beta02'
 //    debugImplementation "com.willowtreeapps.hyperion:hyperion-core:$hyperionVersion"
 //    debugImplementation "com.willowtreeapps.hyperion:hyperion-attr:$hyperionVersion"
 //    debugImplementation "com.willowtreeapps.hyperion:hyperion-crash:$hyperionVersion"
