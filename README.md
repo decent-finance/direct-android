@@ -1,6 +1,6 @@
 # CEX Direct Client Library
 
-![CircleCI](https://img.shields.io/circleci/build/github/decent-finance/direct-android?token=b6789cb625d20c0f00cd98564e95a2bb2525f811) ![GitHub](https://img.shields.io/github/license/decent-finance/direct-android) [ ![Download](https://api.bintray.com/packages/decent-finance/direct-android/com.cexdirect.lib/images/download.svg) ](https://bintray.com/decent-finance/direct-android/com.cexdirect.lib/_latestVersion) [![Maintainability](https://api.codeclimate.com/v1/badges/e3b58b568f4cc06e7e8b/maintainability)](https://codeclimate.com/github/decent-finance/direct-android/maintainability)
+![CircleCI](https://img.shields.io/circleci/build/github/decent-finance/direct-android?token=b6789cb625d20c0f00cd98564e95a2bb2525f811) ![GitHub](https://img.shields.io/github/license/decent-finance/direct-android) [ ![Download](https://api.bintray.com/packages/decent-finance/direct-android/com.cexdirect.lib/images/download.svg) ](https://bintray.com/decent-finance/direct-android/com.cexdirect.lib/_latestVersion) [![Maintainability](https://api.codeclimate.com/v1/badges/e3b58b568f4cc06e7e8b/maintainability)](https://codeclimate.com/github/decent-finance/direct-android/maintainability) [![Gitter](https://badges.gitter.im/decent-finance/community.svg)](https://gitter.im/decent-finance/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Before you start
 
