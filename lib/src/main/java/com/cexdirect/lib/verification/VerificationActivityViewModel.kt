@@ -29,6 +29,7 @@ import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.util.symbolMap
 import com.cexdirect.lib.verification.confirmation.CheckCode
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
@@ -63,6 +64,7 @@ class VerificationActivityViewModel(
     val editEmailEvent = VoidLiveEvent()
     val buyMoreEvent = VoidLiveEvent()
     val txIdCopyEvent = StringLiveEvent()
+    val txIdOpenEvent = StringLiveEvent()
     val scanQrEvent = VoidLiveEvent()
     val editClickEvent = VoidLiveEvent()
     // --- Events --- //
@@ -604,6 +606,12 @@ class VerificationActivityViewModel(
 
     fun copyTxId(txId: String) {
         txIdCopyEvent.postValue(txId)
+    }
+
+    fun openTxDetails(txId: String) {
+        symbolMap.getValue(orderAmounts.selectedCryptoCurrency).transactionBrowserAddress?.let {
+            txIdOpenEvent.postValue("$it$txId")
+        }
     }
 
     fun setUnsupportedFormat() {

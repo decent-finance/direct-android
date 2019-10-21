@@ -96,7 +96,7 @@ fun SuperDuperViewPager.applyAdapter(position: Int, adapter: StepsPagerAdapter, 
     if (orderStep != step) {
         orderStep = step
         val binding = DataBindingUtil.findBinding<ItemReturnBinding>(
-                findViewWithTag<View>("return")
+            findViewWithTag<View>("return")
         ) ?: error("Could not find binding. Child count: $childCount")
         when (orderStep) {
             OrderStep.LOCATION_EMAIL, OrderStep.PAYMENT_BASE -> binding.editVisible = true
@@ -152,23 +152,23 @@ fun EditText.setCurrentText(text: String?, filter: TradeInputFilter?) {
 @BindingAdapter("_3dsData")
 fun WebView.apply3DsData(_3dsData: _3dsData?) {
     _3dsData?.takeIf { it.hasData() }
-            ?._3dsExtras
-            ?.apply { this["TermUrl"] = _3dsData.termUrl }
-            ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
-            ?.asIterable()
-            ?.joinToString("&") { (key, value) -> "$key=$value" }
-            ?.toByteArray()
-            ?.let { this.postUrl(_3dsData._3dsUrl, it) }
+        ?._3dsExtras
+        ?.apply { this["TermUrl"] = _3dsData.termUrl }
+        ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
+        ?.asIterable()
+        ?.joinToString("&") { (key, value) -> "$key=$value" }
+        ?.toByteArray()
+        ?.let { this.postUrl(_3dsData._3dsUrl, it) }
 }
 
 @BindingAdapter("content")
 fun TextView.loadContent(content: String) {
     Markwon.create(context)
-            .let {
-                val node = it.parse(content)
-                val spanned = it.render(node)
-                it.setParsedMarkdown(this, spanned)
-            }
+        .let {
+            val node = it.parse(content)
+            val spanned = it.render(node)
+            it.setParsedMarkdown(this, spanned)
+        }
 }
 
 @BindingAdapter("coinIcon")
@@ -187,10 +187,10 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
             }
         }
         spannableString.setSpan(
-                clickableSpan,
-                0,
-                spannableString.length,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            clickableSpan,
+            0,
+            spannableString.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
         )
         acc.apply {
             append(" ")
@@ -208,4 +208,12 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
 @BindingAdapter("android:imeOptions")
 fun EditText.applyImeOption(options: Int) {
     imeOptions = options
+}
+
+@BindingAdapter("onLongClick")
+fun View.applyLongClickListener(runnable: Runnable) {
+    setOnLongClickListener {
+        runnable.run()
+        true
+    }
 }

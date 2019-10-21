@@ -19,6 +19,8 @@ package com.cexdirect.lib.verification.receipt
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +82,7 @@ class ReceiptFragment : BaseVerificationFragment() {
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
                 this@ReceiptFragment.copyTxId(txId)
             })
+            txIdOpenEvent.observe(this@ReceiptFragment, Observer { openTxDetailsInBrowser(it) })
         }
         stickyViewEvent.value = View.NO_ID
     }
@@ -90,6 +93,13 @@ class ReceiptFragment : BaseVerificationFragment() {
                 ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
             toast(getString(R.string.cexd_order_id_copied))
         }
+    }
+
+    private fun openTxDetailsInBrowser(url: String) {
+        Intent(Intent.ACTION_VIEW).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            data = Uri.parse(url)
+        }.let { it.resolveActivity(requireContext().packageManager)?.run { startActivity(it) } }
     }
 
     override fun onDestroyView() {
