@@ -20,7 +20,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -33,7 +32,6 @@ import com.cexdirect.lib.buy.OrderData
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityVerificationBinding
 import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.IdentityFragment
 import com.cexdirect.lib.verification.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
@@ -43,9 +41,6 @@ class VerificationActivity : BaseActivity() {
 
     @field:[Inject VerificationActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var stickyViewEvent: StickyViewEvent
 
     @VisibleForTesting
     val model: VerificationActivityViewModel by viewModelProvider { modelFactory }
@@ -97,14 +92,6 @@ class VerificationActivity : BaseActivity() {
             })
         }.let { binding.model = it }
 
-        stickyViewEvent.observe(this, Observer {
-            if (it != View.NO_ID) {
-                binding.avScroll.initFooterView(it)
-            } else {
-                binding.avScroll.freeFooter()
-                binding.avScroll.requestLayout()
-            }
-        })
         replaceFragment(0)
     }
 

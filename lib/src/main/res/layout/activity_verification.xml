@@ -30,7 +30,7 @@
             type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
     </data>
 
-    <com.amar.library.ui.StickyScrollView
+    <ScrollView
         android:id="@+id/avScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,5 +102,5 @@
 
         </LinearLayout>
 
-    </com.amar.library.ui.StickyScrollView>
+    </ScrollView>
 </layout>

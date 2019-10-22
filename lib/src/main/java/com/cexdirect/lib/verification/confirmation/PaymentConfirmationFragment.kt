@@ -31,15 +31,11 @@ import com.cexdirect.lib.error.verificationError
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
 class PaymentConfirmationFragment : BaseVerificationFragment() {
-
-    @Inject
-    lateinit var stickyViewEvent: StickyViewEvent
 
     @Inject
     lateinit var webViewClient: Client
@@ -66,7 +62,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
-                    updateConfirmationStatus(it!!) {
+                    updateConfirmationStatus(it) {
                         context!!.verificationError("Rejected")
                         finish()
                     }
@@ -106,8 +102,6 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 onFail = { purchaseFailed(it.message) }
             ))
         }.let { binding.model = it }
-
-        stickyViewEvent.value = R.id.fpcSubmit
     }
 
     @SuppressLint("SetJavaScriptEnabled")

@@ -20,7 +20,6 @@ import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib._di.annotation.IdentityScope
 import com.cexdirect.lib.verification.events.SourceClickEvent
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import dagger.Module
 import dagger.Provides
 
@@ -31,10 +30,6 @@ class SharedStateModule {
     @Provides
     @IdentityScope
     fun provideSourceClickEvent() = SourceClickEvent()
-
-    @Provides
-    @IdentityScope
-    fun provideStickyViewEvent() = StickyViewEvent()
 
     @Provides
     @IdentityScope

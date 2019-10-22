@@ -148,7 +148,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     api 'com.mcxiaoke.koi:core:0.5.5'
-    api 'com.github.amarjain07:StickyScrollView:1.0.2'
     api 'ru.noties.markwon:core:3.1.0'
     api 'me.dm7.barcodescanner:zxing:1.9.13'
 
