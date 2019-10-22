@@ -102,8 +102,8 @@ class VerificationActivityDataValidationTest {
         goToBase()
         givenAllPhotosRequired()
 
-        onView(withId(R.id.fiPassport)).perform(click())
-        onView(withId(R.id.fiNext)).perform(click())
+        onView(withId(R.id.fiPassport)).perform(scrollTo(), click())
+        onView(withId(R.id.fiNext)).perform(scrollTo(), click())
 
         onView(withId(R.id.pdDocFrontError))
             .perform(scrollTo())
