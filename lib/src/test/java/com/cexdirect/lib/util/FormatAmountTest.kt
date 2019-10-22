@@ -41,15 +41,10 @@ class FormatAmountTest(
         @JvmStatic
         @Parameterized.Parameters(name = "{index}: Format {0} as {1}")
         fun getData() = arrayListOf(
-            arrayOf(1.000001, "1.00", Precision("", "FOO", 2, 2, "smaller", "", "")),
-            arrayOf(1.000009, "1.00", Precision("", "FOO", 2, 2, "smaller", "", "")),
-            arrayOf(1.099999, "1.09", Precision("", "FOO", 2, 2, "smaller", "", "")),
-            arrayOf(1.099999, "1.10", Precision("", "BAR", 2, 2, "bigger", "", "")),
-            arrayOf(1.000009, "1.00", Precision("", "BAR", 2, 2, "bigger", "", "")),
-            arrayOf(1.000003, "1.00", Precision("", "BAR", 2, 2, "bigger", "", "")),
             arrayOf(1.099999, "1.09", Precision("", "BUZZ", 2, 2, "trunk", "", "")),
             arrayOf(1.134576, "1.13", Precision("", "BUZZ", 2, 2, "trunk", "", "")),
-            arrayOf(0.05679207804, "0.0567", Precision("", "BTC", 4, 8, "trunk", "", ""))
+            arrayOf(0.05679207804, "0.0567", Precision("", "BTC", 4, 8, "trunk", "", "")),
+            arrayOf(0.05673207804, "0.0567", Precision("", "BTC", 4, 8, "trunk", "", ""))
         )
     }
 }
