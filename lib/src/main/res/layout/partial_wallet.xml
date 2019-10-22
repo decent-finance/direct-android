@@ -69,6 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipChildren="false"
+                    android:hint="@{@string/cexd_wallet(model.orderAmounts.selectedCryptoCurrency)}"
                     app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -76,7 +77,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
-                        android:hint="@string/cexd_wallet"
                         android:imeOptions="@{model.userCountry.shouldShowState ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE}"
                         android:inputType="text"
                         android:paddingEnd="28dp"

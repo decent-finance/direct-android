@@ -72,7 +72,7 @@
     <string name="cexd_gallery">Gallery</string>
     <string name="cexd_camera">Camera</string>
     <string name="cexd_send_crypto_to">Send Crypto To</string>
-    <string name="cexd_wallet">Wallet</string>
+    <string name="cexd_wallet">%1s Wallet Address</string>
     <string name="cexd_verify_payment">Verify Payment</string>
     <string name="cexd_verify_payment_desc">Please check whether your personal information below is correct. We have obtained it by scanning your document. You can make corrections below if necessary.</string>
     <string name="cexd_please_fill_information">Please Fill Information</string>

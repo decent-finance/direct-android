@@ -41,6 +41,7 @@ import com.cexdirect.lib.verification.OrderStep
 import com.cexdirect.lib.verification.StepsPagerAdapter
 import com.cexdirect.lib.verification.confirmation._3dsData
 import com.cexdirect.lib.views.SuperDuperViewPager
+import com.google.android.material.textfield.TextInputLayout
 import ru.noties.markwon.Markwon
 import java.net.URLEncoder
 
@@ -216,4 +217,9 @@ fun View.applyLongClickListener(runnable: Runnable) {
         runnable.run()
         true
     }
+}
+
+@BindingAdapter("android:hint")
+fun TextInputLayout.applyHint(hint: String?) {
+    this.hint = hint
 }
