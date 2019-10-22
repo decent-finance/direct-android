@@ -112,7 +112,7 @@ class IdentityFragment : BaseVerificationFragment() {
             nextClickEvent.observe(this@IdentityFragment, Observer { handleNextClick() })
             basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
             extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}))
+            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}, final = {}))
             createOrder.observe(this@IdentityFragment, restObserver(
                 onOk = {
                     model.updateOrderId(it!!.orderId)
