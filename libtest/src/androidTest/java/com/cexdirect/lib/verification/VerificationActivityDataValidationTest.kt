@@ -207,7 +207,6 @@ class VerificationActivityDataValidationTest {
     }
 
     private fun goToBase() {
-        activityRule.activity.stickyViewEvent.postValue(View.NO_ID)
         activityRule.activity.model.apply {
             locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
             paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -216,7 +215,6 @@ class VerificationActivityDataValidationTest {
     }
 
     private fun goToExtras() {
-        activityRule.activity.stickyViewEvent.postValue(View.NO_ID)
         activityRule.activity.model.apply {
             locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
             paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
