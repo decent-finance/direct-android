@@ -19,17 +19,21 @@ package com.cexdirect.lib.network.ws
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.map
 import com.google.gson.Gson
-import com.shopify.livedataktx.map
-import com.shopify.livedataktx.toKtx
 import okhttp3.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 @OpenForTesting
-class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: WsUrlProvider, private val gson: Gson) {
+class CexdSocket(
+    private val client: OkHttpClient,
+    private val wsUrlProvider: WsUrlProvider,
+    private val gson: Gson
+) {
 
     private val subscriptions = HashMap<String, SubscriptionMessage<BaseSocketMessage>>()
 
@@ -37,10 +41,10 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
     private var connected = false
     private val connecting = AtomicBoolean(false)
 
-    private val socketMessage = MutableLiveData<String>().toKtx()
-    val parsedMessage = socketMessage.map {
+    private val socketMessage = MutableLiveData<String>()
+    val parsedMessage = socketMessage.map(Function<String, Pair<String, String>> {
         gson.fromJson(it, BaseSocketMessage::class.java).event to it
-    }
+    })
 
     private val pingPongObserver = Observer<Pair<String, String>> { data ->
         if (data.first == "pong") {
@@ -57,8 +61,8 @@ class CexdSocket(private val client: OkHttpClient, private val wsUrlProvider: Ws
         handler.post { parsedMessage.observeForever(pingPongObserver) }
 
         val request = Request.Builder()
-                .url(wsUrlProvider.provideWsUrl())
-                .build()
+            .url(wsUrlProvider.provideWsUrl())
+            .build()
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {

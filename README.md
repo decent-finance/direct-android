@@ -8,17 +8,22 @@ Please note, that this library requires `minSdkVersion` to be at least `21`. Thi
 
 ## Installation
 
-Add the following repository to your `build.gradle`
+Add the following repository to your top-level `build.gradle`
 
 ```gradle
-maven {	url  'https://dl.bintray.com/decent-finance/direct-android' }
+allprojects {
+    repositories {
+        maven {	url  'https://dl.bintray.com/decent-finance/direct-android' }
+    }
+}
 ```
 
-Also add these repositories so that required dendencies are properly resolved
+Also add these repositories so that required dependencies are properly resolved
 
 ```gradle
+google()
+jcenter()
 maven { url 'https://jitpack.io' }
-maven { url 'https://dl.bintray.com/shopify/shopify-android' }
 ```
 
 Add the following dependency to your module-level `buld.gradle`
