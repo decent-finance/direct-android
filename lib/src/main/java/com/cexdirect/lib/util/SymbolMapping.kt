@@ -18,30 +18,38 @@ package com.cexdirect.lib.util
 
 import com.cexdirect.lib.R
 
-data class Symbol(val fullName: String, val iconId: Int = R.drawable.ic_coin_default)
+data class Symbol(
+    val fullName: String,
+    val iconId: Int = R.drawable.ic_coin_default,
+    val transactionBrowserAddress: String? = null
+)
 
 val symbolMap = mapOf(
     "USD" to Symbol("United States Dollar", R.drawable.ic_coin_usd),
     "EUR" to Symbol("Euro", R.drawable.ic_coin_eur),
     "GBP" to Symbol("Pound Sterling", R.drawable.ic_coin_gbp),
     "RUB" to Symbol("Ruble", R.drawable.ic_coin_rub),
-    "XRP" to Symbol("Ripple", R.drawable.ic_coin_xrp),
-    "BTC" to Symbol("Bitcoin", R.drawable.ic_coin_btc),
-    "BCH" to Symbol("Bitcoin Cash", R.drawable.ic_coin_bch),
-    "ZEC" to Symbol("Zcash", R.drawable.ic_coin_zec),
-    "BTG" to Symbol("Bitcoin Gold", R.drawable.ic_coin_btg),
-    "XLM" to Symbol("Stellar", R.drawable.ic_coin_xlm),
-    "ETH" to Symbol("Ethereum", R.drawable.ic_coin_eth),
-    "LTC" to Symbol("Litecoin", R.drawable.ic_coin_ltc),
+    "XRP" to Symbol("Ripple", R.drawable.ic_coin_xrp, "https://xrpl.org/xrp-ledger-rpc-tool.html#"),
+    "BTC" to Symbol("Bitcoin", R.drawable.ic_coin_btc, "https://www.blockchain.com/btc/tx/"),
+    "BCH" to Symbol(
+        "Bitcoin Cash",
+        R.drawable.ic_coin_bch,
+        "https://blockchair.com/litecoin/transaction/"
+    ),
+    "ZEC" to Symbol("Zcash", R.drawable.ic_coin_zec, "https://explorer.zcha.in/transactions/"),
+    "BTG" to Symbol("Bitcoin Gold", R.drawable.ic_coin_btg, "https://btgexplorer.com/tx/"),
+    "XLM" to Symbol("Stellar", R.drawable.ic_coin_xlm, "https://stellarchain.io/tx/"),
+    "ETH" to Symbol("Ethereum", R.drawable.ic_coin_eth, "https://www.etherchain.org/tx/"),
+    "LTC" to Symbol("Litecoin", R.drawable.ic_coin_ltc, "https://live.blockcypher.com/ltc/tx/"),
     "BSV" to Symbol("BSV"),
     "OMG" to Symbol("OmiseGO"),
     "BAT" to Symbol("Basic Attention Token"),
-    "MHC" to Symbol("#MetaHash", R.drawable.ic_coin_mhc),
-    "BTT" to Symbol("BitTorrent", R.drawable.ic_coin_btt),
-    "TRX" to Symbol("Tron", R.drawable.ic_coin_trx),
-    "DASH" to Symbol("Dash", R.drawable.ic_coin_dash),
+    "MHC" to Symbol("#MetaHash", R.drawable.ic_coin_mhc, "http://venus.mhscan.com/?page=tx&id="),
+    "BTT" to Symbol("BitTorrent", R.drawable.ic_coin_btt, "https://tronscan.org/#/transaction/"),
+    "TRX" to Symbol("Tron", R.drawable.ic_coin_trx, "https://tronscan.org/#/transaction/"),
+    "DASH" to Symbol("Dash", R.drawable.ic_coin_dash, "https://live.blockcypher.com/dash/tx/"),
     "QASH" to Symbol("QASH", R.drawable.ic_coin_qash),
-    "GUSD" to Symbol("Gemini Dollar", R.drawable.ic_coin_gemini)
+    "GUSD" to Symbol("Gemini Dollar", R.drawable.ic_coin_gemini, "https://etherscan.io/tx/")
 )
 
 fun Symbol?.orDefault() = this ?: Symbol("")

@@ -144,6 +144,14 @@
         <item name="android:layout_height">32dp</item>
     </style>
 
+    <style name="Direct.Timer">
+        <item name="android:background">@drawable/shape_bg_timer</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/cexd_textfield_text</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
     <style name="Direct.SecondaryButton">
         <item name="android:background">@drawable/shape_bg_btn_secondary</item>
         <item name="android:textSize">14sp</item>
@@ -200,6 +208,18 @@
         <item name="android:textColor">@color/cexd_textfield_text</item>
         <item name="android:textColorHint">@color/cexd_textfield_text</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Direct.ReturnLabel">
+        <item name="android:background">@color/cexd_white</item>
+    </style>
+
+    <style name="Direct.EditOrder">
+        <item name="android:background">@drawable/shape_bg_textfield</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="Direct.StepLabel">

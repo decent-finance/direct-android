@@ -46,7 +46,8 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
                         val response = it.response()!!.errorBody()!!.string()
                         try {
                             val type = object : TypeToken<ApiResponse<Void>>() {}.type
-                            val body = Direct.directComponent.gson().fromJson<ApiResponse<Void>>(response, type)
+                            val body = Direct.directComponent.gson()
+                                .fromJson<ApiResponse<Void>>(response, type)
                             postValue(Failure(it.code(), body.message ?: ""))
                         } catch (e: Exception) {
                             postValue(Failure(0, it.message ?: ""))
@@ -59,4 +60,3 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
         }
     }
 }
-

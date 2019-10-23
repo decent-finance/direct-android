@@ -13,9 +13,9 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
         classpath 'com.google.gms:google-services:4.3.2'
-        classpath 'io.fabric.tools:gradle:1.31.1'
+        classpath 'io.fabric.tools:gradle:1.31.2'
         classpath 'com.cmgapps:gradle-licenses-plugin:1.3.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
@@ -26,7 +26,7 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version '1.0.1'
+    id "io.gitlab.arturbosch.detekt" version '1.1.1'
 }
 
 allprojects {
@@ -34,7 +34,6 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
-        maven { url "https://dl.bintray.com/shopify/shopify-android" }
     }
     apply from: "$rootDir/detekt.gradle"
 }

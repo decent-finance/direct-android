@@ -29,7 +29,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
@@ -136,9 +136,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:onClick="@{() -> model.copyTxId(model.txId)}"
+                            android:onClick="@{() -> model.openTxDetails(model.txId)}"
                             android:text="@{model.txId}"
                             android:visibility="@{(model.txId != null &amp;&amp; !model.txId.isEmpty()) ? View.VISIBLE: View.GONE}"
+                            app:onLongClick="@{() -> model.copyTxId(model.txId)}"
                             tools:text="abc123"
                             tools:visibility="gone" />
                     </FrameLayout>

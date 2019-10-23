@@ -19,27 +19,24 @@ package com.cexdirect.lib.verification.receipt
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
+import com.cexdirect.lib.buy.OrderData
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.FragmentReceiptBinding
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
-import javax.inject.Inject
 
 class ReceiptFragment : BaseVerificationFragment() {
-
-    @Inject
-    lateinit var stickyViewEvent: StickyViewEvent
 
     private lateinit var binding: FragmentReceiptBinding
 
@@ -57,24 +54,29 @@ class ReceiptFragment : BaseVerificationFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Direct.identitySubcomponent?.inject(this)
         binding.model = model
 
         model.apply {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@ReceiptFragment, socketObserver(
-                onOk = { model.updatePaymentInfo(it!!) },
+                onOk = { model.updatePaymentInfo(it) },
                 onFail = { purchaseFailed(it.message) }
             ))
             buyMoreEvent.observe(this@ReceiptFragment, Observer {
-                context!!.startBuyActivity()
+                context!!.startBuyActivity(
+                    OrderData(
+                        model.orderAmounts.selectedFiatAmount,
+                        model.orderAmounts.selectedFiatCurrency,
+                        model.orderAmounts.selectedCryptoCurrency
+                    )
+                )
                 finish()
             })
             txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
                 this@ReceiptFragment.copyTxId(txId)
             })
+            txIdOpenEvent.observe(this@ReceiptFragment, Observer { openTxDetailsInBrowser(it) })
         }
-        stickyViewEvent.value = View.NO_ID
     }
 
     private fun copyTxId(txId: String?) {
@@ -83,6 +85,13 @@ class ReceiptFragment : BaseVerificationFragment() {
                 ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
             toast(getString(R.string.cexd_order_id_copied))
         }
+    }
+
+    private fun openTxDetailsInBrowser(url: String) {
+        Intent(Intent.ACTION_VIEW).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            data = Uri.parse(url)
+        }.let { it.resolveActivity(requireContext().packageManager)?.run { startActivity(it) } }
     }
 
     override fun onDestroyView() {

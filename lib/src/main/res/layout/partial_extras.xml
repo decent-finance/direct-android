@@ -38,6 +38,7 @@
             android:visibility="@{model.orderStep == OrderStep.PAYMENT_EXTRA ? View.VISIBLE : View.GONE}">
 
             <TextView
+                android:id="@+id/peExtrasTitle"
                 style="@style/Direct.IdentityTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,8 +70,8 @@
                 android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 app:additionalFields="@{model.additionalFields}"
-                app:validation="@{model.validationMap}"
-                app:input="@={model.extras}" />
+                app:input="@={model.extras}"
+                app:validation="@{model.validationMap}" />
 
         </LinearLayout>
 

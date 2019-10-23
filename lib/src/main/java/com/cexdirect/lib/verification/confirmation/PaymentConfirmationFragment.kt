@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
@@ -30,15 +31,11 @@ import com.cexdirect.lib.error.verificationError
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.mcxiaoke.koi.ext.finish
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
 class PaymentConfirmationFragment : BaseVerificationFragment() {
-
-    @Inject
-    lateinit var stickyViewEvent: StickyViewEvent
 
     @Inject
     lateinit var webViewClient: Client
@@ -49,10 +46,12 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) =
-        FragmentPaymentConfirmationBinding.inflate(inflater, container, false).apply {
-            binding = this
-        }.root
+    ) = DataBindingUtil.inflate<FragmentPaymentConfirmationBinding>(
+        inflater,
+        R.layout.fragment_payment_confirmation,
+        container,
+        false
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,7 +62,7 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(this@PaymentConfirmationFragment, socketObserver(
                 onOk = {
-                    updateConfirmationStatus(it!!) {
+                    updateConfirmationStatus(it) {
                         context!!.verificationError("Rejected")
                         finish()
                     }
@@ -71,25 +70,30 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 onFail = { purchaseFailed(it.message) }
             ))
             resendCodeEvent.observe(this@PaymentConfirmationFragment, Observer {
-                requestCheckCode()
+                requestNewCheckCode()
             })
             editEmailEvent.observe(this@PaymentConfirmationFragment, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCode.observe(this@PaymentConfirmationFragment, restObserver(
-                onOk = { /* Don't do anything here, because order status will be updated via WS */ },
-                onFail = {
-                    if (it.code == CODE_BAD_REQUEST) {
-                        toast(R.string.cexd_wrong_code)
-                    } else {
-                        purchaseFailed(it.message)
+            checkCodeResult.observe(
+                this@PaymentConfirmationFragment, restObserver(
+                    onOk = { /* Don't do anything here, because order status will be updated via WS */ },
+                    onFail = {
+                        if (it.code == CODE_BAD_REQUEST) {
+                            toast(R.string.cexd_wrong_code)
+                        } else {
+                            purchaseFailed(it.message)
+                        }
                     }
-                }
-            ))
-            resendCheckCode.observe(this@PaymentConfirmationFragment, restObserver(
-                onOk = { toast(R.string.cexd_check_mail) },
-                onFail = { purchaseFailed(it.message) }
-            ))
+                ))
+            newCheckCode.observe(
+                this@PaymentConfirmationFragment, restObserver(
+                    onOk = {
+                        toast(R.string.cexd_check_mail)
+                        restartResendTimer()
+                    },
+                    onFail = { purchaseFailed(it.message) }
+                ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
@@ -98,8 +102,6 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                 onFail = { purchaseFailed(it.message) }
             ))
         }.let { binding.model = it }
-
-        stickyViewEvent.value = R.id.fpcSubmit
     }
 
     @SuppressLint("SetJavaScriptEnabled")

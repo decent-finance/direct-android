@@ -118,7 +118,7 @@ class BuyActivityViewModelTest {
             precisionList = givenPrecisions()
         }
 
-        model.initRates(givenRates()) { }
+        model.initRates(givenRates(), null, null, null) { }
 
         assertThat(model.amount.rates).containsOnlyElementsOf(givenRates())
         assertThat(model.amount.fiatAmount).isEqualTo("250")

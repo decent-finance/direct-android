@@ -41,7 +41,6 @@ import com.cexdirect.lib.network.models.OrderInfoData
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
-import com.cexdirect.lib.verification.events.StickyViewEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
 import com.cexdirect.lib.verification.identity.util.*
@@ -63,16 +62,14 @@ class IdentityFragment : BaseVerificationFragment() {
     @Inject
     lateinit var event: SourceClickEvent
 
-    @Inject
-    lateinit var stickyViewEvent: StickyViewEvent
-
     private lateinit var binding: FragmentIdentityBinding
 
     private var currentPhotoPath: String = ""
 
     private val paymentDataObserver = restObserver<OrderInfoData>(
         onOk = { /* Order status will be updated via WS connection */ },
-        onFail = { purchaseFailed(it.message) }
+        onFail = { purchaseFailed(it.message) },
+        final = { /* do not hide loader here */ }
     )
 
     override fun onCreateView(
@@ -115,7 +112,7 @@ class IdentityFragment : BaseVerificationFragment() {
             nextClickEvent.observe(this@IdentityFragment, Observer { handleNextClick() })
             basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
             extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}))
+            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}, final = {}))
             createOrder.observe(this@IdentityFragment, restObserver(
                 onOk = {
                     model.updateOrderId(it!!.orderId)
@@ -150,7 +147,6 @@ class IdentityFragment : BaseVerificationFragment() {
                 final = {}
             ))
         }.let { binding.model = it }
-        stickyViewEvent.postValue(R.id.fiNext)
     }
 
     private fun setupInputs() {
@@ -179,12 +175,19 @@ class IdentityFragment : BaseVerificationFragment() {
         model.subscribeToOrderInfo().observe(this, socketObserver(
             onOk = {
                 model.updateOrderStatus(
-                    it!!,
+                    it,
                     {
                         context!!.verificationError("Rejected")
                         finish()
                     },
-                    { hideLoader() }
+                    { hideLoader() },
+                    {
+                        // FIXME: A workaround (dirty hack) to request scroll after view is laid out
+                        binding.fiExtras.peExtrasTitle.postDelayed(
+                            { model.requestScrollTo(binding.fiExtras.peExtrasTitle.id) },
+                            1000
+                        )
+                    }
                 )
             },
             onFail = { purchaseFailed(it.message) }
@@ -274,7 +277,7 @@ class IdentityFragment : BaseVerificationFragment() {
                             {
                                 when (it) {
                                     FailType.SIZE_INVALID -> model.setImageSizeInvalid()
-                                    FailType.UNSUPPORTED_FORMAT -> toast(R.string.cexd_file_unsupported)
+                                    FailType.UNSUPPORTED_FORMAT -> model.setUnsupportedFormat()
                                 }
                             }
                         )

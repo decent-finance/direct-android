@@ -130,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:text="@={model.confirmationCode}"
+                        android:text="@={model.checkCode.code}"
                         tools:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -160,13 +160,32 @@
                     android:onClick="@{() -> model.editEmail()}"
                     android:text="@string/cexd_edit_email" />
 
-                <TextView
-                    style="@style/Direct.SecondaryButton"
+                <FrameLayout
                     android:layout_width="150dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="5dp"
-                    android:onClick="@{() -> model.resendCheckCode()}"
-                    android:text="@string/cexd_code_not_received" />
+                    android:animateLayoutChanges="true">
+
+                    <TextView
+                        android:id="@+id/fpcTimer"
+                        style="@style/Direct.Timer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@{@string/cexd_remaining(model.checkCode.remaining)}"
+                        android:visibility="@{model.checkCode.canResend ? View.GONE : View.VISIBLE}"
+                        tools:text="1:59"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        style="@style/Direct.SecondaryButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:onClick="@{() -> model.resendCheckCode()}"
+                        android:text="@string/cexd_code_not_received"
+                        android:visibility="@{model.checkCode.canResend ? View.VISIBLE : View.GONE}"
+                        tools:visibility="gone" />
+
+                </FrameLayout>
 
             </LinearLayout>
 

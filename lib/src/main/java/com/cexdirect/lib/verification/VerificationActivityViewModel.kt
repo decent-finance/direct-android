@@ -16,11 +16,11 @@
 
 package com.cexdirect.lib.verification
 
+import androidx.annotation.VisibleForTesting
 import androidx.databinding.*
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.PagerAdapter
 import com.cexdirect.lib.*
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
@@ -29,6 +29,8 @@ import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.util.symbolMap
+import com.cexdirect.lib.verification.confirmation.CheckCode
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
@@ -48,7 +50,7 @@ class VerificationActivityViewModel(
 
     // --- Events --- //
     val nextClickEvent = VoidLiveEvent()
-    val nextClickEvent2 = VoidLiveEvent()
+    val stepChangeEvent = VoidLiveEvent()
     val returnEvent = VoidLiveEvent()
     val copyEvent = StringLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
@@ -62,13 +64,16 @@ class VerificationActivityViewModel(
     val editEmailEvent = VoidLiveEvent()
     val buyMoreEvent = VoidLiveEvent()
     val txIdCopyEvent = StringLiveEvent()
+    val txIdOpenEvent = StringLiveEvent()
     val scanQrEvent = VoidLiveEvent()
+    val editClickEvent = VoidLiveEvent()
+    val scrollRequestEvent = IntLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()
     val orderId = ObservableField("")
     val currentStep = ObservableInt(1)
-    val pagerAdapter = ObservableField<PagerAdapter>(StepsPagerAdapter())
+    val pagerAdapter = ObservableField(StepsPagerAdapter(stringProvider, editClickEvent))
 
     val additionalFields = ObservableField<Map<String, Additional>>(emptyMap())
 
@@ -97,7 +102,7 @@ class VerificationActivityViewModel(
     val countrySearch = ObservableField("")
     val showCountrySearch = ObservableBoolean(false)
 
-    val confirmationCode = ObservableField("")
+    val checkCode = CheckCode()
     val _3dsData = com.cexdirect.lib.verification.confirmation._3dsData()
 
     val paymentInfo = ObservableField<PaymentInfo>()
@@ -212,10 +217,10 @@ class VerificationActivityViewModel(
         orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
     }
 
-    val resendCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
+    val newCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
 
-    val checkCode = orderApi.checkCode(this) {
-        CheckCodeData(orderId.get()!!, confirmationCode.get()!!)
+    val checkCodeResult = orderApi.checkCode(this) {
+        CheckCodeData(orderId.get()!!, checkCode.code)
     }
     // --- Requests --- //
 
@@ -254,13 +259,17 @@ class VerificationActivityViewModel(
         })
     }
 
-    fun returnToStart() {
-        returnEvent.call()
+    fun setOrderAmounts(crypto: String, cryptoAmount: String, fiat: String, fiatAmount: String) {
+        orderAmounts.selectedCryptoCurrency = crypto
+        orderAmounts.selectedCryptoAmount = cryptoAmount
+        orderAmounts.selectedFiatCurrency = fiat
+        orderAmounts.selectedFiatAmount = fiatAmount
+        pagerAdapter.get()!!.setOrderAmounts(cryptoAmount, crypto, fiatAmount, fiat)
     }
 
-    fun next() {
+    private fun changeOrderStep() {
         if (currentStep.get() < 3) {
-            nextClickEvent2.call()
+            stepChangeEvent.call()
         } else {
             returnEvent.call()
         }
@@ -443,7 +452,8 @@ class VerificationActivityViewModel(
     fun updateOrderStatus(
         data: OrderInfoData,
         rejectAction: () -> Unit,
-        hideAction: () -> Unit
+        hideAction: () -> Unit,
+        scrollAction: () -> Unit
     ) {
         when (data.orderStatus) {
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
@@ -463,14 +473,15 @@ class VerificationActivityViewModel(
                             paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
                         }
                     hideAction.invoke()
+                    scrollAction.invoke()
                 }
             }
             OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
             OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
+                    changeOrderStep()
                     hideAction.invoke()
-                    next()
                 }
             else -> {
             }
@@ -526,11 +537,11 @@ class VerificationActivityViewModel(
     }
 
     fun submitCode() {
-        checkCode.execute()
+        checkCodeResult.execute()
     }
 
-    fun requestCheckCode() {
-        resendCheckCode.execute()
+    fun requestNewCheckCode() {
+        newCheckCode.execute()
     }
 
     fun updateUserEmail(email: String) {
@@ -553,7 +564,8 @@ class VerificationActivityViewModel(
         }
     }
 
-    private fun askFor3ds(threeDS: _3Ds) {
+    @VisibleForTesting
+    fun askFor3ds(threeDS: _3Ds) {
         orderStep.set(OrderStep.TDS)
         _3dsData.apply {
             _3dsUrl = threeDS.url
@@ -562,13 +574,19 @@ class VerificationActivityViewModel(
         }
     }
 
-    private fun askForEmailConfirmation() {
+    @VisibleForTesting
+    fun askForEmailConfirmation() {
         orderStep.set(OrderStep.EMAIL_CONFIRMATION)
+        checkCode.startTimer()
+    }
+
+    fun restartResendTimer() {
+        checkCode.restartTimer()
     }
 
     private fun confirmOrder() {
         orderStep.set(OrderStep.CONFIRMED)
-        next()
+        changeOrderStep()
     }
 
     fun buyMore() {
@@ -583,6 +601,7 @@ class VerificationActivityViewModel(
             OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
+                messenger.removeOrderInfoSubscription()
             }
             else -> { // do nothing
             }
@@ -591,6 +610,20 @@ class VerificationActivityViewModel(
 
     fun copyTxId(txId: String) {
         txIdCopyEvent.postValue(txId)
+    }
+
+    fun openTxDetails(txId: String) {
+        symbolMap.getValue(orderAmounts.selectedCryptoCurrency).transactionBrowserAddress?.let {
+            txIdOpenEvent.postValue("$it$txId")
+        }
+    }
+
+    fun setUnsupportedFormat() {
+        userDocs.setUnsupportedFormat()
+    }
+
+    fun requestScrollTo(coordinate: Int) {
+        scrollRequestEvent.postValue(coordinate)
     }
 
     class Factory(

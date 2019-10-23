@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,26 +14,24 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.util
+package com.cexdirect.lib.verification.confirmation
 
-import com.cexdirect.lib.network.models.Precision
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
-class FormatAmountTest(
-    private val given: Double,
-    private val expected: String,
-    private val precision: Precision
-) {
+class CheckCodeTimeTest(private val given: Long, private val expected: String) {
 
     @Test
-    fun formatAmount() {
-        val actual = given.formatAmount(precision)
+    fun formatTime() {
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
+        checkCode.timer.onTick(given)
 
-        assertThat(actual).isNotBlank().isEqualTo(expected)
+        assertThat(checkCode.remaining).isEqualTo(expected)
     }
 
     companion object {
@@ -41,10 +39,10 @@ class FormatAmountTest(
         @JvmStatic
         @Parameterized.Parameters(name = "{index}: Format {0} as {1}")
         fun getData() = arrayListOf(
-            arrayOf(1.099999, "1.09", Precision("", "BUZZ", 2, 2, "trunk", "", "")),
-            arrayOf(1.134576, "1.13", Precision("", "BUZZ", 2, 2, "trunk", "", "")),
-            arrayOf(0.05679207804, "0.0567", Precision("", "BTC", 4, 8, "trunk", "", "")),
-            arrayOf(0.05673207804, "0.0567", Precision("", "BTC", 4, 8, "trunk", "", ""))
+            arrayOf(2 * 60 * 1000L, "2:00"),
+            arrayOf(60 * 1000L, "1:00"),
+            arrayOf(30 * 1000L, "0:30"),
+            arrayOf(0L, "0:00")
         )
     }
 }

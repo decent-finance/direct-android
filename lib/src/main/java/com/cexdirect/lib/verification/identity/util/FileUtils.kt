@@ -49,7 +49,7 @@ fun convertAndSet(
     val resolver = context.contentResolver
 
     val mimeType = resolver.getType(uri) ?: ""
-    if (!mimeType.startsWith("image/")) {
+    if (!mimeType.startsWith("image/") or mimeType.contentEquals("image/tiff")) {
         failure.invoke(FailType.UNSUPPORTED_FORMAT)
         return
     }

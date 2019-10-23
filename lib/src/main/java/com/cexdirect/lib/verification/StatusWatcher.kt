@@ -25,18 +25,24 @@ class StatusWatcher(initial: OrderStatus = OrderStatus.INCOMPLETE) {
     private val currentStatus = AtomicReference(initial)
     private val screenChanged = AtomicBoolean(false)
 
+    private val paymentExtrasSent = AtomicBoolean(false)
+
     fun updateAndDo(newStatus: OrderStatus, updateAction: () -> Unit) {
-        if (isUpdatedStatus(newStatus) or screenWasChanged(newStatus)) {
+        if (isStatusUpdated(newStatus) or screenWasChanged(newStatus)) {
+            // To avoid repeating PSS-related requests after processing wasn't successful
+            // we do this check and disallow returning to previous state
+            if (newStatus == OrderStatus.PSS_READY && !paymentExtrasSent.compareAndSet(false, true)) return
+
             currentStatus.set(newStatus)
             updateAction.invoke()
         }
     }
 
     private fun screenWasChanged(newStatus: OrderStatus) =
-        currentStatus.get() == newStatus && screenChanged.getAndSet(false)
+            currentStatus.get() == newStatus && screenChanged.getAndSet(false)
 
-    private fun isUpdatedStatus(newStatus: OrderStatus) =
-        currentStatus.get() != newStatus
+    private fun isStatusUpdated(newStatus: OrderStatus) =
+            currentStatus.get() != newStatus
 
     fun setScreenChanged() {
         screenChanged.compareAndSet(false, true)

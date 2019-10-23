@@ -66,8 +66,8 @@ class BuyActivity : BaseActivity() {
                 if (it !is Loading) {
                     model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
                         Direct.setPendingAmounts(
-                                crypto = MonetaryData(cryptoAmount, cryptoCurrency),
-                                fiat = MonetaryData(fiatAmount, fiatCurrency)
+                            crypto = MonetaryData(cryptoAmount, cryptoCurrency),
+                            fiat = MonetaryData(fiatAmount, fiatCurrency)
                         )
                     }
                     val intent = with(Intent(this@BuyActivity, VerificationActivity::class.java)) {
@@ -88,7 +88,12 @@ class BuyActivity : BaseActivity() {
             currencies.observe(this@BuyActivity, Observer {
                 when (it) {
                     is Loading -> showLoader()
-                    is Success -> model.initRates(it.data!!) {
+                    is Success -> model.initRates(
+                        it.data!!,
+                        intent.getStringExtra("lastFiatAmount"),
+                        intent.getStringExtra("lastFiatCurrency"),
+                        intent.getStringExtra("lastCryptoCurrency")
+                    ) {
                         hideLoader()
                         subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
                     }
@@ -100,10 +105,18 @@ class BuyActivity : BaseActivity() {
                 model.amount.fiatAmount = it
             })
             switchBaseCurrencyEvent.observe(this@BuyActivity, Observer {
-                model.filterBaseCurrencies { showCurrencySelectionDialog(PairSelectionBottomSheetDialog.TYPE_BASE) }
+                model.filterBaseCurrencies {
+                    showCurrencySelectionDialog(
+                        PairSelectionBottomSheetDialog.TYPE_BASE
+                    )
+                }
             })
             switchQuoteCurrencyEvent.observe(this@BuyActivity, Observer {
-                model.filterQuoteCurrencies { showCurrencySelectionDialog(PairSelectionBottomSheetDialog.TYPE_QUOTE) }
+                model.filterQuoteCurrencies {
+                    showCurrencySelectionDialog(
+                        PairSelectionBottomSheetDialog.TYPE_QUOTE
+                    )
+                }
             })
         }.let {
             binding.model = it
@@ -117,6 +130,20 @@ class BuyActivity : BaseActivity() {
     }
 }
 
-fun Context.startBuyActivity() {
-    startActivity(Intent(this, BuyActivity::class.java))
+fun Context.startBuyActivity(data: OrderData? = null) {
+    val intent = Intent(this, BuyActivity::class.java)
+    data?.let { (fiatAmount, fiatCurrency, cryptoCurrency) ->
+        intent.apply {
+            putExtra("lastFiatAmount", fiatAmount)
+            putExtra("lastFiatCurrency", fiatCurrency)
+            putExtra("lastCryptoCurrency", cryptoCurrency)
+        }
+    }
+    startActivity(intent)
 }
+
+data class OrderData(
+    val fiatAmount: String,
+    val fiatCurrency: String,
+    val cryptoCurrency: String
+)

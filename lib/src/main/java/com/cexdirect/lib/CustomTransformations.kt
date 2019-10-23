@@ -14,8 +14,21 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.verification.events
+package com.cexdirect.lib
 
-import com.cexdirect.lib.SingleLiveEvent
+import androidx.arch.core.util.Function
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Transformations
 
-class StickyViewEvent : SingleLiveEvent<Int>()
+fun <X> LiveData<X>.filter(predicate: (value: X) -> Boolean): LiveData<X> =
+    MediatorLiveData<X>().apply {
+        addSource(this@filter) {
+            if (predicate.invoke(it)) {
+                postValue(it)
+            }
+        }
+    }
+
+fun <X, Y> LiveData<X>.map(mapTransformation: Function<X, Y>): LiveData<Y> =
+    Transformations.map(this, mapTransformation)

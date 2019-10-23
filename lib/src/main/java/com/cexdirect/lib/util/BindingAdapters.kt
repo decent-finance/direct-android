@@ -16,8 +16,6 @@
 
 package com.cexdirect.lib.util
 
-import android.os.Handler
-import android.os.Looper
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -28,22 +26,24 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.TradeInputFilter
+import com.cexdirect.lib.databinding.ItemReturnBinding
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.showTerms
+import com.cexdirect.lib.verification.OrderStep
+import com.cexdirect.lib.verification.StepsPagerAdapter
 import com.cexdirect.lib.verification.confirmation._3dsData
 import com.cexdirect.lib.views.SuperDuperViewPager
+import com.google.android.material.textfield.TextInputLayout
 import ru.noties.markwon.Markwon
 import java.net.URLEncoder
-
-const val FIRE_ON_EXIT_DELAY = 200L
 
 @BindingAdapter("showSoftInputOnFocus")
 fun EditText.makeShowSoftInput(show: Boolean) {
@@ -62,28 +62,50 @@ fun EditText.setFocusListener(onFocused: Runnable?, onUnfocused: Runnable?) {
     }
 }
 
-@BindingAdapter("currentPosition", "pagerAdapter", requireAll = true)
-fun SuperDuperViewPager.applyAdapter(position: Int, adapter: PagerAdapter) {
-    setAdapter(adapter)
-    currentPos = position
-    setCurrentItem(position, false)
+@BindingAdapter("offscreenPages")
+fun ViewPager.applyOffscreenPageLimit(limit: Int) {
+    offscreenPageLimit = limit
 }
 
-@BindingAdapter("onExit")
-fun SuperDuperViewPager.applyPageListener(r: Runnable) {
-    addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-        override fun onPageSelected(position: Int) {
-            if (position == 0) {
-                Handler(Looper.getMainLooper()).postDelayed(r, FIRE_ON_EXIT_DELAY)
+@BindingAdapter("currentPosition", "pagerAdapter", "orderStep", requireAll = true)
+fun SuperDuperViewPager.applyAdapter(position: Int, adapter: StepsPagerAdapter, step: OrderStep) {
+    if (adapter != getAdapter()) {
+        setAdapter(adapter)
+        addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                if (position == 0) {
+                    when (orderStep) {
+                        OrderStep.LOCATION_EMAIL, OrderStep.PAYMENT_BASE -> {
+                            // nop
+                        }
+                        else -> setCurrentItem(currentPos, true)
+                    }
+                    return
+                }
+                if (position > currentPos) {
+                    setCurrentItem(currentPos, true)
+                } else if (position < currentPos) {
+                    setCurrentItem(currentPos, true)
+                }
             }
-            if (position > currentPos) {
-                setCurrentItem(currentPos, true)
-            } else if (position in 2 until currentPos) {
-                setCurrentItem(currentPos, true)
-            }
+        })
+    }
+    if (currentPos != position) {
+        currentPos = position
+        setCurrentItem(position, false)
+    }
+    if (orderStep != step) {
+        orderStep = step
+        val binding = DataBindingUtil.findBinding<ItemReturnBinding>(
+            findViewWithTag<View>("return")
+        ) ?: error("Could not find binding. Child count: $childCount")
+        when (orderStep) {
+            OrderStep.LOCATION_EMAIL, OrderStep.PAYMENT_BASE -> binding.editVisible = true
+            else -> binding.editVisible = false
         }
-    })
+    }
 }
+
 
 @BindingAdapter("pic")
 fun ImageView.applyPic(id: Int) {
@@ -131,23 +153,23 @@ fun EditText.setCurrentText(text: String?, filter: TradeInputFilter?) {
 @BindingAdapter("_3dsData")
 fun WebView.apply3DsData(_3dsData: _3dsData?) {
     _3dsData?.takeIf { it.hasData() }
-            ?._3dsExtras
-            ?.apply { this["TermUrl"] = _3dsData.termUrl }
-            ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
-            ?.asIterable()
-            ?.joinToString("&") { (key, value) -> "$key=$value" }
-            ?.toByteArray()
-            ?.let { this.postUrl(_3dsData._3dsUrl, it) }
+        ?._3dsExtras
+        ?.apply { this["TermUrl"] = _3dsData.termUrl }
+        ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
+        ?.asIterable()
+        ?.joinToString("&") { (key, value) -> "$key=$value" }
+        ?.toByteArray()
+        ?.let { this.postUrl(_3dsData._3dsUrl, it) }
 }
 
 @BindingAdapter("content")
 fun TextView.loadContent(content: String) {
     Markwon.create(context)
-            .let {
-                val node = it.parse(content)
-                val spanned = it.render(node)
-                it.setParsedMarkdown(this, spanned)
-            }
+        .let {
+            val node = it.parse(content)
+            val spanned = it.render(node)
+            it.setParsedMarkdown(this, spanned)
+        }
 }
 
 @BindingAdapter("coinIcon")
@@ -166,10 +188,10 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
             }
         }
         spannableString.setSpan(
-                clickableSpan,
-                0,
-                spannableString.length,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            clickableSpan,
+            0,
+            spannableString.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
         )
         acc.apply {
             append(" ")
@@ -187,4 +209,17 @@ fun TextView.applyLegalText(rules: Set<RuleData>) {
 @BindingAdapter("android:imeOptions")
 fun EditText.applyImeOption(options: Int) {
     imeOptions = options
+}
+
+@BindingAdapter("onLongClick")
+fun View.applyLongClickListener(runnable: Runnable) {
+    setOnLongClickListener {
+        runnable.run()
+        true
+    }
+}
+
+@BindingAdapter("android:hint")
+fun TextInputLayout.applyHint(hint: String?) {
+    this.hint = hint
 }

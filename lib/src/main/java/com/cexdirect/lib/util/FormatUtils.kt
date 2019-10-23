@@ -27,24 +27,12 @@ const val BIN_SYMBOLS = 4
 fun Double.formatAmount(precision: Precision) =
     NumberFormat.getNumberInstance(Locale.US).apply {
         when (precision.visibleRoundRule) {
-            "bigger" -> {
-                roundingMode = RoundingMode.HALF_UP
-                minimumFractionDigits = precision.visiblePrecision
-                maximumFractionDigits = precision.visiblePrecision
-            }
-            "smaller" -> {
-                // TODO set proper rounding mode?
-                roundingMode = RoundingMode.DOWN
-                minimumFractionDigits = precision.visiblePrecision
-                maximumFractionDigits = precision.visiblePrecision
-            }
             "trunk" -> {
                 roundingMode = RoundingMode.DOWN
                 minimumFractionDigits = precision.visiblePrecision
                 maximumFractionDigits = precision.visiblePrecision
             }
-            "dynamic" -> {
-            }
+            else -> error("Unsupported rule ${precision.visibleRoundRule}")
         }
     }.format(this).replace(",", "")
 

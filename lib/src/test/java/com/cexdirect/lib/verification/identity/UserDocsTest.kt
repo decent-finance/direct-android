@@ -127,8 +127,8 @@ class UserDocsTest {
         assertThat(userDocs)
             .hasFieldOrPropertyWithValue("documentTypeSelected", true)
             .hasFieldOrPropertyWithValue("documentType", DocumentType.ID_CARD)
-                .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_id_front)
-                .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_id_back)
+            .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_id_front)
+            .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_id_back)
         verify(stringProvider, atMost(2)).provideString(eq(R.string.cexd_take_pic_id))
     }
 
@@ -154,8 +154,8 @@ class UserDocsTest {
         assertThat(userDocs)
             .hasFieldOrPropertyWithValue("documentTypeSelected", true)
             .hasFieldOrPropertyWithValue("documentType", DocumentType.DRIVER_LICENCE)
-                .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_license_front)
-                .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_license_back)
+            .hasFieldOrPropertyWithValue("documentImage", R.drawable.ic_pic_license_front)
+            .hasFieldOrPropertyWithValue("documentImageBack", R.drawable.ic_pic_license_back)
         verify(stringProvider).provideString(eq(R.string.cexd_take_pic_licence))
     }
 
@@ -171,6 +171,7 @@ class UserDocsTest {
 
     @Test
     fun setSelfieStatusToInvalidAfterForceValidateWhenEmpty() {
+        whenever(stringProvider.provideString(anyInt())).thenReturn("")
         userDocs.documentTypeSelected = true
         userDocs.requiredImages = Images(false, true)
 
@@ -199,5 +200,41 @@ class UserDocsTest {
         userDocs.forceValidate()
 
         assertThat(userDocs.selfieStatus).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun setDocFrontStatusToInvalidWhenUnsupportedFormat() {
+        whenever(stringProvider.provideString(eq(R.string.cexd_wrong_format))).thenReturn("Test")
+        userDocs.currentPhotoType = PhotoType.ID
+
+        userDocs.setUnsupportedFormat()
+
+        assertThat(userDocs)
+            .hasFieldOrPropertyWithValue("documentFrontErrorText", "Test")
+            .hasFieldOrPropertyWithValue("documentFrontStatus", FieldStatus.INVALID)
+    }
+
+    @Test
+    fun setDocBackStatusToInvalidWhenUnsupportedFormat() {
+        whenever(stringProvider.provideString(eq(R.string.cexd_wrong_format))).thenReturn("Test")
+        userDocs.currentPhotoType = PhotoType.ID_BACK
+
+        userDocs.setUnsupportedFormat()
+
+        assertThat(userDocs)
+            .hasFieldOrPropertyWithValue("documentBackErrorText", "Test")
+            .hasFieldOrPropertyWithValue("documentBackStatus", FieldStatus.INVALID)
+    }
+
+    @Test
+    fun setSelfieStatusToInvalidWhenUnsupportedFormat() {
+        whenever(stringProvider.provideString(eq(R.string.cexd_wrong_format))).thenReturn("Test")
+        userDocs.currentPhotoType = PhotoType.SELFIE
+
+        userDocs.setUnsupportedFormat()
+
+        assertThat(userDocs)
+            .hasFieldOrPropertyWithValue("selfieErrorText", "Test")
+            .hasFieldOrPropertyWithValue("selfieStatus", FieldStatus.INVALID)
     }
 }

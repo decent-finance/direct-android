@@ -153,9 +153,17 @@ class BuyActivityViewModel(
         action.invoke()
     }
 
-    fun initRates(data: List<ExchangeRate>, action: () -> Unit) {
+    fun initRates(
+        data: List<ExchangeRate>,
+        lastFiatAmount: String?,
+        lastFiatCurrency: String?,
+        lastCryptoCurrency: String?,
+        action: () -> Unit
+    ) {
         amount.rates = data
-        amount.fiatAmount = "250" // for now, this value is hardcoded
+        amount.fiatAmount = lastFiatAmount ?: "250" // for now, this value is hardcoded
+        lastFiatCurrency?.let { amount.selectedFiatCurrency = it }
+        lastCryptoCurrency?.let { amount.selectedCryptoCurrency = it }
         amount.inputMode = InputMode.FIAT
         dataLoaded.set(true)
         action.invoke()

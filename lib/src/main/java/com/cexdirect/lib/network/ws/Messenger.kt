@@ -16,27 +16,28 @@
 
 package com.cexdirect.lib.network.ws
 
+import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.filter
+import com.cexdirect.lib.map
 import com.cexdirect.lib.network.Resource
-import com.cexdirect.lib.network.models.ExchangeRate
-import com.cexdirect.lib.network.models.OrderInfoBody
-import com.cexdirect.lib.network.models.OrderInfoData
+import com.cexdirect.lib.network.models.*
 import com.google.gson.Gson
-import com.shopify.livedataktx.filter
-import com.shopify.livedataktx.map
 
 @OpenForTesting
 class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
 
-    fun subscribeToOrderInfo(): LiveData<Resource<OrderInfoData?>> =
+    fun subscribeToOrderInfo(): LiveData<Resource<OrderInfoData>> =
         cexdSocket.run {
             sendMessage { OrderInfoSubscription(OrderInfoBody(), "orderInfo") }
             parsedMessage
                 .filter { it.first == "orderInfo" }
-                .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
-                .map { mapResponse(it) }
+                .map(Function<Pair<String, String>, OrderInfoResponse> {
+                    gson.fromJson(it.second, OrderInfoMessage::class.java).data
+                })
+                .map(Function { mapResponse(it) })
         }
 
     fun removeOrderInfoSubscription() {
@@ -53,8 +54,10 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
             sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
             parsedMessage
                 .filter { it.first == "currencies" }
-                .map { gson.fromJson(it.second, ExchangeRatesMessage::class.java).data }
-                .map { mapResponse(it) }
+                .map(Function<Pair<String, String>, ExchangeRatesResponse> {
+                    gson.fromJson(it.second, ExchangeRatesMessage::class.java).data
+                })
+                .map(Function { mapResponse(it) })
         }
 
     fun removeExchangesSubscription() {

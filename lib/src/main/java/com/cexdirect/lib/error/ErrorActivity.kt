@@ -57,7 +57,7 @@ class ErrorActivity : BaseActivity() {
         model.userEmail.set(Direct.userEmail)
         model.tryAgainEvent.observe(this, Observer {
             finish()
-            startBuyActivity()
+            startBuyActivity(data = null)
         })
 
         binding.model = model
