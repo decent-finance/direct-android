@@ -67,6 +67,7 @@ class VerificationActivityViewModel(
     val txIdOpenEvent = StringLiveEvent()
     val scanQrEvent = VoidLiveEvent()
     val editClickEvent = VoidLiveEvent()
+    val scrollRequestEvent = IntLiveEvent()
     // --- Events --- //
 
     val orderAmounts = OrderAmounts()
@@ -451,7 +452,8 @@ class VerificationActivityViewModel(
     fun updateOrderStatus(
         data: OrderInfoData,
         rejectAction: () -> Unit,
-        hideAction: () -> Unit
+        hideAction: () -> Unit,
+        scrollAction: () -> Unit
     ) {
         when (data.orderStatus) {
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
@@ -471,6 +473,7 @@ class VerificationActivityViewModel(
                             paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
                         }
                     hideAction.invoke()
+                    scrollAction.invoke()
                 }
             }
             OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
@@ -617,6 +620,10 @@ class VerificationActivityViewModel(
 
     fun setUnsupportedFormat() {
         userDocs.setUnsupportedFormat()
+    }
+
+    fun requestScrollTo(coordinate: Int) {
+        scrollRequestEvent.postValue(coordinate)
     }
 
     class Factory(

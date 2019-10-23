@@ -20,6 +20,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -89,6 +90,10 @@ class VerificationActivity : BaseActivity() {
                         ClipData.newPlainText(getString(R.string.cexd_order_id_label), orderId)
                     toast(getString(R.string.cexd_order_id_copied))
                 }
+            })
+            scrollRequestEvent.observe(this@VerificationActivity, Observer {
+                val view = findViewById<View>(it)
+                binding.avScroll.requestChildFocus(view, view)
             })
         }.let { binding.model = it }
 

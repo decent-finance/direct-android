@@ -118,6 +118,7 @@
         </com.cexdirect.lib.views.CollapsibleLayout>
 
         <include
+            android:id="@+id/fiExtras"
             layout="@layout/partial_extras"
             app:model="@{model}" />
 

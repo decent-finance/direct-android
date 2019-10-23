@@ -180,7 +180,14 @@ class IdentityFragment : BaseVerificationFragment() {
                         context!!.verificationError("Rejected")
                         finish()
                     },
-                    { hideLoader() }
+                    { hideLoader() },
+                    {
+                        // FIXME: A workaround (dirty hack) to request scroll after view is laid out
+                        binding.fiExtras.peExtrasTitle.postDelayed(
+                            { model.requestScrollTo(binding.fiExtras.peExtrasTitle.id) },
+                            1000
+                        )
+                    }
                 )
             },
             onFail = { purchaseFailed(it.message) }
