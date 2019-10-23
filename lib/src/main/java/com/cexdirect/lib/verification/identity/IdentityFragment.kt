@@ -43,6 +43,8 @@ import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
+import com.cexdirect.lib.verification.identity.img.CameraImageReference
+import com.cexdirect.lib.verification.identity.img.GalleryImageReference
 import com.cexdirect.lib.verification.identity.util.*
 import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.mcxiaoke.koi.ext.finish
@@ -264,11 +266,16 @@ class IdentityFragment : BaseVerificationFragment() {
             RQ_CHOOSE_PIC -> {
                 try {
                     data?.data?.let { uri ->
-                        convertAndSet(
+                        checkAndSet(
                             context!!,
                             uri,
                             {
-                                model.setImage(it)
+                                model.setImage(
+                                    GalleryImageReference(
+                                        it,
+                                        requireContext().contentResolver
+                                    )
+                                )
                                 Glide.with(this)
                                     .load(uri)
                                     .thumbnail(THUMBNAIL_SCALE_FACTOR)
@@ -288,10 +295,10 @@ class IdentityFragment : BaseVerificationFragment() {
             }
             RQ_TAKE_PHOTO -> {
                 try {
-                    convertAndSet(
+                    checkAndSet(
                         currentPhotoPath,
                         {
-                            model.setImage(it)
+                            model.setImage(CameraImageReference(it))
                             Glide.with(this)
                                 .load(File(currentPhotoPath))
                                 .thumbnail(THUMBNAIL_SCALE_FACTOR)

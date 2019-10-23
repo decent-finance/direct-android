@@ -20,11 +20,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import com.nhaarman.mockitokotlin2.*
-import org.bouncycastle.asn1.cmc.CMCStatus.success
 import org.junit.Test
-import org.mockito.stubbing.Answer
-import java.io.InputStream
-import java.io.OutputStream
 
 class FileUtilsTest {
 
@@ -38,7 +34,7 @@ class FileUtilsTest {
             on { contentResolver } doReturn resolver
         }
 
-        convertAndSet(context, mock(), {}, failure)
+        checkAndSet(context, mock(), {}, failure)
 
         verify(failure).invoke(eq(FailType.UNSUPPORTED_FORMAT))
     }
@@ -53,7 +49,7 @@ class FileUtilsTest {
             on { contentResolver } doReturn resolver
         }
 
-        convertAndSet(context, mock(), {}, failure)
+        checkAndSet(context, mock(), {}, failure)
 
         verify(failure).invoke(eq(FailType.UNSUPPORTED_FORMAT))
     }
@@ -78,7 +74,7 @@ class FileUtilsTest {
             on { contentResolver } doReturn resolver
         }
 
-        convertAndSet(context, mock(), {}, failure)
+        checkAndSet(context, mock(), {}, failure)
 
         verify(failure).invoke(eq(FailType.SIZE_INVALID))
     }

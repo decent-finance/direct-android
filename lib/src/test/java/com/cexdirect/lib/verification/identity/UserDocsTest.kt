@@ -100,8 +100,8 @@ class UserDocsTest {
         userDocs.requiredImagesAmount = 2
 
         userDocs.imagesBase64.let {
-            it["abc"] = "abc"
-            it["def"] = "def"
+            it["abc"] = mock()
+            it["def"] = mock()
         }
 
         assertThat(userDocs.shouldSendPhoto).isTrue()
@@ -112,7 +112,7 @@ class UserDocsTest {
         userDocs.requiredImagesAmount = 2
 
         userDocs.imagesBase64.let {
-            it["abc"] = "abc"
+            it["abc"] = mock()
         }
 
         assertThat(userDocs.shouldSendPhoto).isFalse()
@@ -164,7 +164,7 @@ class UserDocsTest {
         val mock: Runnable = mock()
         userDocs.uploadAction = { mock.run() }
 
-        userDocs.selfieBase64 = ""
+        userDocs.selfieBase64 = mock()
 
         verify(mock).run()
     }

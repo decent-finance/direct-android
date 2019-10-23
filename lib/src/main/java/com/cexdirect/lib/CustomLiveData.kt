@@ -36,10 +36,8 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
         postValue(Loading())
         scope.launch {
             runCatching {
-                val response = block().await() as Extractable<V>
-                withContext(Dispatchers.Main) {
-                    postValue(Success(response.extract()))
-                }
+                val response = withContext(Dispatchers.IO) { block().await() } as Extractable<V>
+                withContext(Dispatchers.Main) { postValue(Success(response.extract())) }
             }.getOrElse {
                 withContext(Dispatchers.Main) {
                     if (it is HttpException) {

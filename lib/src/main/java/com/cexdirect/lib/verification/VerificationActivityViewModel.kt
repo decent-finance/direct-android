@@ -35,6 +35,7 @@ import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
 import com.cexdirect.lib.verification.identity.country.CountryClickEvent
+import com.cexdirect.lib.verification.identity.img.ImageReference
 import com.cexdirect.lib.views.CollapsibleLayout
 
 @Suppress("MagicNumber")
@@ -412,8 +413,8 @@ class VerificationActivityViewModel(
         scanQrEvent.call()
     }
 
-    fun setImage(imageBase64: String) {
-        userDocs.setImage(imageBase64)
+    fun setImage(imgRef: ImageReference) {
+        userDocs.setImage(imgRef)
     }
 
     fun closeCountryPicker() {
