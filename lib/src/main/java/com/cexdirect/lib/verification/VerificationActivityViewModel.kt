@@ -598,6 +598,7 @@ class VerificationActivityViewModel(
             OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
+                messenger.removeOrderInfoSubscription()
             }
             else -> { // do nothing
             }
