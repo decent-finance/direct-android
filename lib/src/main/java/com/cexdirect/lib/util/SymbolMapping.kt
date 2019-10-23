@@ -34,12 +34,12 @@ val symbolMap = mapOf(
     "BCH" to Symbol(
         "Bitcoin Cash",
         R.drawable.ic_coin_bch,
-        "https://blockchair.com/litecoin/transaction/"
+        "https://blockchair.com/bitcoin-cash/transaction/"
     ),
     "ZEC" to Symbol("Zcash", R.drawable.ic_coin_zec, "https://explorer.zcha.in/transactions/"),
     "BTG" to Symbol("Bitcoin Gold", R.drawable.ic_coin_btg, "https://btgexplorer.com/tx/"),
     "XLM" to Symbol("Stellar", R.drawable.ic_coin_xlm, "https://stellarchain.io/tx/"),
-    "ETH" to Symbol("Ethereum", R.drawable.ic_coin_eth, "https://www.etherchain.org/tx/"),
+    "ETH" to Symbol("Ethereum", R.drawable.ic_coin_eth, "https://etherscan.io/tx/"),
     "LTC" to Symbol("Litecoin", R.drawable.ic_coin_ltc, "https://live.blockcypher.com/ltc/tx/"),
     "BSV" to Symbol("BSV"),
     "OMG" to Symbol("OmiseGO"),
