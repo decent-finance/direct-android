@@ -86,18 +86,18 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
                         }
                     }
                 ))
-            newCheckCode.observe(
-                this@PaymentConfirmationFragment, restObserver(
-                    onOk = {
-                        toast(R.string.cexd_check_mail)
-                        restartResendTimer()
-                    },
-                    onFail = { purchaseFailed(it.message) }
-                ))
+            newCheckCode.observe(this@PaymentConfirmationFragment, restObserver(
+                onOk = {
+                    toast(R.string.cexd_check_mail)
+                    restartResendTimer()
+                },
+                onFail = { purchaseFailed(it.message) }
+            ))
             changeEmail.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)
+                    restartResendTimer()
                 },
                 onFail = { purchaseFailed(it.message) }
             ))
