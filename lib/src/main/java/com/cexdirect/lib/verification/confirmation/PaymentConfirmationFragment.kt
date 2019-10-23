@@ -75,17 +75,16 @@ class PaymentConfirmationFragment : BaseVerificationFragment() {
             editEmailEvent.observe(this@PaymentConfirmationFragment, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCodeResult.observe(
-                this@PaymentConfirmationFragment, restObserver(
-                    onOk = { /* Don't do anything here, because order status will be updated via WS */ },
-                    onFail = {
-                        if (it.code == CODE_BAD_REQUEST) {
-                            toast(R.string.cexd_wrong_code)
-                        } else {
-                            purchaseFailed(it.message)
-                        }
+            checkCodeResult.observe(this@PaymentConfirmationFragment, restObserver(
+                onOk = { /* Don't do anything here, because order status will be updated via WS */ },
+                onFail = {
+                    if (it.code == CODE_BAD_REQUEST) {
+                        toast(R.string.cexd_wrong_code)
+                    } else {
+                        purchaseFailed(it.message)
                     }
-                ))
+                }
+            ))
             newCheckCode.observe(this@PaymentConfirmationFragment, restObserver(
                 onOk = {
                     toast(R.string.cexd_check_mail)

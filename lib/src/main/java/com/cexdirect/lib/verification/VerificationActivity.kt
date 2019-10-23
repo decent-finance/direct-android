@@ -102,6 +102,7 @@ class VerificationActivity : BaseActivity() {
 
     @VisibleForTesting
     fun replaceFragment(position: Int) {
+        hideLoader()
         supportFragmentManager.beginTransaction()
             .replace(R.id.avFragmentFrame, fragments[position])
             .commit()
