@@ -189,7 +189,7 @@ class IdentityFragment : BaseVerificationFragment() {
                         // FIXME: A workaround (dirty hack) to request scroll after view is laid out
                         binding.fiExtras.peExtrasTitle.postDelayed(
                             { model.requestScrollTo(binding.fiExtras.peExtrasTitle.id) },
-                            1000
+                            SCROLL_DELAY
                         )
                     }
                 )
@@ -333,5 +333,6 @@ class IdentityFragment : BaseVerificationFragment() {
         const val RQ_CHOOSE_PIC = 1001
         const val RQ_SCAN_QR = 1002
         const val COUNTRY_NOT_SUPPORTED = 475
+        const val SCROLL_DELAY = 1000L
     }
 }
