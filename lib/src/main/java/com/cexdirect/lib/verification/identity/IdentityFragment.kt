@@ -32,6 +32,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.cexdirect.lib.Direct
+import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentIdentityBinding
 import com.cexdirect.lib.error.locationNotSupported
@@ -58,6 +59,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+@OpenForTesting
 @RuntimePermissions
 class IdentityFragment : BaseVerificationFragment() {
 
