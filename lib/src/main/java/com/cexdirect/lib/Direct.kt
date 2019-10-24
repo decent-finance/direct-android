@@ -27,7 +27,6 @@ import com.cexdirect.lib._di.DirectComponent
 import com.cexdirect.lib._di.IdentitySubcomponent
 import com.cexdirect.lib.check.CheckActivity
 import com.cexdirect.lib.network.models.CountryData
-import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
 import java.util.*
 import kotlin.collections.HashSet
@@ -42,8 +41,6 @@ object Direct {
     var credentials: Credentials = Credentials("", "")
     var userEmail = ""
 
-    var pendingFiatAmount = MonetaryData("", "")
-    var pendingCryptoAmount = MonetaryData("", "")
     var pendingOrderId = ""
 
     var countries: List<CountryData> = emptyList()
@@ -58,10 +55,12 @@ object Direct {
         }
 
     lateinit var sourceUri: String
-    lateinit var packageName: String
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) get
     lateinit var directComponent: DirectComponent
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) get
     lateinit var context: Context
+
+    private lateinit var packageName: String
 
     fun initWith(context: Context) {
         this.context = context
@@ -78,24 +77,16 @@ object Direct {
         identitySubcomponent = null
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun clear() {
+        pendingOrderId = ""
+        userEmail = ""
+    }
+
     fun startDirect() {
         check(credentials.placementId.isNotBlank() && credentials.secret.isNotBlank())
         Intent(context, CheckActivity::class.java)
             .apply { flags = FLAG_ACTIVITY_NEW_TASK }
             .let { context.startActivity(it) }
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun setPendingAmounts(fiat: MonetaryData, crypto: MonetaryData) {
-        pendingFiatAmount = fiat
-        pendingCryptoAmount = crypto
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun clear() {
-        pendingFiatAmount = MonetaryData("", "")
-        pendingCryptoAmount = MonetaryData("", "")
-        pendingOrderId = ""
-        userEmail = ""
     }
 }

@@ -115,8 +115,8 @@ class VerificationActivityViewModel(
         NewOrderData(
             userEmail.email,
             userCountry.selectedCountry.code,
-            MonetaryData(Direct.pendingFiatAmount.amount, Direct.pendingFiatAmount.currency),
-            MonetaryData(Direct.pendingCryptoAmount.amount, Direct.pendingCryptoAmount.currency)
+            MonetaryData(orderAmounts.selectedFiatAmount, orderAmounts.selectedFiatCurrency),
+            MonetaryData(orderAmounts.selectedCryptoAmount, orderAmounts.selectedCryptoCurrency)
         )
     }
 
