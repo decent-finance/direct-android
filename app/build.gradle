@@ -162,6 +162,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
     kaptAndroidTest "androidx.databinding:databinding-compiler:$databindVersion"
