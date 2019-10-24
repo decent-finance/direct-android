@@ -40,7 +40,25 @@ class EmailValidatorTest(private val givenEmail: String, private val expectedSta
             arrayOf("dd@dd.de", FieldStatus.VALID),
             arrayOf("john.smith@example.com", FieldStatus.VALID),
             arrayOf("xyz", FieldStatus.INVALID),
-            arrayOf("abc@qwe.......com", FieldStatus.INVALID)
+            arrayOf("abc@qwe.......com", FieldStatus.INVALID),
+            arrayOf("jfjfj@jjjjg...gg", FieldStatus.INVALID),
+            arrayOf("eron@don.don.don", FieldStatus.VALID),
+            arrayOf("eron+01@don.don.don", FieldStatus.VALID),
+            arrayOf("much.more.unusual@example.com", FieldStatus.VALID),
+            arrayOf("email@subdomain.example.com", FieldStatus.VALID),
+            arrayOf("firstname+lastname@example.com", FieldStatus.VALID),
+            arrayOf("email@123.123.123.123", FieldStatus.VALID),
+            arrayOf("_______@example.com", FieldStatus.VALID),
+            arrayOf("plainaddress", FieldStatus.INVALID),
+            arrayOf("#@%^%#\$@#\$@#.com", FieldStatus.INVALID),
+            arrayOf("@example.com", FieldStatus.INVALID),
+            arrayOf("email.example.com", FieldStatus.INVALID),
+            arrayOf("email@example@example.com", FieldStatus.INVALID),
+            arrayOf(".email@example.com", FieldStatus.INVALID),
+            arrayOf("email.@example.com", FieldStatus.INVALID),
+            arrayOf("email..email@example.com", FieldStatus.INVALID),
+            arrayOf("email@example.com (Joe Smith)", FieldStatus.INVALID),
+            arrayOf("Abc..123@example.com", FieldStatus.INVALID)
         )
     }
 }
