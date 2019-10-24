@@ -21,7 +21,10 @@ package com.cexdirect.lib.util
 import java.util.regex.Pattern
 
 val emailPattern =
-    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)!!
+    Pattern.compile(
+        "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]{2,6}$",
+        Pattern.CASE_INSENSITIVE
+    )!!
 
 fun checkEmailStatus(email: String?) =
     if (email.isNullOrBlank()) {
