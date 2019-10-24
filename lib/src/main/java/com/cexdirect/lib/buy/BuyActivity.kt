@@ -33,7 +33,6 @@ import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.ExchangeRate
-import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.verification.VerificationActivity
 import javax.inject.Inject
 
@@ -64,12 +63,6 @@ class BuyActivity : BaseActivity() {
             buyCryptoEvent.observe(this@BuyActivity, Observer { model.sendBuyEvent.execute() })
             sendBuyEvent.observe(this@BuyActivity, Observer {
                 if (it !is Loading) {
-                    model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
-                        Direct.setPendingAmounts(
-                            crypto = MonetaryData(cryptoAmount, cryptoCurrency),
-                            fiat = MonetaryData(fiatAmount, fiatCurrency)
-                        )
-                    }
                     val intent = with(Intent(this@BuyActivity, VerificationActivity::class.java)) {
                         model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
                             putExtra("cryptoAmount", cryptoAmount)

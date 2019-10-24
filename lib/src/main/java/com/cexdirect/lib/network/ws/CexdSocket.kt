@@ -27,6 +27,7 @@ import com.cexdirect.lib.map
 import com.google.gson.Gson
 import okhttp3.*
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 
 @OpenForTesting
 class CexdSocket(
@@ -40,6 +41,7 @@ class CexdSocket(
     private var webSocket: WebSocket? = null
     private var connected = false
     private val connecting = AtomicBoolean(false)
+    private val lastPongTimestamp = AtomicLong(0)
 
     private val socketMessage = MutableLiveData<String>()
     val parsedMessage = socketMessage.map(Function<String, Pair<String, String>> {
@@ -48,12 +50,21 @@ class CexdSocket(
 
     private val pingPongObserver = Observer<Pair<String, String>> { data ->
         if (data.first == "pong") {
+            lastPongTimestamp.set(System.currentTimeMillis())
             handler.postDelayed(sendPingRunnable, PING_PONG_DELAY)
         }
     }
 
     private val ping = gson.toJson(BaseSocketMessage("ping"))
-    private val sendPingRunnable = Runnable { sendRawMessage(ping) }
+    private val sendPingRunnable = Runnable {
+        sendRawMessage(ping)
+        handler.postDelayed(checkPongRunnable, MAX_PONG_DELAY)
+    }
+    private val checkPongRunnable = Runnable {
+        if (lastPongTimestamp.get() < System.currentTimeMillis() - MAX_PONG_DELAY) {
+            reconnect()
+        }
+    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -98,6 +109,7 @@ class CexdSocket(
     }
 
     fun stop() {
+        handler.removeCallbacks(checkPongRunnable)
         handler.removeCallbacks(sendPingRunnable)
         handler.post { parsedMessage.removeObserver(pingPongObserver) }
         webSocket?.close(CLOSE_STATUS, "Stopped")
@@ -110,8 +122,8 @@ class CexdSocket(
     }
 
     fun <T : BaseSocketMessage> sendMessage(msg: SubscriptionMessage<T>) {
+        subscriptions[msg.invoke().event] = msg
         if (connected) {
-            subscriptions[msg.invoke().event] = msg
             val json = gson.toJson(msg.invoke())
             webSocket?.send(json)
             Log.d("Socket", "Sent $json")
@@ -129,6 +141,7 @@ class CexdSocket(
     companion object {
         const val PING_PONG_DELAY = 10_000L
         const val CLOSE_STATUS = 1000
+        const val MAX_PONG_DELAY = 1500L
     }
 }
 

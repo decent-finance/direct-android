@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.check
 
+import android.os.SystemClock
 import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
@@ -115,6 +116,9 @@ class CheckActivityViewModelTest {
         Direct.credentials = Credentials("foo", "s3cr3t")
 
         model.checkPlacement()
+
+        // FIXME : replace with test dispatcher provide
+        SystemClock.sleep(500)
 
         @Suppress("DeferredResultUnused")
         verify(merchantService).getPlacementInfoAsync(anyString())

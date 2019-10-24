@@ -39,7 +39,7 @@ class UserEmailTest {
 
     @Test
     fun invalid() {
-        userEmail.email = "incorrect_em@il"
+        userEmail.email = "incorrect_em.@il"
 
         assertThat(userEmail.emailStatus).isEqualTo(FieldStatus.INVALID)
     }

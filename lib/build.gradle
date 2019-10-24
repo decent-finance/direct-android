@@ -13,7 +13,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-version '1.0.0-alpha5'
+version '1.0.0-alpha6'
 
 android {
     compileSdkVersion 28
@@ -121,7 +121,6 @@ allOpen {
 
 ext {
     // lib deps versions
-    coroutinesVersion = '1.3.2'
     daggerVersion = '2.24'
     permissionDispatcherVersion = '4.5.0'
     okHttpVersion = '4.2.2'
@@ -181,6 +180,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestUtil "androidx.test:orchestrator:$orchestratorVersion"
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
     kaptAndroidTest "androidx.databinding:databinding-compiler:$databindVersion"

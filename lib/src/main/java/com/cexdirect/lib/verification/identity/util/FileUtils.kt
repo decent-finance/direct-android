@@ -22,28 +22,25 @@ import android.util.Base64
 import android.util.Base64OutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 
 enum class FailType {
     SIZE_INVALID, UNSUPPORTED_FORMAT
 }
 
-fun convertAndSet(imgFilePath: String, block: (imgBase64: String) -> Unit, failure: () -> Unit) {
+fun checkAndSet(imgFilePath: String, success: (imgFilePath: String) -> Unit, failure: () -> Unit) {
     val imgFile = File(imgFilePath)
     if (fileSizeValid(imgFile.length())) {
-        FileInputStream(imgFile).use { input ->
-            convertStreamToBase64(input)?.let { block.invoke(it) }
-        }
+        success.invoke(imgFilePath)
     } else {
         failure.invoke()
     }
 }
 
-fun convertAndSet(
+fun checkAndSet(
     context: Context,
     uri: Uri,
-    success: (imgBase64: String) -> Unit,
+    success: (imgUri: Uri) -> Unit,
     failure: (type: FailType) -> Unit
 ) {
     val resolver = context.contentResolver
@@ -59,21 +56,17 @@ fun convertAndSet(
 
     val fileLength = fileDescriptor.length
     if (fileSizeValid(fileLength)) {
-        resolver.openInputStream(uri)?.use { input ->
-            convertStreamToBase64(input)?.let { success.invoke(it) }
-        }
+        success.invoke(uri)
     } else {
         failure.invoke(FailType.SIZE_INVALID)
     }
 }
 
-fun convertStreamToBase64(input: InputStream): String? {
-    return ByteArrayOutputStream().use { output ->
-        Base64OutputStream(output, Base64.DEFAULT).use { base64Output ->
-            input.copyTo(base64Output)
-            base64Output.flush()
-            output.toString("UTF-8")
-        }
+fun convertStreamToBase64(input: InputStream): String = ByteArrayOutputStream().use { output ->
+    Base64OutputStream(output, Base64.DEFAULT).use { base64Output ->
+        input.copyTo(base64Output)
+        base64Output.flush()
+        output.toString("UTF-8")
     }
 }
 

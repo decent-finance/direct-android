@@ -32,6 +32,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.cexdirect.lib.Direct
+import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentIdentityBinding
 import com.cexdirect.lib.error.locationNotSupported
@@ -43,6 +44,8 @@ import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import com.cexdirect.lib.verification.identity.country.CountryPickerDialog
 import com.cexdirect.lib.verification.identity.country.StatePickerDialog
+import com.cexdirect.lib.verification.identity.img.CameraImageReference
+import com.cexdirect.lib.verification.identity.img.GalleryImageReference
 import com.cexdirect.lib.verification.identity.util.*
 import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.mcxiaoke.koi.ext.finish
@@ -56,6 +59,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+@OpenForTesting
 @RuntimePermissions
 class IdentityFragment : BaseVerificationFragment() {
 
@@ -185,7 +189,7 @@ class IdentityFragment : BaseVerificationFragment() {
                         // FIXME: A workaround (dirty hack) to request scroll after view is laid out
                         binding.fiExtras.peExtrasTitle.postDelayed(
                             { model.requestScrollTo(binding.fiExtras.peExtrasTitle.id) },
-                            1000
+                            SCROLL_DELAY
                         )
                     }
                 )
@@ -264,11 +268,16 @@ class IdentityFragment : BaseVerificationFragment() {
             RQ_CHOOSE_PIC -> {
                 try {
                     data?.data?.let { uri ->
-                        convertAndSet(
+                        checkAndSet(
                             context!!,
                             uri,
                             {
-                                model.setImage(it)
+                                model.setImage(
+                                    GalleryImageReference(
+                                        it,
+                                        requireContext().contentResolver
+                                    )
+                                )
                                 Glide.with(this)
                                     .load(uri)
                                     .thumbnail(THUMBNAIL_SCALE_FACTOR)
@@ -288,10 +297,10 @@ class IdentityFragment : BaseVerificationFragment() {
             }
             RQ_TAKE_PHOTO -> {
                 try {
-                    convertAndSet(
+                    checkAndSet(
                         currentPhotoPath,
                         {
-                            model.setImage(it)
+                            model.setImage(CameraImageReference(it))
                             Glide.with(this)
                                 .load(File(currentPhotoPath))
                                 .thumbnail(THUMBNAIL_SCALE_FACTOR)
@@ -324,5 +333,6 @@ class IdentityFragment : BaseVerificationFragment() {
         const val RQ_CHOOSE_PIC = 1001
         const val RQ_SCAN_QR = 1002
         const val COUNTRY_NOT_SUPPORTED = 475
+        const val SCROLL_DELAY = 1000L
     }
 }

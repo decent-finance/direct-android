@@ -63,8 +63,8 @@ class CheckCode() : BaseObservable() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                val mins = (millisUntilFinished / 1000) / 60
-                val secs = ((millisUntilFinished / 1000) % 60)
+                val mins = (millisUntilFinished / MILLIS_IN_SEC) / SECS_IN_MIN
+                val secs = ((millisUntilFinished / MILLIS_IN_SEC) % SECS_IN_MIN)
                 remaining = "$mins:${secs.toString().padStart(2, '0')}"
             }
         }
@@ -88,5 +88,8 @@ class CheckCode() : BaseObservable() {
     companion object {
         private const val RESEND_TIMEOUT_MILLIS = 2 * 60 * 1000L
         private const val TICK_INTERVAL_MILLIS = 1000L
+
+        private const val MILLIS_IN_SEC = 1000
+        private const val SECS_IN_MIN = 60
     }
 }

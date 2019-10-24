@@ -24,6 +24,7 @@ import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.network.models.Base64Image
 import com.cexdirect.lib.network.models.Images
 import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.verification.identity.img.ImageReference
 
 class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
 
@@ -139,10 +140,10 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             notifyPropertyChanged(BR.selfieErrorText)
         }
 
-    var imagesBase64 = ObservableArrayMap<String, String>()
+    var imagesBase64 = ObservableArrayMap<String, ImageReference>()
 
     @get:Bindable
-    var selfieBase64 = ""
+    var selfieBase64: ImageReference? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.selfieBase64)
@@ -204,8 +205,8 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             }
         })
         imagesBase64.addOnMapChangedCallback(object :
-            ObservableMap.OnMapChangedCallback<ObservableMap<String, String>, String, String>() {
-            override fun onMapChanged(sender: ObservableMap<String, String>, key: String?) {
+            ObservableMap.OnMapChangedCallback<ObservableMap<String, ImageReference>, String, ImageReference>() {
+            override fun onMapChanged(sender: ObservableMap<String, ImageReference>, key: String?) {
                 if (sender.keys.size == requiredImagesAmount) {
                     shouldSendPhoto = true
                 } else if (sender.isEmpty() || sender.keys.size < requiredImagesAmount) {
@@ -215,19 +216,19 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         })
     }
 
-    fun setImage(imageBase64: String) {
+    fun setImage(imgRef: ImageReference) {
         when (currentPhotoType) {
             PhotoType.SELFIE -> {
                 selfieStatus = FieldStatus.VALID
-                selfieBase64 = imageBase64
+                selfieBase64 = imgRef
             }
             PhotoType.ID -> {
                 documentFrontStatus = FieldStatus.VALID
-                imagesBase64["front"] = imageBase64
+                imagesBase64["front"] = imgRef
             }
             PhotoType.ID_BACK -> {
                 documentBackStatus = FieldStatus.VALID
-                imagesBase64["back"] = imageBase64
+                imagesBase64["back"] = imgRef
             }
         }
     }
@@ -321,12 +322,16 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     fun getDocumentPhotosArray() =
         Array(requiredImagesAmount) {
             when (it) {
-                0 -> Base64Image(0, imagesBase64["front"]!!)
-                1 -> Base64Image(1, imagesBase64["back"]!!)
+                0 -> Base64Image(0, imagesBase64.getValue("front").encodeToBase64())
+                1 -> Base64Image(1, imagesBase64.getValue("back").encodeToBase64())
                 else -> error("Illegal index $it")
             }
         }
 
-    fun getSelfieArray() = arrayOf(Base64Image(0, selfieBase64))
+    fun getSelfieArray() = arrayOf(
+        Base64Image(
+            0, selfieBase64?.encodeToBase64() ?: error("Selfie reference not set")
+        )
+    )
 
 }
