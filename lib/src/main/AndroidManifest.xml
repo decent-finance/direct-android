@@ -28,7 +28,21 @@
         <activity
             android:name=".check.CheckActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Direct" />
+            android:theme="@style/Direct">
+
+            <intent-filter android:label="@string/cexd_open_label">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="cexdirect.com"
+                    android:pathPrefix="/buy"
+                    android:scheme="https" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".verification.VerificationActivity"
             android:screenOrientation="portrait"

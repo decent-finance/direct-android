@@ -18,4 +18,6 @@
 <resources>
     <string name="app_name">CEX Direct UAT</string>
     <string name="leak_canary_display_activity_label">CEX Direct UAT Leaks</string>
+
+    <string name="cexd_open_label">Direct UAT</string>
 </resources>

@@ -15,6 +15,8 @@
   -->
 
 <resources>
+    <string name="cexd_open_label">CEX Direct</string>
+
     <string name="cexd_app_name">Direct</string>
     <string name="cexd_buy_label">BUY</string>
     <string name="cexd_legal">© 2013–2019 CEX.IO Ltd (UK)\n\n24th Floor One Canada Square, Canary Wharf London E14 5AB, United Kingdom</string>
