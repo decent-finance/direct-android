@@ -121,7 +121,7 @@ allOpen {
 
 ext {
     // lib deps versions
-    daggerVersion = '2.24'
+    daggerVersion = '2.25.2'
     permissionDispatcherVersion = '4.5.0'
     okHttpVersion = '4.2.2'
     retrofitVersion = '2.6.2'
@@ -161,7 +161,7 @@ dependencies {
 
     api 'org.bouncycastle:bcprov-jdk15on:1.64'
 
-    debugApi 'androidx.fragment:fragment-testing:1.2.0-beta02'
+    debugApi "androidx.fragment:fragment-testing:$fragmentTestingVersion"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:$assertjVersion"
