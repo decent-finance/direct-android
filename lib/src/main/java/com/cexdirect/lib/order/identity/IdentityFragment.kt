@@ -36,8 +36,8 @@ import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentIdentityBinding
 import com.cexdirect.lib.error.locationNotSupported
+import com.cexdirect.lib.error.paymentRejected
 import com.cexdirect.lib.error.purchaseFailed
-import com.cexdirect.lib.error.verificationError
 import com.cexdirect.lib.network.models.OrderInfoData
 import com.cexdirect.lib.order.BaseOrderFragment
 import com.cexdirect.lib.order.events.SourceClickEvent
@@ -126,8 +126,7 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onFail = {
                     if (it.code == COUNTRY_NOT_SUPPORTED) {
-                        context!!.locationNotSupported()
-                        finish()
+                        locationNotSupported()
                     } else {
                         purchaseFailed(it.message)
                     }
@@ -182,7 +181,7 @@ class IdentityFragment : BaseOrderFragment() {
                 model.updateOrderStatus(
                     it,
                     {
-                        context!!.verificationError("Rejected")
+                        requireContext().paymentRejected(it)
                         finish()
                     },
                     { hideLoader() },

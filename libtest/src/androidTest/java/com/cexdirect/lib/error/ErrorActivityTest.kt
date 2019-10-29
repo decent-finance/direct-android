@@ -69,7 +69,7 @@ class ErrorActivityTest {
 
     @Test
     fun showTerms() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
 
@@ -92,7 +92,7 @@ class ErrorActivityTest {
 
     @Test
     fun showExitDialog() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
@@ -102,7 +102,7 @@ class ErrorActivityTest {
 
     @Test
     fun dismissExitDialog() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
@@ -113,7 +113,7 @@ class ErrorActivityTest {
 
     @Test
     fun exit() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
@@ -151,20 +151,29 @@ class ErrorActivityTest {
     }
 
     @Test
-    fun displayVerificationError() {
-        val intent = givenVerificationErrorIntent()
+    fun displayGenericError() {
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
 
-        onView(withText("Test reason")).check(matches(isDisplayed()))
+        onView(withText(R.string.cexd_service_offline)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun displayVerificationRejectedError() {
+        val intent = givenVerificationRejectedIntent()
+
+        activityRule.launchActivity(intent)
+
+        onView(withText(R.string.cexd_you_have_not_passed)).check(matches(isDisplayed()))
     }
 
     @Test
     fun relaunchDirectFromVerificationErrorScreen() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_try_again)).perform(click())
+        onView(withText(R.string.cexd_try_again)).perform(scrollTo(), click())
 
         intended(hasComponent(CalcActivity::class.java.name))
     }
@@ -190,7 +199,7 @@ class ErrorActivityTest {
 
     @Test
     fun contactSupport() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_support)).perform(scrollTo(), click())
@@ -215,9 +224,13 @@ class ErrorActivityTest {
             putExtra("reason", "Test reason")
         }
 
-    private fun givenVerificationErrorIntent() =
+    private fun givenGenericErrorIntent() =
         Intent().apply {
             putExtra("type", ErrorType.VERIFICATION_ERROR.name)
-            putExtra("reason", "Test reason")
+        }
+
+    private fun givenVerificationRejectedIntent() =
+        Intent().apply {
+            putExtra("type", ErrorType.NOT_VERIFIED.name)
         }
 }

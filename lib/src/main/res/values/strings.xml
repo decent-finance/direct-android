@@ -169,4 +169,10 @@
     <string name="cexd_title_get">Get %1s %2s for %3s %4s</string>
     <string name="cexd_edit">Edit</string>
     <string name="cexd_open_qr_scanner">Open QR scanner</string>
+    <string name="cexd_you_have_not_passed">You haven\'t passed verification</string>
+    <string name="cexd_verification_rejected_reason">Unfortunately your order hasn\'t passed \nour verification process, \nso it was rejected.</string>
+    <string name="cexd_verification_rejected_desc">Some reasons that can influence rejection:\n\n &#8226; Bad quality of uploaded photo/documents;\n &#8226; Documents are cropped, blurry or masked;\n &#8226; Document front and back sides were switched;\n &#8226; Documents are expired</string>
+    <string name="cexd_service_offline">Service is experiencing technical difficulties</string>
+    <string name="cexd_service_offline_desc">We expect this to be resolved shortly. Payment will be refunded, if your card has been charged.</string>
+    <string name="cexd_error_icon">Error icon</string>
 </resources>

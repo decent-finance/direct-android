@@ -30,6 +30,7 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.CalcActivity.Companion.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityErrorBinding
 import com.cexdirect.lib.di.annotation.ErrorActivityFactory
+import com.cexdirect.lib.network.models.OrderStatus
 import com.mcxiaoke.koi.ext.finish
 import javax.inject.Inject
 
@@ -69,7 +70,11 @@ class ErrorActivity : BaseActivity() {
                 .commit()
             ErrorType.VERIFICATION_ERROR -> supportFragmentManager
                 .beginTransaction()
-                .replace(binding.aeErrorFrame.id, VerificationErrorFragment())
+                .replace(binding.aeErrorFrame.id, GenericErrorFragment())
+                .commit()
+            ErrorType.NOT_VERIFIED -> supportFragmentManager
+                .beginTransaction()
+                .replace(binding.aeErrorFrame.id, VerificationRejectedFragment())
                 .commit()
             ErrorType.LOCATION_NOT_SUPPORTED -> supportFragmentManager
                 .beginTransaction()
@@ -81,11 +86,26 @@ class ErrorActivity : BaseActivity() {
     }
 }
 
-fun Context.verificationError(reason: String?) {
-    Intent(this, ErrorActivity::class.java).apply {
-        putExtra("type", ErrorType.VERIFICATION_ERROR.name)
-        putExtra("reason", reason)
-    }.let { startActivity(it) }
+fun Context.paymentRejected(rejectStatus: OrderStatus) {
+    when (rejectStatus) {
+        OrderStatus.IVS_REJECTED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.NOT_VERIFIED.name)
+            }.let { startActivity(it) }
+        }
+        OrderStatus.IVS_FAILED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.VERIFICATION_ERROR.name)
+            }.let { startActivity(it) }
+        }
+        OrderStatus.REJECTED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.PURCHASE_FAILED.name)
+                putExtra("reason", "Rejected")
+            }.let { startActivity(it) }
+        }
+        else -> error("Illegal reject status: ${rejectStatus.name}")
+    }
 }
 
 fun Fragment.purchaseFailed(reason: String?) {
@@ -105,12 +125,15 @@ internal fun Context.showPurchaseFailedScreen(reason: String?) {
     }.let { startActivity(it) }
 }
 
-fun Context.locationNotSupported() {
-    Intent(this, ErrorActivity::class.java).apply {
+fun Fragment.locationNotSupported() {
+    Intent(requireContext(), ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
-    }.let { startActivity(it) }
+    }.let {
+        startActivity(it)
+        finish()
+    }
 }
 
 enum class ErrorType {
-    VERIFICATION_ERROR, LOCATION_NOT_SUPPORTED, PURCHASE_FAILED
+    VERIFICATION_ERROR, NOT_VERIFIED, LOCATION_NOT_SUPPORTED, PURCHASE_FAILED
 }

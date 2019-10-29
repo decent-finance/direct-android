@@ -22,19 +22,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentVerificationErrorBinding
+import com.cexdirect.lib.databinding.FragmentGenericErrorBinding
 
-class VerificationErrorFragment : BaseErrorFragment() {
+class GenericErrorFragment : BaseErrorFragment() {
 
-    private lateinit var binding: FragmentVerificationErrorBinding
+    private lateinit var binding: FragmentGenericErrorBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentVerificationErrorBinding>(
+    ) = DataBindingUtil.inflate<FragmentGenericErrorBinding>(
         inflater,
-        R.layout.fragment_verification_error,
+        R.layout.fragment_generic_error,
         container,
         false
     ).apply { binding = this }.root

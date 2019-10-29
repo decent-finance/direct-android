@@ -26,8 +26,9 @@ import androidx.lifecycle.Observer
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
+import com.cexdirect.lib.error.paymentRejected
 import com.cexdirect.lib.error.purchaseFailed
-import com.cexdirect.lib.error.verificationError
+import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.order.BaseOrderFragment
@@ -64,7 +65,8 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                 viewLifecycleOwner, socketObserver(
                 onOk = {
                     updateConfirmationStatus(it) {
-                        context!!.verificationError("Rejected")
+                        // TODO: for now, only REJECTED is possible here
+                        requireContext().paymentRejected(OrderStatus.REJECTED)
                         finish()
                     }
                 },
@@ -85,7 +87,8 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                     } else {
                         purchaseFailed(it.message)
                     }
-                }
+                },
+                    final = {}
             ))
             changeCheckCodeRequest.observe(
                 viewLifecycleOwner, restObserver(

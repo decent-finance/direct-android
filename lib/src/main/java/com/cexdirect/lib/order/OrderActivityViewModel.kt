@@ -415,12 +415,20 @@ class OrderActivityViewModel(
 
     fun updateOrderStatus(
         data: OrderInfoData,
-        rejectAction: () -> Unit,
+        rejectAction: (status: OrderStatus) -> Unit,
         hideAction: () -> Unit,
         scrollAction: () -> Unit
     ) {
         when (data.orderStatus) {
-            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
+                rejectAction.invoke(OrderStatus.REJECTED)
+            }
+            OrderStatus.IVS_FAILED -> statusWatcher.updateAndDo(OrderStatus.IVS_FAILED) {
+                rejectAction.invoke(OrderStatus.IVS_FAILED)
+            }
+            OrderStatus.IVS_REJECTED -> statusWatcher.updateAndDo(OrderStatus.IVS_REJECTED) {
+                rejectAction.invoke(OrderStatus.IVS_REJECTED)
+            }
             OrderStatus.IVS_READY -> {
                 statusWatcher.updateAndDo(OrderStatus.IVS_READY) {
                     startVerificationChain()
