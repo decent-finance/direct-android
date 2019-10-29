@@ -116,6 +116,7 @@ class VerificationActivityViewModel(
         NewOrderData(
             userEmail.email,
             userCountry.selectedCountry.code,
+            userCountry.selectedState.code.ifBlank { null },
             MonetaryData(orderAmounts.selectedFiatAmount, orderAmounts.selectedFiatCurrency),
             MonetaryData(orderAmounts.selectedCryptoAmount, orderAmounts.selectedCryptoCurrency)
         )

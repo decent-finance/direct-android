@@ -21,6 +21,7 @@ class NewOrderBody(data: NewOrderData) : BaseBody<NewOrderData>(data = data)
 data class NewOrderData(
     val userEmail: String,
     val country: String,
+    val state: String?,
     val fiat: MonetaryData,
     val crypto: MonetaryData,
     val skipVerify: Boolean = false
