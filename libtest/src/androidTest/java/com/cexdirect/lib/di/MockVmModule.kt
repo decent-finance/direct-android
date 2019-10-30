@@ -17,7 +17,6 @@
 package com.cexdirect.lib.di
 
 import com.cexdirect.lib.MockCoroutineDispatcherProvider
-import com.cexdirect.lib._di.VmModule
 
 class MockVmModule : VmModule() {
 

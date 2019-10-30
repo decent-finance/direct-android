@@ -385,11 +385,11 @@ class VerificationActivityViewModel(
         }
     }
 
-    private fun paymentDataValid() = userDocs.isValid()
-            && userCardData.isValid()
-            && userTerms.accepted()
-            && userWallet.isValid()
-            && ssnPresent()
+    private fun paymentDataValid() = userDocs.isValid() &&
+            userCardData.isValid() &&
+            userTerms.accepted() &&
+            userWallet.isValid() &&
+            ssnPresent()
 
     private fun startVerificationChain() {
         walletVerification.execute()
@@ -530,7 +530,6 @@ class VerificationActivityViewModel(
         }
     }
 
-
     fun resendCheckCode() {
         resendCodeEvent.call()
     }
@@ -648,4 +647,3 @@ class VerificationActivityViewModel(
             ) as T
     }
 }
-

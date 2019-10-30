@@ -52,7 +52,6 @@ class ExitDialog : BaseBottomSheetDialog() {
         model.closeEvent.observe(this, Observer { dismiss() })
         model.exitEvent.observe(this, Observer { finish() })
     }
-
 }
 
 class ExitDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :

@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-
 @Suppress("unused")
 abstract class BaseObservableViewModel(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModel(),
     Observable, CoroutineScope {

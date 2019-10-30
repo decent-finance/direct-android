@@ -14,16 +14,16 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._di.annotation.IdentityScope
-import com.cexdirect.lib._di.annotation.PhotoSourceDialogFactory
-import com.cexdirect.lib._di.annotation.VerificationActivityFactory
+import com.cexdirect.lib.di.annotation.IdentityScope
+import com.cexdirect.lib.di.annotation.PhotoSourceDialogFactory
+import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.ws.Messenger

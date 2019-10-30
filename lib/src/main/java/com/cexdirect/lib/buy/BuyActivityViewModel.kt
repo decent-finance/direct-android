@@ -69,7 +69,6 @@ class BuyActivityViewModel(
                     ?.let {
                         amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
                     }
-
             }
             paymentApi.getExchangeRates(this).apply { execute() }
         })

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di.annotation
+package com.cexdirect.lib.di.annotation
 
 import javax.inject.Qualifier
 

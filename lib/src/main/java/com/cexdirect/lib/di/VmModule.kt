@@ -14,20 +14,20 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.ExitDialogViewModel
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib._di.annotation.BuyActivityFactory
-import com.cexdirect.lib._di.annotation.CheckActivityFactory
-import com.cexdirect.lib._di.annotation.ErrorActivityFactory
-import com.cexdirect.lib._di.annotation.TermsActivityFactory
 import com.cexdirect.lib.buy.BuyActivityViewModel
 import com.cexdirect.lib.check.CheckActivityViewModel
 import com.cexdirect.lib.check.RuleIds
+import com.cexdirect.lib.di.annotation.BuyActivityFactory
+import com.cexdirect.lib.di.annotation.CheckActivityFactory
+import com.cexdirect.lib.di.annotation.ErrorActivityFactory
+import com.cexdirect.lib.di.annotation.TermsActivityFactory
 import com.cexdirect.lib.error.ErrorActivityViewModel
 import com.cexdirect.lib.network.AnalyticsApi
 import com.cexdirect.lib.network.MerchantApi

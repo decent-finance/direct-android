@@ -39,8 +39,9 @@ abstract class BaseActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(Direct.theme.mode)
     }
 
-    protected inline fun <reified VM : BaseObservableViewModel> viewModelProvider(crossinline factory: () -> ViewModelProvider.Factory) =
-        lazy { ViewModelProviders.of(this, factory()).get(VM::class.java) }
+    protected inline fun <reified VM : BaseObservableViewModel> viewModelProvider(
+        crossinline factory: () -> ViewModelProvider.Factory
+    ) = lazy { ViewModelProviders.of(this, factory()).get(VM::class.java) }
 
     protected fun LegalViewModel.applyLegalObservers() {
         supportClickEvent.observe(this@BaseActivity, Observer {

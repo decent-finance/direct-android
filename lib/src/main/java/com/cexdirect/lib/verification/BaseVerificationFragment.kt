@@ -22,7 +22,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._di.annotation.VerificationActivityFactory
+import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import javax.inject.Inject
 
 abstract class BaseVerificationFragment : BaseFragment() {

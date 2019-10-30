@@ -1,9 +1,9 @@
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
 import dagger.Module
 import dagger.Provides
-import com.cexdirect.lib._di.annotation.HeaderInterceptor
-import com.cexdirect.lib._di.annotation.LoggingInterceptor
+import com.cexdirect.lib.di.annotation.HeaderInterceptor
+import com.cexdirect.lib.di.annotation.LoggingInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

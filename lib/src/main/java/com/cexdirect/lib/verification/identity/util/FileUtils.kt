@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+@file:Suppress("MatchingDeclarationName")
+
 package com.cexdirect.lib.verification.identity.util
 
 import android.content.Context

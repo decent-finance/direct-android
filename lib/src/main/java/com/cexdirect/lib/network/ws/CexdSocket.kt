@@ -95,6 +95,7 @@ class CexdSocket(
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                // do nothing
             }
         })
     }

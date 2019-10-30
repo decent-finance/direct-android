@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
-import com.cexdirect.lib._di.annotation.IdentityScope
+import com.cexdirect.lib.di.annotation.IdentityScope
 import com.cexdirect.lib.verification.BaseVerificationFragment
 import com.cexdirect.lib.verification.VerificationActivity
 import com.cexdirect.lib.verification.confirmation.ChangeEmailDialog

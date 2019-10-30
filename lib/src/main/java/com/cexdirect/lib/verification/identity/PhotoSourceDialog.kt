@@ -24,8 +24,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
-import com.cexdirect.lib._di.annotation.PhotoSourceDialogFactory
 import com.cexdirect.lib.databinding.DialogPhotoSourceBinding
+import com.cexdirect.lib.di.annotation.PhotoSourceDialogFactory
 import com.cexdirect.lib.verification.events.SourceClickEvent
 import javax.inject.Inject
 
@@ -81,4 +81,3 @@ class PhotoSourceDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider
 enum class SourceClickType {
     PHOTO, CAMERA, CANCEL
 }
-

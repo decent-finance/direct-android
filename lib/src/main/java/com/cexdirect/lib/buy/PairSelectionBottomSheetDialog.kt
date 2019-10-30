@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.cexdirect.lib.BaseBottomSheetDialog
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.BuyActivityFactory
 import com.cexdirect.lib.databinding.DialogPairSelectorBinding
+import com.cexdirect.lib.di.annotation.BuyActivityFactory
 import javax.inject.Inject
 
 class PairSelectionBottomSheetDialog : BaseBottomSheetDialog() {

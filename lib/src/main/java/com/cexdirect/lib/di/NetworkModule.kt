@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
 import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.OpenForTesting

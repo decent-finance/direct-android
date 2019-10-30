@@ -30,4 +30,3 @@ data class PublicKeyData(
     val orderId: String = Direct.pendingOrderId,
     var orderSecret: String = ""
 )
-

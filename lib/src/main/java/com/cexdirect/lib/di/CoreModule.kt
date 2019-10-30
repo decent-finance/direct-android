@@ -14,24 +14,35 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
+import android.content.Context
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib.StringLiveEvent
-import com.cexdirect.lib._di.annotation.IdentityScope
-import com.cexdirect.lib.verification.events.SourceClickEvent
+import com.cexdirect.lib.StringProvider
+import com.cexdirect.lib.util.DH
+import com.cexdirect.lib.util.Encryptor
+import com.cexdirect.lib.util.PlacementValidator
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @OpenForTesting
 @Module
-class SharedStateModule {
+class CoreModule(private val context: Context) {
 
     @Provides
-    @IdentityScope
-    fun provideSourceClickEvent() = SourceClickEvent()
+    @Singleton
+    fun provideStringProvider() = StringProvider(context)
 
     @Provides
-    @IdentityScope
-    fun provideEmailChangedEvent() = StringLiveEvent()
+    @Singleton
+    fun provideEncryptor() = Encryptor()
+
+    @Provides
+    @Singleton
+    fun provideDH(encryptor: Encryptor) = DH(/*encryptor, SecureRandom()*/)
+
+    @Provides
+    @Singleton
+    fun providePlacementValidator() = PlacementValidator(context)
 }

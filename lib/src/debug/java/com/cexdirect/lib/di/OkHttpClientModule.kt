@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di
+package com.cexdirect.lib.di
 
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib._di.annotation.HeaderInterceptor
-import com.cexdirect.lib._di.annotation.LoggingInterceptor
+import com.cexdirect.lib.di.annotation.HeaderInterceptor
+import com.cexdirect.lib.di.annotation.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor

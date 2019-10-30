@@ -96,7 +96,7 @@ class UserCardData(private val dh: DH) : BaseObservable() {
     internal fun validateCardCvv(cvv: String) =
         when {
             cvv.isEmpty() -> FieldStatus.EMPTY
-            cvv.length < 3 -> FieldStatus.INVALID
+            cvv.length < CVV_LENGTH -> FieldStatus.INVALID
             else -> FieldStatus.VALID
         }
 
@@ -108,7 +108,7 @@ class UserCardData(private val dh: DH) : BaseObservable() {
                 val split = expiry.split("/")
 
                 val month = split.first().toInt()
-                val monthValid = month in 1..12
+                val monthValid = month in 1..LAST_MONTH
 
                 val yearValid =
                     split.last().toInt() >= Calendar
@@ -130,7 +130,7 @@ class UserCardData(private val dh: DH) : BaseObservable() {
     internal fun validateCardNumber(cardNumber: String) =
         when {
             cardNumber.isEmpty() -> FieldStatus.EMPTY
-            cardNumber.trimAllWhitespace().length == 16 -> FieldStatus.VALID
+            cardNumber.trimAllWhitespace().length == CARD_NUMBER_LENGTH -> FieldStatus.VALID
             else -> FieldStatus.INVALID
         }
 
@@ -176,13 +176,16 @@ class UserCardData(private val dh: DH) : BaseObservable() {
         return generateCardData(cardData, publicKey)
     }
 
-    fun isValid() = numberStatus == FieldStatus.VALID
-            && expiryStatus == FieldStatus.VALID
-            && cvvStatus == FieldStatus.VALID
+    fun isValid() = numberStatus == FieldStatus.VALID &&
+            expiryStatus == FieldStatus.VALID &&
+            cvvStatus == FieldStatus.VALID
 
     companion object {
         private const val GENERATOR_BYTES = 16
         private const val GENERATOR_OFFSET = 5
+        private const val CARD_NUMBER_LENGTH = 16
+        private const val LAST_MONTH = 12
+        private const val CVV_LENGTH = 3
 
         private val PATTERN_EXP_DATE = Pattern.compile("^(\\d{2}/\\d{2})$").toRegex()
     }

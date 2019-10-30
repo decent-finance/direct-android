@@ -27,9 +27,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.ErrorActivityFactory
 import com.cexdirect.lib.buy.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityErrorBinding
+import com.cexdirect.lib.di.annotation.ErrorActivityFactory
 import com.mcxiaoke.koi.ext.finish
 import javax.inject.Inject
 

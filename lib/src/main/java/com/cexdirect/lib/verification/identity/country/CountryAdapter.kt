@@ -46,7 +46,6 @@ class CountryAdapter(private val clickEvent: CountryClickEvent) :
             )
         )
 
-
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {

@@ -25,7 +25,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.cexdirect.lib.R
 
-
 class DocumentTypeButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -144,4 +143,3 @@ class DocumentTypeButton @JvmOverloads constructor(
         }
     }
 }
-

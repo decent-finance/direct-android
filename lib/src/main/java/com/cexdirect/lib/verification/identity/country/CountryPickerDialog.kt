@@ -27,8 +27,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseBottomSheetDialog
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.databinding.DialogCountryPickerBinding
+import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.verification.VerificationActivityViewModel
 import javax.inject.Inject

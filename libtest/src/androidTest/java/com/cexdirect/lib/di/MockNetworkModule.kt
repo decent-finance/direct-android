@@ -17,7 +17,6 @@
 package com.cexdirect.lib.di
 
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib._di.NetworkModule
 import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient

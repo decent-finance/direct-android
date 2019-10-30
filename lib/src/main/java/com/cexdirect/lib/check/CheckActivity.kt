@@ -24,9 +24,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.CheckActivityFactory
 import com.cexdirect.lib.buy.BuyActivity
 import com.cexdirect.lib.databinding.ActivityCheckBinding
+import com.cexdirect.lib.di.annotation.CheckActivityFactory
 import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Loading
 import com.cexdirect.lib.network.Success

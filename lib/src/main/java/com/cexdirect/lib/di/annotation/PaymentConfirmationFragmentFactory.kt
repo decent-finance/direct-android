@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib._di.annotation
+package com.cexdirect.lib.di.annotation
 
-import javax.inject.Scope
+import javax.inject.Qualifier
 
-@Scope
+@Qualifier
 @Retention
-annotation class IdentityScope
+annotation class PaymentConfirmationFragmentFactory

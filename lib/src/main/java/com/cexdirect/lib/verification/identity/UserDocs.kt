@@ -333,5 +333,4 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             0, selfieBase64?.encodeToBase64() ?: error("Selfie reference not set")
         )
     )
-
 }

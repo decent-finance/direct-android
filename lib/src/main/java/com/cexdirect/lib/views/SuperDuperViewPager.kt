@@ -21,7 +21,6 @@ import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
 import com.cexdirect.lib.verification.OrderStep
 
-
 class SuperDuperViewPager @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null

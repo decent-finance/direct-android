@@ -72,4 +72,3 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
         cexdSocket.removeAllSubscriptions()
     }
 }
-

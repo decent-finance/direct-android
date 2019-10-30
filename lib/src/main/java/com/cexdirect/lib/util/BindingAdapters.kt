@@ -106,7 +106,6 @@ fun SuperDuperViewPager.applyAdapter(position: Int, adapter: StepsPagerAdapter, 
     }
 }
 
-
 @BindingAdapter("pic")
 fun ImageView.applyPic(id: Int) {
     val drawable = ResourcesCompat.getDrawable(resources, id, context.theme)
@@ -134,9 +133,11 @@ fun EditText.applyTextWatcher(listener: InverseBindingListener) {
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            // do nothing
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            // do nothing
         }
     })
 }

@@ -25,8 +25,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib._di.annotation.TermsActivityFactory
 import com.cexdirect.lib.databinding.ActivityTermsBinding
+import com.cexdirect.lib.di.annotation.TermsActivityFactory
 import javax.inject.Inject
 
 class TermsActivity : BaseActivity() {
