@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.verification.identity
 
+import android.Manifest
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -30,10 +31,15 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.GrantPermissionRule
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
 import com.cexdirect.lib.network.models.Additional
+import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.Images
 import com.cexdirect.lib.network.ws.CexdSocket
 import com.cexdirect.lib.network.ws.Messenger
@@ -42,10 +48,12 @@ import com.cexdirect.lib.util.entryData
 import com.cexdirect.lib.util.hasVisibility
 import com.cexdirect.lib.verification.OrderStep
 import com.cexdirect.lib.verification.VerificationActivityViewModel
+import com.cexdirect.lib.verification.scanner.QrScannerActivity
 import com.cexdirect.lib.views.CollapsibleLayout
 import com.nhaarman.mockitokotlin2.whenever
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Java6Assertions.assertThat
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -56,6 +64,9 @@ class IdentityFragmentTest {
 
     @get:Rule
     val mockRule = DirectNetworkMockRule()
+
+    @get:Rule
+    val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA)
 
     @Mock
     lateinit var messenger: Messenger
@@ -69,6 +80,8 @@ class IdentityFragmentTest {
 
     @Before
     fun setUp() {
+        Intents.init()
+
         mockServer.start(8080)
 
         whenever(messenger.subscribeToOrderInfo()).thenReturn(MutableLiveData())
@@ -81,6 +94,8 @@ class IdentityFragmentTest {
     @After
     fun tearDown() {
         mockServer.shutdown()
+
+        Intents.release()
     }
 
     @Test
@@ -148,6 +163,30 @@ class IdentityFragmentTest {
     }
 
     @Test
+    fun displaySsnForUs() {
+        scenario.onFragment {
+            goToBase(it.model)
+            it.model.userCountry.selectedCountry = CountryData(
+                "USA",
+                "US",
+                listOf(CountryData("Alabama", "AL", null))
+            )
+        }
+
+        onView(withHint(R.string.cexd_ssn)).perform(scrollTo()).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun dontDisplaySsnForNonUs() {
+        scenario.onFragment {
+            goToBase(it.model)
+            it.model.userCountry.selectedCountry = CountryData("Mexico", "MX", null)
+        }
+
+        onView(withHint(R.string.cexd_ssn)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
     fun displayValidationErrorForSsn() {
         scenario.onFragment {
             goToBase(it.model)
@@ -187,6 +226,28 @@ class IdentityFragmentTest {
         onView(withText(R.string.cexd_invalid_cvv))
             .perform(scrollTo())
             .check(hasVisibility(View.VISIBLE))
+    }
+
+    @Test
+    fun launchQrScanner() {
+        scenario.onFragment {
+            goToBase(it.model)
+        }
+
+        onView(withContentDescription(R.string.cexd_open_qr_scanner)).perform(scrollTo(), click())
+
+        intended(hasComponent(QrScannerActivity::class.java.name))
+    }
+
+    @Test
+    fun showCvvInfoDialog() {
+        scenario.onFragment {
+            goToBase(it.model)
+        }
+
+        onView(withContentDescription(R.string.cexd_show_cvv_info)).perform(scrollTo(), click())
+
+        onView(withText(R.string.cexd_cvv_desc)).check(matches(isDisplayed()))
     }
 
     @Test

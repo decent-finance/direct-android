@@ -168,4 +168,5 @@
     <string name="cexd_remaining">%1s</string>
     <string name="cexd_title_get">Get %1s %2s for %3s %4s</string>
     <string name="cexd_edit">Edit</string>
+    <string name="cexd_open_qr_scanner">Open QR scanner</string>
 </resources>

@@ -91,7 +91,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical|end"
                     android:background="@null"
-                    android:contentDescription="@string/cexd_show_cvv_info"
+                    android:contentDescription="@string/cexd_open_qr_scanner"
                     android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:onClick="@{() -> model.scanQrCode()}"
                     android:src="@drawable/ic_qr_code" />
