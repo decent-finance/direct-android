@@ -31,6 +31,7 @@ import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.symbolMap
 import com.cexdirect.lib.verification.confirmation.CheckCode
+import com.cexdirect.lib.verification.confirmation.TdsData
 import com.cexdirect.lib.verification.events.UploadPhotoEvent
 import com.cexdirect.lib.verification.identity.*
 import com.cexdirect.lib.verification.identity.country.CountryAdapter
@@ -104,7 +105,7 @@ class VerificationActivityViewModel(
     val showCountrySearch = ObservableBoolean(false)
 
     val checkCode = CheckCode()
-    val _3dsData = com.cexdirect.lib.verification.confirmation._3dsData()
+    val tdsData = ObservableField<TdsData?>()
 
     val paymentInfo = ObservableField<PaymentInfo>()
     val txId = ObservableField("")
@@ -567,13 +568,9 @@ class VerificationActivityViewModel(
     }
 
     @VisibleForTesting
-    fun askFor3ds(threeDS: _3Ds) {
+    fun askFor3ds(threeDS: Tds) {
         orderStep.set(OrderStep.TDS)
-        _3dsData.apply {
-            _3dsUrl = threeDS.url
-            _3dsExtras = threeDS.data
-            txId = threeDS.txId
-        }
+        tdsData.set(TdsData(threeDS.url, threeDS.data, threeDS.txId, orderId.get()!!))
     }
 
     @VisibleForTesting

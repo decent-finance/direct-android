@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:visibility="@{model.orderStep == OrderStep.TDS ? View.VISIBLE : View.GONE}"
-            app:_3dsData="@{model._3dsData}" />
+            app:_3dsData="@{model.tdsData}" />
 
         <LinearLayout
             android:layout_width="match_parent"

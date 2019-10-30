@@ -28,8 +28,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
-import com.cexdirect.lib.network.models._3Ds
-import com.cexdirect.lib.network.models._3DsExtras
+import com.cexdirect.lib.network.models.Tds
+import com.cexdirect.lib.network.models.TdsExtras
 import com.cexdirect.lib.network.ws.CexdSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.hasVisibility
@@ -117,7 +117,7 @@ class PaymentConfirmationFragmentTest {
     @Test
     fun showWebViewWhenAskedFor3ds() {
         scenario.onFragment {
-            it.model.askFor3ds(_3Ds("abc123", "POST", "https://example.com", "FOO", _3DsExtras()))
+            it.model.askFor3ds(Tds("abc123", "POST", "https://example.com", "FOO", TdsExtras()))
             it.model.userEmail.email = "example@example.com"
         }.moveToState(Lifecycle.State.RESUMED)
 
