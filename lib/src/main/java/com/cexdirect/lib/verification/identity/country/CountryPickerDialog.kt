@@ -63,14 +63,14 @@ abstract class BaseCountryPickerDialog : BaseBottomSheetDialog() {
                 selectedCountry = getSelectedCountry()
             })
             currentCountryData = getCountries()
-            countryClickEvent.observe(this@BaseCountryPickerDialog, Observer {
+            countryClickEvent.observe(viewLifecycleOwner, Observer {
                 selectCountry(it)
                 dismiss()
             })
-            countryPickerExitEvent.observe(this@BaseCountryPickerDialog, Observer {
+            countryPickerExitEvent.observe(viewLifecycleOwner, Observer {
                 dismiss()
             })
-            toggleSearchEvent.observe(this@BaseCountryPickerDialog, Observer {
+            toggleSearchEvent.observe(viewLifecycleOwner, Observer {
                 showCountrySearch.set(it)
             })
         }.let {

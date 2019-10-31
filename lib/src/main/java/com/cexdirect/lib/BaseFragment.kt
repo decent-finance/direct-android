@@ -33,7 +33,7 @@ abstract class BaseFragment : Fragment() {
     protected inline fun <reified VM : BaseObservableViewModel> activityViewModelProvider(
         crossinline factory: () -> ViewModelProvider.Factory
     ) =
-        lazy { ViewModelProviders.of(activity!!, factory()).get(VM::class.java) }
+        lazy { ViewModelProviders.of(requireActivity(), factory()).get(VM::class.java) }
 
     protected inline fun <reified VM : BaseObservableViewModel> fragmentViewModelProvider(
         crossinline factory: () -> ViewModelProvider.Factory

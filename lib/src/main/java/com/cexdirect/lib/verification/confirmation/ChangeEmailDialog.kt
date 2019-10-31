@@ -56,11 +56,11 @@ class ChangeEmailDialog : BaseBottomSheetDialog() {
 
         binding.model = model
 
-        model.saveEvent.observe(this, Observer {
+        model.saveEvent.observe(viewLifecycleOwner, Observer {
             emailChangedEvent.value = model.userEmail.email
             dismiss()
         })
-        model.cancelEvent.observe(this, Observer {
+        model.cancelEvent.observe(viewLifecycleOwner, Observer {
             dismiss()
         })
     }

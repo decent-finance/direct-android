@@ -49,8 +49,8 @@ class ExitDialog : BaseBottomSheetDialog() {
         Direct.directComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
         binding.model = model
-        model.closeEvent.observe(this, Observer { dismiss() })
-        model.exitEvent.observe(this, Observer { finish() })
+        model.closeEvent.observe(viewLifecycleOwner, Observer { dismiss() })
+        model.exitEvent.observe(viewLifecycleOwner, Observer { finish() })
     }
 }
 

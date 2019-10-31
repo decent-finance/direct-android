@@ -58,11 +58,12 @@ class ReceiptFragment : BaseVerificationFragment() {
 
         model.apply {
             statusWatcher.setScreenChanged()
-            subscribeToOrderInfo().observe(this@ReceiptFragment, socketObserver(
+            subscribeToOrderInfo().observe(
+                viewLifecycleOwner, socketObserver(
                 onOk = { model.updatePaymentInfo(it) },
                 onFail = { purchaseFailed(it.message) }
             ))
-            buyMoreEvent.observe(this@ReceiptFragment, Observer {
+            buyMoreEvent.observe(viewLifecycleOwner, Observer {
                 context!!.startBuyActivity(
                     OrderData(
                         model.orderAmounts.selectedFiatAmount,
@@ -72,10 +73,10 @@ class ReceiptFragment : BaseVerificationFragment() {
                 )
                 finish()
             })
-            txIdCopyEvent.observe(this@ReceiptFragment, Observer { txId ->
+            txIdCopyEvent.observe(viewLifecycleOwner, Observer { txId ->
                 this@ReceiptFragment.copyTxId(txId)
             })
-            txIdOpenEvent.observe(this@ReceiptFragment, Observer { openTxDetailsInBrowser(it) })
+            txIdOpenEvent.observe(viewLifecycleOwner, Observer { openTxDetailsInBrowser(it) })
         }
     }
 

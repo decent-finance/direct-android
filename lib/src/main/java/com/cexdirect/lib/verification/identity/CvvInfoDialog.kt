@@ -53,7 +53,7 @@ class CvvInfoDialog : BaseBottomSheetDialog() {
         Direct.identitySubcomponent?.inject(this)
         super.onViewCreated(view, savedInstanceState)
         binding.model = model
-        model.closeEvent.observe(this, Observer { dismiss() })
+        model.closeEvent.observe(viewLifecycleOwner, Observer { dismiss() })
     }
 }
 

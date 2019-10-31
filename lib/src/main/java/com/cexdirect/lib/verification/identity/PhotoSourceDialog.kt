@@ -58,7 +58,7 @@ class PhotoSourceDialog : BaseBottomSheetDialog() {
         Direct.identitySubcomponent?.inject(this)
         super.onViewCreated(view, savedInstanceState)
         binding.model = model
-        model.sourceClickEvent.observe(this, Observer {
+        model.sourceClickEvent.observe(viewLifecycleOwner, Observer {
             event.value = it
             dismiss()
         })

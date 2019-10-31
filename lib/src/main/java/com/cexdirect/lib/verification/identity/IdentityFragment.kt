@@ -87,7 +87,7 @@ class IdentityFragment : BaseVerificationFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupInputs()
 
-        event.observe(this, Observer {
+        event.observe(viewLifecycleOwner, Observer {
             when (it!!) {
                 SourceClickType.PHOTO -> choosePhotoFromGalleryWithPermissionCheck()
                 SourceClickType.CAMERA -> takePhotoWithPermissionCheck()
@@ -98,26 +98,27 @@ class IdentityFragment : BaseVerificationFragment() {
         })
 
         model.apply {
-            chooseCountryEvent.observe(this@IdentityFragment, Observer {
-                CountryPickerDialog().show(fragmentManager!!, "country")
+            chooseCountryEvent.observe(viewLifecycleOwner, Observer {
+                CountryPickerDialog().show(parentFragmentManager, "country")
             })
-            chooseStateEvent.observe(this@IdentityFragment, Observer {
-                StatePickerDialog().show(fragmentManager!!, "state")
+            chooseStateEvent.observe(viewLifecycleOwner, Observer {
+                StatePickerDialog().show(parentFragmentManager, "state")
             })
-            uploadPhotoEvent.observe(this@IdentityFragment, Observer {
-                PhotoSourceDialog().show(fragmentManager!!, "choose")
+            uploadPhotoEvent.observe(viewLifecycleOwner, Observer {
+                PhotoSourceDialog().show(parentFragmentManager, "choose")
             })
-            cvvInfoEvent.observe(this@IdentityFragment, Observer {
-                CvvInfoDialog().show(fragmentManager!!, "cvv")
+            cvvInfoEvent.observe(viewLifecycleOwner, Observer {
+                CvvInfoDialog().show(parentFragmentManager, "cvv")
             })
-            scanQrEvent.observe(this@IdentityFragment, Observer {
+            scanQrEvent.observe(viewLifecycleOwner, Observer {
                 scanQrCodeWithPermissionCheck()
             })
-            nextClickEvent.observe(this@IdentityFragment, Observer { handleNextClick() })
-            basePaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            extraPaymentData.observe(this@IdentityFragment, paymentDataObserver)
-            processingResult.observe(this@IdentityFragment, restObserver(onOk = {}, final = {}))
-            createOrder.observe(this@IdentityFragment, restObserver(
+            nextClickEvent.observe(viewLifecycleOwner, Observer { handleNextClick() })
+            basePaymentData.observe(viewLifecycleOwner, paymentDataObserver)
+            extraPaymentData.observe(viewLifecycleOwner, paymentDataObserver)
+            processingResult.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))
+            createOrder.observe(
+                viewLifecycleOwner, restObserver(
                 onOk = {
                     model.updateOrderId(it!!.orderId)
                     setPaymentBase()
@@ -132,14 +133,17 @@ class IdentityFragment : BaseVerificationFragment() {
                     }
                 }
             ))
-            getOrderInfo.observe(this@IdentityFragment, restObserver(
+            getOrderInfo.observe(
+                viewLifecycleOwner, restObserver(
                 onOk = { setRequiredImages(it!!.basic.images) }
             ))
-            uploadImage.observe(this@IdentityFragment, restObserver(
+            uploadImage.observe(
+                viewLifecycleOwner, restObserver(
                 onOk = { setDocumentStatusToValid() },
                 onFail = { purchaseFailed(it.message) }
             ))
-            verificationResult.observe(this@IdentityFragment, restObserver(
+            verificationResult.observe(
+                viewLifecycleOwner, restObserver(
                 onOk = {},
                 onFail = {
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
@@ -176,7 +180,8 @@ class IdentityFragment : BaseVerificationFragment() {
     }
 
     private fun subscribeToOrderInfoUpdates() {
-        model.subscribeToOrderInfo().observe(this, socketObserver(
+        model.subscribeToOrderInfo().observe(
+            viewLifecycleOwner, socketObserver(
             onOk = {
                 model.updateOrderStatus(
                     it,
