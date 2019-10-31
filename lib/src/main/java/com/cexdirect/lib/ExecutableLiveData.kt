@@ -14,8 +14,6 @@
  *    limitations under the License.
  */
 
-@file:Suppress("MatchingDeclarationName")
-
 package com.cexdirect.lib
 
 import androidx.lifecycle.MutableLiveData
@@ -38,7 +36,8 @@ open class ExecutableLiveData<T : ApiResponse<V>, V>(
         postValue(Loading())
         scope.launch {
             runCatching {
-                val response = withContext(Dispatchers.IO) { block().await() } as Extractable<V>
+                val response =
+                    withContext(DispatcherRegistry.io) { block().await() } as Extractable<V>
                 withContext(Dispatchers.Main) { postValue(Success(response.extract())) }
             }.getOrElse {
                 withContext(Dispatchers.Main) {

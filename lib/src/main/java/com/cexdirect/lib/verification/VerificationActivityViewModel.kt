@@ -46,9 +46,8 @@ class VerificationActivityViewModel(
     stringProvider: StringProvider,
     private val messenger: Messenger,
     dh: DH,
-    val emailChangedEvent: StringLiveEvent,
-    dispatcherProvider: CoroutineDispatcherProvider
-) : LegalViewModel(dispatcherProvider) {
+    val emailChangedEvent: StringLiveEvent
+) : LegalViewModel() {
 
     // --- Events --- //
     val nextClickEvent = VoidLiveEvent()
@@ -630,8 +629,7 @@ class VerificationActivityViewModel(
         private val stringProvider: StringProvider,
         private val messenger: Messenger,
         private val dh: DH,
-        private val emailChangedEvent: StringLiveEvent,
-        private val dispatcherProvider: CoroutineDispatcherProvider
+        private val emailChangedEvent: StringLiveEvent
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -642,8 +640,7 @@ class VerificationActivityViewModel(
                 stringProvider,
                 messenger,
                 dh,
-                emailChangedEvent,
-                dispatcherProvider
+                emailChangedEvent
             ) as T
     }
 }

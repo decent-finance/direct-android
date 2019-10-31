@@ -16,11 +16,10 @@
 
 package com.cexdirect.lib.check
 
-import android.os.SystemClock
 import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib.MockCoroutineDispatcherProvider
+import com.cexdirect.lib.DispatcherRule
 import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.MerchantService
 import com.cexdirect.lib.network.PaymentApi
@@ -44,6 +43,9 @@ class CheckActivityViewModelTest {
     @get:Rule
     val activityRule = ActivityTestRule(TermsActivity::class.java, true, false)
 
+    @get:Rule
+    val dispatcherRule = DispatcherRule()
+
     @Mock
     lateinit var merchantService: MerchantService
 
@@ -65,8 +67,7 @@ class CheckActivityViewModelTest {
             MerchantApi(merchantService),
             PaymentApi(paymentService),
             placementValidator,
-            ruleIds,
-            MockCoroutineDispatcherProvider()
+            ruleIds
         )
     }
 
@@ -116,9 +117,6 @@ class CheckActivityViewModelTest {
         Direct.credentials = Credentials("foo", "s3cr3t")
 
         model.checkPlacement()
-
-        // FIXME : replace with test dispatcher provide
-        SystemClock.sleep(500)
 
         @Suppress("DeferredResultUnused")
         verify(merchantService).getPlacementInfoAsync(anyString())

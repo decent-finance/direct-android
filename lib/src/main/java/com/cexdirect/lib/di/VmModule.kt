@@ -17,7 +17,6 @@
 package com.cexdirect.lib.di
 
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.ExitDialogViewModel
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
@@ -44,10 +43,6 @@ import javax.inject.Singleton
 class VmModule {
 
     @Provides
-    @Singleton
-    fun provideCoroutineDispatcherProvider() = CoroutineDispatcherProvider()
-
-    @Provides
     @BuyActivityFactory
     @Singleton
     fun provideBuyActivityViewModel(
@@ -55,7 +50,6 @@ class VmModule {
         paymentApi: PaymentApi,
         analyticsApi: AnalyticsApi,
         messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider,
         stringProvider: StringProvider
     ): ViewModelProvider.Factory =
         BuyActivityViewModel.Factory(
@@ -63,18 +57,14 @@ class VmModule {
             paymentApi,
             analyticsApi,
             messenger,
-            coroutineDispatcherProvider,
             stringProvider
         )
 
     @Provides
     @ErrorActivityFactory
     @Singleton
-    fun provideErrorActivityViewModel(
-        messenger: Messenger,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        ErrorActivityViewModel.Factory(messenger, coroutineDispatcherProvider)
+    fun provideErrorActivityViewModel(messenger: Messenger): ViewModelProvider.Factory =
+        ErrorActivityViewModel.Factory(messenger)
 
     @Provides
     @CheckActivityFactory
@@ -82,29 +72,22 @@ class VmModule {
     fun provideCheckActivityViewModel(
         merchantApi: MerchantApi,
         paymentApi: PaymentApi,
-        placementValidator: PlacementValidator,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
+        placementValidator: PlacementValidator
     ): ViewModelProvider.Factory =
         CheckActivityViewModel.Factory(
             merchantApi,
             paymentApi,
             placementValidator,
-            RuleIds(),
-            coroutineDispatcherProvider
+            RuleIds()
         )
 
     @Provides
     @TermsActivityFactory
     @Singleton
-    fun provideTermsActivityViewModel(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        TermsActivityViewModel.Factory(coroutineDispatcherProvider)
+    fun provideTermsActivityViewModel(): ViewModelProvider.Factory =
+        TermsActivityViewModel.Factory()
 
     @Provides
     @Singleton
-    fun provideExitDialogViewModel(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ) =
-        ExitDialogViewModel.Factory(coroutineDispatcherProvider)
+    fun provideExitDialogViewModel() = ExitDialogViewModel.Factory()
 }

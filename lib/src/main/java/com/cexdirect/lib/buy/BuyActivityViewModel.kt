@@ -36,9 +36,8 @@ class BuyActivityViewModel(
     paymentApi: PaymentApi,
     private val analyticsApi: AnalyticsApi,
     private val messenger: Messenger,
-    dispatcherProvider: CoroutineDispatcherProvider,
     stringProvider: StringProvider
-) : LegalViewModel(dispatcherProvider) {
+) : LegalViewModel() {
 
     val amount = BuyAmount(stringProvider)
 
@@ -182,7 +181,6 @@ class BuyActivityViewModel(
         private val paymentApi: PaymentApi,
         private val analyticsApi: AnalyticsApi,
         private val messenger: Messenger,
-        private val dispatcherProvider: CoroutineDispatcherProvider,
         private val stringProvider: StringProvider
     ) : ViewModelProvider.Factory {
 
@@ -193,7 +191,6 @@ class BuyActivityViewModel(
                 paymentApi,
                 analyticsApi,
                 messenger,
-                dispatcherProvider,
                 stringProvider
             ) as T
     }

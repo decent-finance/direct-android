@@ -26,7 +26,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
 @Suppress("unused")
-abstract class BaseObservableViewModel(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModel(),
+abstract class BaseObservableViewModel : ViewModel(),
     Observable, CoroutineScope {
 
     private val job by lazy { Job() }
@@ -35,7 +35,7 @@ abstract class BaseObservableViewModel(private val dispatcherProvider: Coroutine
     private var mCallbacks: PropertyChangeRegistry? = null
 
     override val coroutineContext: CoroutineContext
-        get() = dispatcherProvider.main + job
+        get() = DispatcherRegistry.main + job
 
     @Synchronized
     override fun addOnPropertyChangedCallback(callback: OnPropertyChangedCallback) {

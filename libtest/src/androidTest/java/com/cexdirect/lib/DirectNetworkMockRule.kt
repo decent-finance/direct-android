@@ -25,7 +25,7 @@ class DirectNetworkMockRule : DaggerMockRule<DirectComponent>(
     CoreModule(InstrumentationRegistry.getInstrumentation().targetContext),
     OkHttpClientModule(),
     MockNetworkModule(),
-    MockVmModule()
+    VmModule()
 ) {
     init {
         set { Direct.directComponent = it }

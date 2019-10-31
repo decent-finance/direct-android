@@ -19,11 +19,9 @@ package com.cexdirect.lib.verification.scanner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.VoidLiveEvent
 
-class QrScannerActivityViewModel(val dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class QrScannerActivityViewModel : BaseObservableViewModel() {
 
     val cancelEvent = VoidLiveEvent()
 
@@ -31,10 +29,10 @@ class QrScannerActivityViewModel(val dispatcherProvider: CoroutineDispatcherProv
         cancelEvent.call()
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) :
-        ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            QrScannerActivityViewModel(dispatcherProvider) as T
+            QrScannerActivityViewModel() as T
     }
 }

@@ -17,7 +17,6 @@
 package com.cexdirect.lib.buy
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.cexdirect.lib.MockCoroutineDispatcherProvider
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.network.AnalyticsApi
 import com.cexdirect.lib.network.MerchantApi
@@ -60,7 +59,6 @@ class BuyActivityViewModelTest {
             mock(),
             mock(),
             mock(),
-            MockCoroutineDispatcherProvider(),
             stringProvider
         )
     }

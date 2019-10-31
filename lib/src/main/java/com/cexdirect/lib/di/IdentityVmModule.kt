@@ -17,7 +17,6 @@
 package com.cexdirect.lib.di
 
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.StringProvider
@@ -49,8 +48,7 @@ class IdentityVmModule {
         stringProvider: StringProvider,
         messenger: Messenger,
         dh: DH,
-        emailChangedEvent: StringLiveEvent,
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
+        emailChangedEvent: StringLiveEvent
     ): ViewModelProvider.Factory =
         VerificationActivityViewModel.Factory(
             paymentApi,
@@ -58,36 +56,24 @@ class IdentityVmModule {
             stringProvider,
             messenger,
             dh,
-            emailChangedEvent,
-            coroutineDispatcherProvider
+            emailChangedEvent
         )
 
     @Provides
     @PhotoSourceDialogFactory
     @IdentityScope
-    fun providePhotoSourceDialogFactory(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ): ViewModelProvider.Factory =
-        PhotoSourceDialogViewModel.Factory(coroutineDispatcherProvider)
+    fun providePhotoSourceDialogFactory(): ViewModelProvider.Factory =
+        PhotoSourceDialogViewModel.Factory()
 
     @Provides
     @IdentityScope
-    fun provideCvvInfoDialogViewModelFactory(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ) =
-        CvvInfoDialogViewModel.Factory(coroutineDispatcherProvider)
+    fun provideCvvInfoDialogViewModelFactory() = CvvInfoDialogViewModel.Factory()
 
     @Provides
     @IdentityScope
-    fun provideChangeEmailDialogViewModelFactory(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ) =
-        ChangeEmailDialogViewModel.Factory(coroutineDispatcherProvider)
+    fun provideChangeEmailDialogViewModelFactory() = ChangeEmailDialogViewModel.Factory()
 
     @Provides
     @IdentityScope
-    fun provideQrScannerViewModelFactory(
-        coroutineDispatcherProvider: CoroutineDispatcherProvider
-    ) =
-        QrScannerActivityViewModel.Factory(coroutineDispatcherProvider)
+    fun provideQrScannerViewModelFactory() = QrScannerActivityViewModel.Factory()
 }

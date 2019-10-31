@@ -20,11 +20,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.VoidLiveEvent
 
-class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class TermsActivityViewModel : BaseObservableViewModel() {
 
     val title = ObservableField("")
     val content = ObservableField("")
@@ -35,8 +33,8 @@ class TermsActivityViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
         okEvent.call()
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) = TermsActivityViewModel(dispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) = TermsActivityViewModel() as T
     }
 }

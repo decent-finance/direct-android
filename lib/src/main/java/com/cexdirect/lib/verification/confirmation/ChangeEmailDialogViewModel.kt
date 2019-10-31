@@ -19,12 +19,11 @@ package com.cexdirect.lib.verification.confirmation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.VoidLiveEvent
 import com.cexdirect.lib.verification.identity.UserEmail
 
-class ChangeEmailDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class ChangeEmailDialogViewModel :
+    BaseObservableViewModel() {
 
     val userEmail = UserEmail()
 
@@ -39,8 +38,9 @@ class ChangeEmailDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider
         cancelEvent.call()
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) = ChangeEmailDialogViewModel(dispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            ChangeEmailDialogViewModel() as T
     }
 }

@@ -23,7 +23,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.*
+import com.cexdirect.lib.BaseBottomSheetDialog
+import com.cexdirect.lib.BaseObservableViewModel
+import com.cexdirect.lib.Direct
+import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.DialogPhotoSourceBinding
 import com.cexdirect.lib.di.annotation.PhotoSourceDialogFactory
 import com.cexdirect.lib.verification.events.SourceClickEvent
@@ -62,8 +65,7 @@ class PhotoSourceDialog : BaseBottomSheetDialog() {
     }
 }
 
-class PhotoSourceDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class PhotoSourceDialogViewModel : BaseObservableViewModel() {
 
     val sourceClickEvent = SourceClickEvent()
 
@@ -71,10 +73,11 @@ class PhotoSourceDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider
         sourceClickEvent.value = type
     }
 
-    class Factory(private val dispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) = PhotoSourceDialogViewModel(dispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            PhotoSourceDialogViewModel() as T
     }
 }
 

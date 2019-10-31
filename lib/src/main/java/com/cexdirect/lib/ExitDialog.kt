@@ -54,8 +54,7 @@ class ExitDialog : BaseBottomSheetDialog() {
     }
 }
 
-class ExitDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class ExitDialogViewModel : BaseObservableViewModel() {
 
     val closeEvent = VoidLiveEvent()
     val exitEvent = VoidLiveEvent()
@@ -68,10 +67,9 @@ class ExitDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
         exitEvent.call()
     }
 
-    class Factory(private val coroutineDispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            ExitDialogViewModel(coroutineDispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) = ExitDialogViewModel() as T
     }
 }

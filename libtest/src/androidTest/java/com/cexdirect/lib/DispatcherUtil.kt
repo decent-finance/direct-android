@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,16 +13,20 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package com.cexdirect.lib
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-@Suppress("EXPERIMENTAL_API_USAGE")
-class MockCoroutineDispatcherProvider : CoroutineDispatcherProvider() {
-    override val main: CoroutineDispatcher
-        get() = Dispatchers.Unconfined
-    override val io: CoroutineDispatcher
-        get() = Dispatchers.Unconfined
+fun setToUnconfined() {
+    DispatcherRegistry.apply {
+        main = Dispatchers.Unconfined
+        io = Dispatchers.Unconfined
+    }
+}
+
+fun resetDispatchers() {
+    DispatcherRegistry.apply {
+        main = Dispatchers.Main
+        io = Dispatchers.IO
+    }
 }

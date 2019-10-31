@@ -57,8 +57,8 @@ class CvvInfoDialog : BaseBottomSheetDialog() {
     }
 }
 
-class CvvInfoDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+class CvvInfoDialogViewModel :
+    BaseObservableViewModel() {
 
     val closeEvent = VoidLiveEvent()
 
@@ -66,9 +66,8 @@ class CvvInfoDialogViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
         closeEvent.call()
     }
 
-    class Factory(private val coroutineDispatcherProvider: CoroutineDispatcherProvider) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            CvvInfoDialogViewModel(coroutineDispatcherProvider) as T
+        override fun <T : ViewModel?> create(modelClass: Class<T>) = CvvInfoDialogViewModel() as T
     }
 }

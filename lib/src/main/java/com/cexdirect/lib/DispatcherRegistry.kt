@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 package com.cexdirect.lib
 
+import androidx.annotation.RestrictTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-@OpenForTesting
-class CoroutineDispatcherProvider {
-    val main: CoroutineDispatcher by lazy { Dispatchers.Main }
-    val io: CoroutineDispatcher by lazy { Dispatchers.IO }
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+object DispatcherRegistry {
+
+    @JvmStatic
+    var main: CoroutineDispatcher = Dispatchers.Main
+
+    @JvmStatic
+    var io: CoroutineDispatcher = Dispatchers.IO
 }

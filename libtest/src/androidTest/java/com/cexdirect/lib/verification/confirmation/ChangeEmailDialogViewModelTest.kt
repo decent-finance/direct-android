@@ -17,7 +17,6 @@
 package com.cexdirect.lib.verification.confirmation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.cexdirect.lib.MockCoroutineDispatcherProvider
 import com.cexdirect.lib.util.observeOnce
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
@@ -33,7 +32,7 @@ class ChangeEmailDialogViewModelTest {
 
     @Before
     fun setUp() {
-        model = ChangeEmailDialogViewModel(MockCoroutineDispatcherProvider())
+        model = ChangeEmailDialogViewModel()
     }
 
     @Test

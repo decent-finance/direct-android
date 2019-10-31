@@ -19,7 +19,6 @@ package com.cexdirect.lib.check
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.CoroutineDispatcherProvider
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.PaymentApi
@@ -32,9 +31,8 @@ class CheckActivityViewModel(
     merchantApi: MerchantApi,
     paymentApi: PaymentApi,
     private val placementValidator: PlacementValidator,
-    private val ruleIds: RuleIds,
-    dispatcherProvider: CoroutineDispatcherProvider
-) : BaseObservableViewModel(dispatcherProvider) {
+    private val ruleIds: RuleIds
+) : BaseObservableViewModel() {
 
     val checkResult = merchantApi.getPlacementInfo(this, Direct.credentials.placementId)
     val ruleResult = merchantApi.getRule(this) { ruleIds.getCurrentRuleId() }
@@ -96,8 +94,7 @@ class CheckActivityViewModel(
         private val merchantApi: MerchantApi,
         private val paymentApi: PaymentApi,
         private val placementValidator: PlacementValidator,
-        private val ruleIds: RuleIds,
-        private val dispatcherProvider: CoroutineDispatcherProvider
+        private val ruleIds: RuleIds
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -106,8 +103,7 @@ class CheckActivityViewModel(
                 merchantApi,
                 paymentApi,
                 placementValidator,
-                ruleIds,
-                dispatcherProvider
+                ruleIds
             ) as T
     }
 }
