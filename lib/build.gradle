@@ -10,7 +10,7 @@ import com.cmgapps.license.OutputType
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
+    maven { url 'https://jitpack.io' }
 }
 
 version '1.0.0-alpha6'
@@ -24,11 +24,6 @@ android {
         versionName this.version
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     testOptions {
@@ -149,6 +144,7 @@ dependencies {
     api 'com.mcxiaoke.koi:core:0.5.5'
     api 'ru.noties.markwon:core:3.1.0'
     api 'me.dm7.barcodescanner:zxing:1.9.13'
+    api 'com.cexdirect:livedatax:0.2.0'
 
     api "com.squareup.okhttp3:okhttp:$okHttpVersion"
     api "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"

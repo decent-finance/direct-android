@@ -17,25 +17,25 @@
 package com.cexdirect.lib.buy
 
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
 import com.cexdirect.lib.network.AnalyticsApi
 import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.PaymentApi
-import com.cexdirect.lib.network.enqueueWith
 import com.cexdirect.lib.network.models.EventData
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.MonetaryData
+import com.cexdirect.lib.network.models.Precision
 import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.livedatax.switchMap
 
 @OpenForTesting
 class BuyActivityViewModel(
     merchantApi: MerchantApi,
     paymentApi: PaymentApi,
-    private val analyticsApi: AnalyticsApi,
-    private val messenger: Messenger,
+    analyticsApi: AnalyticsApi,
+    messenger: Messenger,
     stringProvider: StringProvider
 ) : LegalViewModel() {
 
@@ -44,52 +44,32 @@ class BuyActivityViewModel(
     val shouldShowCryptoInput = ObservableBoolean(false)
     val dataLoaded = ObservableBoolean(false)
 
-    val buyCryptoEvent = VoidLiveEvent()
     val popularClickEvent = StringLiveEvent()
     val switchBaseCurrencyEvent = VoidLiveEvent()
     val switchQuoteCurrencyEvent = VoidLiveEvent()
     val closeSelectorEvent = VoidLiveEvent()
+    private final val buyClickEvent = VoidLiveEvent()
 
     final val currencyClickEvent = StringLiveEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
-    private val precisions =
-        merchantApi.getCurrencyPrecisions(this, Direct.credentials.placementId)
-
-    @Suppress("NestedLambdaShadowedImplicitParameter")
-    val currencies = Transformations.switchMap(precisions) {
-        it.enqueueWith({
-            it.data.let {
-                amount.precisionList = it!!
-                amount.precisionList.find { it.currency == amount.selectedFiatCurrency }?.let {
-                    amount.fiatInputFilter = TradeInputFilter(it.visiblePrecision)
-                }
-                amount.precisionList.findLast { it.currency == amount.selectedCryptoCurrency }
-                    ?.let {
-                        amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision)
-                    }
-            }
-            paymentApi.getExchangeRates(this).apply { execute() }
-        })
-    }
-
-    val sendBuyEvent = analyticsApi.sendBuyEvent(this) {
-        EventData(
-            fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
-            crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
+    final val api = CalculatorApi(merchantApi, paymentApi, analyticsApi, messenger, this)
+    val calcData = api.calcData
+    val buyEvent = buyClickEvent.switchMap {
+        api.sendBuyEvent(
+            EventData(
+                fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
+                crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
+            )
         )
     }
 
     fun loadData() {
-        precisions.execute()
-    }
-
-    fun sendOpenEvent() {
-        analyticsApi.sendOpenEvent(this).apply { execute() }
+        api.loadCalcData()
     }
 
     fun buyCrypto() {
-        buyCryptoEvent.call()
+        buyClickEvent.call()
     }
 
     fun enableCryptoInput() {
@@ -116,16 +96,13 @@ class BuyActivityViewModel(
         amount.selectedFiatCurrency = currency
     }
 
-    fun subscribeToExchangeRates() = messenger.subscribeToExchangeRates()
+    fun subscribeToExchangeRates() = api.subscribeToExchangeRates()
 
-    fun extractMonetaryData(
-        block: (
-            cryptoAmount: String,
-            cryptoCurrency: String,
-            fiatAmount: String,
-            fiatCurrency: String
-        ) -> Unit
-    ) {
+    fun unsubscribeFromExchangeRates() {
+        api.unsubscribeFromExchangeRates()
+    }
+
+    fun extractMonetaryData(block: (cryptoAmount: String, cryptoCurrency: String, fiatAmount: String, fiatCurrency: String) -> Unit) {
         block.invoke(
             amount.cryptoAmount,
             amount.selectedCryptoCurrency,
@@ -151,6 +128,14 @@ class BuyActivityViewModel(
         action.invoke()
     }
 
+    fun initPrecisions(precisions: List<Precision>) {
+        amount.precisionList = precisions
+        amount.precisionList.find { it.currency == amount.selectedFiatCurrency }
+            ?.let { amount.fiatInputFilter = TradeInputFilter(it.visiblePrecision) }
+        amount.precisionList.findLast { it.currency == amount.selectedCryptoCurrency }
+            ?.let { amount.cryptoInputFilter = TradeInputFilter(it.visiblePrecision) }
+    }
+
     fun initRates(
         data: List<ExchangeRate>,
         lastFiatAmount: String?,
@@ -169,11 +154,6 @@ class BuyActivityViewModel(
 
     fun updateRates(data: List<ExchangeRate>) {
         amount.rates = data
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        messenger.removeExchangesSubscription()
     }
 
     class Factory(

@@ -28,10 +28,6 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.ActivityBuyBinding
 import com.cexdirect.lib.di.annotation.BuyActivityFactory
 import com.cexdirect.lib.error.purchaseFailed
-import com.cexdirect.lib.network.Failure
-import com.cexdirect.lib.network.Loading
-import com.cexdirect.lib.network.Resource
-import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.verification.VerificationActivity
 import javax.inject.Inject
@@ -43,12 +39,10 @@ class BuyActivity : BaseActivity() {
 
     private val model: BuyActivityViewModel by viewModelProvider { modelFactory }
 
-    private val ratesObserver = Observer<Resource<List<ExchangeRate>?>> {
-        when (it) {
-            is Success -> model.updateRates(it.data!!)
-            is Failure -> purchaseFailed(it.message)
-        }
-    }
+    private val ratesObserver = messageObserver<List<ExchangeRate>>(
+        onOk = { model.updateRates(it) },
+        onFail = { purchaseFailed(it.message) }
+    )
 
     private lateinit var binding: ActivityBuyBinding
 
@@ -60,9 +54,8 @@ class BuyActivity : BaseActivity() {
 
         model.apply {
             applyLegalObservers()
-            buyCryptoEvent.observe(this@BuyActivity, Observer { model.sendBuyEvent.execute() })
-            sendBuyEvent.observe(this@BuyActivity, Observer {
-                if (it !is Loading) {
+            buyEvent.observe(this@BuyActivity, requestObserver(
+                onOk = {
                     val intent = with(Intent(this@BuyActivity, VerificationActivity::class.java)) {
                         model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
                             putExtra("cryptoAmount", cryptoAmount)
@@ -72,27 +65,26 @@ class BuyActivity : BaseActivity() {
                         }
                         this
                     }
+                    unsubscribeFromExchangeRates()
                     startActivity(intent)
                     finish()
-                } else {
-                    showLoader()
+                },
+                onFail = {
+                    showStubScreen()
                 }
-            })
-            currencies.observe(this@BuyActivity, Observer {
-                when (it) {
-                    is Loading -> showLoader()
-                    is Success -> model.initRates(
-                        it.data!!,
+            ))
+            calcData.observe(this@BuyActivity, requestObserver(
+                onOk = {
+                    model.initPrecisions(it!!.first)
+                    model.initRates(
+                        it.second,
                         intent.getStringExtra("lastFiatAmount"),
                         intent.getStringExtra("lastFiatCurrency"),
                         intent.getStringExtra("lastCryptoCurrency")
-                    ) {
-                        hideLoader()
-                        subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver)
-                    }
-                    is Failure -> showStubScreen()
-                }
-            })
+                    ) { subscribeToExchangeRates().observe(this@BuyActivity, ratesObserver) }
+                },
+                onFail = { showStubScreen() }
+            ))
             popularClickEvent.observe(this@BuyActivity, Observer {
                 binding.abAmount.requestFocus()
                 model.amount.fiatAmount = it
@@ -113,7 +105,6 @@ class BuyActivity : BaseActivity() {
             })
         }.let {
             binding.model = it
-            it.sendOpenEvent()
             it.loadData()
         }
     }

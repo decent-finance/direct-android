@@ -49,7 +49,7 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
 
     fun subscribeToExchangeRates(
         placementId: String = Direct.credentials.placementId
-    ): LiveData<Resource<List<ExchangeRate>?>> =
+    ): LiveData<Resource<List<ExchangeRate>>> =
         cexdSocket.run {
             sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
             parsedMessage
