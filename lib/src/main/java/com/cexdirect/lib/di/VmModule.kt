@@ -22,7 +22,6 @@ import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.buy.BuyActivityViewModel
 import com.cexdirect.lib.check.CheckActivityViewModel
-import com.cexdirect.lib.check.RuleIds
 import com.cexdirect.lib.di.annotation.BuyActivityFactory
 import com.cexdirect.lib.di.annotation.CheckActivityFactory
 import com.cexdirect.lib.di.annotation.ErrorActivityFactory
@@ -77,8 +76,7 @@ class VmModule {
         CheckActivityViewModel.Factory(
             merchantApi,
             paymentApi,
-            placementValidator,
-            RuleIds()
+            placementValidator
         )
 
     @Provides

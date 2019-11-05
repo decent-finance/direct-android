@@ -24,12 +24,10 @@ import com.cexdirect.lib.network.MerchantApi
 import com.cexdirect.lib.network.MerchantService
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.PaymentService
-import com.cexdirect.lib.network.models.CountryData
-import com.cexdirect.lib.network.models.PlacementInfo
 import com.cexdirect.lib.terms.TermsActivity
 import com.cexdirect.lib.util.PlacementValidator
-import com.nhaarman.mockitokotlin2.*
-import org.assertj.core.api.Java6Assertions.assertThat
+import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -55,19 +53,15 @@ class CheckActivityViewModelTest {
     @Mock
     lateinit var placementValidator: PlacementValidator
 
-    lateinit var ruleIds: RuleIds
-
     lateinit var model: CheckActivityViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        ruleIds = RuleIds()
         model = CheckActivityViewModel(
             MerchantApi(merchantService),
             PaymentApi(paymentService),
-            placementValidator,
-            ruleIds
+            placementValidator
         )
     }
 
@@ -77,46 +71,10 @@ class CheckActivityViewModelTest {
     }
 
     @Test
-    fun invokeFailForInactivePlacement() {
-        val givenInfo = PlacementInfo("", "", false, emptyList(), listOf("foo", "bar"))
-        val givenRunnable: Runnable = mock()
-
-        model.processPlacementInfo(givenInfo) { givenRunnable.run() }
-
-        verify(givenRunnable).run()
-    }
-
-    @Test
-    fun updateIdsAndLoadCountriesForActivePlacement() {
-        val givenInfo = PlacementInfo("", "", true, emptyList(), listOf("foo", "bar"))
-        val givenRunnable: Runnable = mock()
-
-        model.processPlacementInfo(givenInfo) { givenRunnable.run() }
-
-        verify(givenRunnable, never()).run()
-        assertThat(ruleIds.ids).containsOnly("foo", "bar")
-        @Suppress("DeferredResultUnused")
-        verify(paymentService).getCountriesAsync()
-    }
-
-    @Test
-    fun saveCountriesAndLoadRule() {
-        val givenCountry = CountryData("Belarus", "BY", null)
-        val givenIds = listOf("foo", "bar")
-
-        ruleIds.ids = givenIds
-        model.saveCountriesAndLoadRules(listOf(givenCountry))
-
-        assertThat(Direct.countries).containsOnly(givenCountry)
-        @Suppress("DeferredResultUnused")
-        verify(merchantService).getRuleAsync(eq("foo"))
-    }
-
-    @Test
     fun checkPlacement() {
         Direct.credentials = Credentials("foo", "s3cr3t")
 
-        model.checkPlacement()
+        model.loadPlacementData()
 
         @Suppress("DeferredResultUnused")
         verify(merchantService).getPlacementInfoAsync(anyString())

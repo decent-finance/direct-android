@@ -16,8 +16,10 @@
 
 package com.cexdirect.lib.network
 
+import com.cexdirect.lib.CollectibleLiveData
 import com.cexdirect.lib.ExecutableLiveData
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.network.models.RuleData
 import kotlinx.coroutines.CoroutineScope
 
 @OpenForTesting
@@ -29,6 +31,12 @@ class MerchantApi(private val service: MerchantService) {
     fun getPlacementInfo(scope: CoroutineScope, placementId: String) =
         ExecutableLiveData(scope) { service.getPlacementInfoAsync(placementId) }
 
-    fun getRule(scope: CoroutineScope, block: () -> String) =
-        ExecutableLiveData(scope) { service.getRuleAsync(block.invoke()) }
+    fun getRules(scope: CoroutineScope, ids: List<String>) =
+        CollectibleLiveData(
+            scope,
+            HashSet<RuleData>(),
+            ids,
+            { acc, value -> acc.apply { add(value) } },
+            { item -> service.getRuleAsync(item) }
+        )
 }
