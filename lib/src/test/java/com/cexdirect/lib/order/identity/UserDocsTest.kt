@@ -78,6 +78,7 @@ class UserDocsTest {
     fun invokeUploadActionWhenShouldSendPhoto() {
         val mock: Runnable = mock()
         userDocs.uploadAction = { mock.run() }
+        userDocs.currentPhotoType = PhotoType.SELFIE
 
         userDocs.shouldSendPhoto = true
 
@@ -98,6 +99,7 @@ class UserDocsTest {
     fun setSendPhotosToTrueWhenReqAmountReached() {
         userDocs.uploadAction = { }
         userDocs.requiredImagesAmount = 2
+        userDocs.currentPhotoType = PhotoType.SELFIE
 
         userDocs.imagesBase64.let {
             it["abc"] = mock()
@@ -163,6 +165,7 @@ class UserDocsTest {
     fun invokeUploadWhenSelfieSet() {
         val mock: Runnable = mock()
         userDocs.uploadAction = { mock.run() }
+        userDocs.currentPhotoType = PhotoType.SELFIE
 
         userDocs.selfieBase64 = mock()
 
