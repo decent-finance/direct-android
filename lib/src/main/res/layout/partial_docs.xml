@@ -22,21 +22,21 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+            type="com.cexdirect.lib.order.OrderActivityViewModel" />
 
         <import type="android.view.View" />
 
         <import
             alias="type"
-            type="com.cexdirect.lib.verification.identity.PhotoType" />
+            type="com.cexdirect.lib.order.identity.PhotoType" />
 
         <import
             alias="docType"
-            type="com.cexdirect.lib.verification.identity.DocumentType" />
+            type="com.cexdirect.lib.order.identity.DocumentType" />
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
 
-        <import type="com.cexdirect.lib.verification.OrderStep" />
+        <import type="com.cexdirect.lib.order.OrderStep" />
 
     </data>
 

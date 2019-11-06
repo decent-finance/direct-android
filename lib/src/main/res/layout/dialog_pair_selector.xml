@@ -26,7 +26,7 @@
 
         <variable
                 name="model"
-                type="com.cexdirect.lib.buy.BuyActivityViewModel"/>
+            type="com.cexdirect.lib.buy.CalcActivityViewModel" />
     </data>
 
     <LinearLayout

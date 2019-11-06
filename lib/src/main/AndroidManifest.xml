@@ -14,7 +14,7 @@
 
     <application android:largeHeap="true">
         <activity
-            android:name=".verification.scanner.QrScannerActivity"
+            android:name=".order.scanner.QrScannerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Direct.Scanner" />
         <activity
@@ -30,7 +30,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Direct" />
         <activity
-            android:name=".verification.VerificationActivity"
+            android:name=".order.OrderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Direct" />
         <activity
@@ -38,7 +38,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Direct" />
         <activity
-            android:name=".buy.BuyActivity"
+            android:name=".buy.CalcActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Direct" />
 

@@ -19,7 +19,7 @@ package com.cexdirect.lib.di
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringLiveEvent
 import com.cexdirect.lib.di.annotation.IdentityScope
-import com.cexdirect.lib.verification.events.SourceClickEvent
+import com.cexdirect.lib.order.events.SourceClickEvent
 import dagger.Module
 import dagger.Provides
 

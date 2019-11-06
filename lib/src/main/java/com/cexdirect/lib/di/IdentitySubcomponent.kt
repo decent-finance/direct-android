@@ -17,16 +17,16 @@
 package com.cexdirect.lib.di
 
 import com.cexdirect.lib.di.annotation.IdentityScope
-import com.cexdirect.lib.verification.BaseVerificationFragment
-import com.cexdirect.lib.verification.VerificationActivity
-import com.cexdirect.lib.verification.confirmation.ChangeEmailDialog
-import com.cexdirect.lib.verification.confirmation.PaymentConfirmationFragment
-import com.cexdirect.lib.verification.identity.CvvInfoDialog
-import com.cexdirect.lib.verification.identity.IdentityFragment
-import com.cexdirect.lib.verification.identity.PhotoSourceDialog
-import com.cexdirect.lib.verification.identity.country.BaseCountryPickerDialog
-import com.cexdirect.lib.verification.receipt.ReceiptFragment
-import com.cexdirect.lib.verification.scanner.QrScannerActivity
+import com.cexdirect.lib.order.BaseOrderFragment
+import com.cexdirect.lib.order.OrderActivity
+import com.cexdirect.lib.order.confirmation.ChangeEmailDialog
+import com.cexdirect.lib.order.confirmation.PaymentConfirmationFragment
+import com.cexdirect.lib.order.identity.CvvInfoDialog
+import com.cexdirect.lib.order.identity.IdentityFragment
+import com.cexdirect.lib.order.identity.PhotoSourceDialog
+import com.cexdirect.lib.order.identity.country.BaseCountryPickerDialog
+import com.cexdirect.lib.order.receipt.ReceiptFragment
+import com.cexdirect.lib.order.scanner.QrScannerActivity
 import dagger.Subcomponent
 
 @Subcomponent(modules = [SharedStateModule::class, IdentityVmModule::class])
@@ -35,11 +35,11 @@ interface IdentitySubcomponent {
 
     fun inject(identityFragment: IdentityFragment)
 
-    fun inject(baseVerificationFragment: BaseVerificationFragment)
+    fun inject(baseVerificationFragment: BaseOrderFragment)
 
     fun inject(dialog: PhotoSourceDialog)
 
-    fun inject(verificationActivity: VerificationActivity)
+    fun inject(verificationActivity: OrderActivity)
 
     fun inject(paymentConfirmationFragment: PaymentConfirmationFragment)
 

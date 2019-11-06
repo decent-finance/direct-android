@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.databinding.ActivityCheckBinding
 import com.cexdirect.lib.di.annotation.CheckActivityFactory
 import javax.inject.Inject
@@ -52,7 +52,7 @@ class CheckActivity : BaseActivity() {
     }
 
     private fun launchDirect() {
-        startActivity(Intent(this, BuyActivity::class.java))
+        startActivity(Intent(this, CalcActivity::class.java))
         finish()
     }
 }

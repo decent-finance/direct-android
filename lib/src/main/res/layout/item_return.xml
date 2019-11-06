@@ -29,7 +29,7 @@
 
         <variable
             name="listener"
-            type="com.cexdirect.lib.verification.EditClickListener" />
+            type="com.cexdirect.lib.order.EditClickListener" />
 
         <import type="android.view.View" />
     </data>

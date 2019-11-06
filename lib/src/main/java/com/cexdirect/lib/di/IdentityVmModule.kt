@@ -26,12 +26,12 @@ import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.ws.Messenger
+import com.cexdirect.lib.order.OrderActivityViewModel
+import com.cexdirect.lib.order.confirmation.ChangeEmailDialogViewModel
+import com.cexdirect.lib.order.identity.CvvInfoDialogViewModel
+import com.cexdirect.lib.order.identity.PhotoSourceDialogViewModel
+import com.cexdirect.lib.order.scanner.QrScannerActivityViewModel
 import com.cexdirect.lib.util.DH
-import com.cexdirect.lib.verification.VerificationActivityViewModel
-import com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel
-import com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel
-import com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel
-import com.cexdirect.lib.verification.scanner.QrScannerActivityViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -50,7 +50,7 @@ class IdentityVmModule {
         dh: DH,
         emailChangedEvent: StringLiveEvent
     ): ViewModelProvider.Factory =
-        VerificationActivityViewModel.Factory(
+        OrderActivityViewModel.Factory(
             paymentApi,
             orderApi,
             stringProvider,

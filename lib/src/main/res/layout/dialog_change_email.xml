@@ -22,7 +22,7 @@
 
         <variable
                 name="model"
-                type="com.cexdirect.lib.verification.confirmation.ChangeEmailDialogViewModel"/>
+            type="com.cexdirect.lib.order.confirmation.ChangeEmailDialogViewModel" />
 
         <import type="com.cexdirect.lib.util.FieldStatus" />
     </data>

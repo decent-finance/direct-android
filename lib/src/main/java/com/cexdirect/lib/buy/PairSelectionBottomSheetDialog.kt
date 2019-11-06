@@ -38,7 +38,7 @@ class PairSelectionBottomSheetDialog : BaseBottomSheetDialog() {
     @field:[Inject BuyActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
 
-    private val viewModel by viewModelProvider<BuyActivityViewModel> { modelFactory }
+    private val viewModel by viewModelProvider<CalcActivityViewModel> { modelFactory }
 
     private lateinit var binding: DialogPairSelectorBinding
     private lateinit var type: String

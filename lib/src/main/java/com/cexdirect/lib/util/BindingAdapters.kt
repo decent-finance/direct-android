@@ -36,10 +36,10 @@ import com.cexdirect.lib.buy.TradeInputFilter
 import com.cexdirect.lib.databinding.ItemReturnBinding
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
+import com.cexdirect.lib.order.OrderStep
+import com.cexdirect.lib.order.StepsPagerAdapter
+import com.cexdirect.lib.order.confirmation.TdsData
 import com.cexdirect.lib.terms.showTerms
-import com.cexdirect.lib.verification.OrderStep
-import com.cexdirect.lib.verification.StepsPagerAdapter
-import com.cexdirect.lib.verification.confirmation.TdsData
 import com.cexdirect.lib.views.SuperDuperViewPager
 import com.google.android.material.textfield.TextInputLayout
 import ru.noties.markwon.Markwon

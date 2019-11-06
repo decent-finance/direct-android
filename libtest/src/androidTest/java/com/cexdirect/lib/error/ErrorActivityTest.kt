@@ -30,7 +30,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.*
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.TermsActivity
 import com.cexdirect.lib.util.TEST_PLACEMENT
@@ -166,7 +166,7 @@ class ErrorActivityTest {
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_try_again)).perform(click())
 
-        intended(hasComponent(BuyActivity::class.java.name))
+        intended(hasComponent(CalcActivity::class.java.name))
     }
 
     @Test
@@ -185,7 +185,7 @@ class ErrorActivityTest {
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_try_again)).perform(click())
 
-        intended(hasComponent(BuyActivity::class.java.name))
+        intended(hasComponent(CalcActivity::class.java.name))
     }
 
     @Test

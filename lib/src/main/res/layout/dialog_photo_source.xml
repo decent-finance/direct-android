@@ -20,11 +20,11 @@
 
         <import
                 alias="type"
-                type="com.cexdirect.lib.verification.identity.SourceClickType"/>
+            type="com.cexdirect.lib.order.identity.SourceClickType" />
 
         <variable
                 name="model"
-                type="com.cexdirect.lib.verification.identity.PhotoSourceDialogViewModel"/>
+            type="com.cexdirect.lib.order.identity.PhotoSourceDialogViewModel" />
     </data>
 
     <LinearLayout

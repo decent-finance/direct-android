@@ -19,7 +19,7 @@ package com.cexdirect.lib.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.viewpager.widget.ViewPager
-import com.cexdirect.lib.verification.OrderStep
+import com.cexdirect.lib.order.OrderStep
 
 class SuperDuperViewPager @JvmOverloads constructor(
     context: Context,

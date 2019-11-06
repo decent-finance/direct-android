@@ -20,7 +20,7 @@
 
         <variable
                 name="model"
-                type="com.cexdirect.lib.verification.identity.CvvInfoDialogViewModel"/>
+            type="com.cexdirect.lib.order.identity.CvvInfoDialogViewModel" />
     </data>
 
     <LinearLayout

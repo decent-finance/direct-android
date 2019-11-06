@@ -17,7 +17,7 @@
 package com.cexdirect.lib.di
 
 import com.cexdirect.lib.ExitDialog
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.buy.PairSelectionBottomSheetDialog
 import com.cexdirect.lib.check.CheckActivity
 import com.cexdirect.lib.error.BaseErrorFragment
@@ -38,7 +38,7 @@ interface DirectComponent {
 
     fun inject(termsActivity: TermsActivity)
 
-    fun inject(buyActivity: BuyActivity)
+    fun inject(buyActivity: CalcActivity)
 
     fun inject(errorActivity: ErrorActivity)
 

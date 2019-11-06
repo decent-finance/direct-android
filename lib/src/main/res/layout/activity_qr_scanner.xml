@@ -20,14 +20,14 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.scanner.QrScannerActivityViewModel" />
+            type="com.cexdirect.lib.order.scanner.QrScannerActivityViewModel" />
     </data>
 
     <FrameLayout
         android:id="@+id/aqsContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".verification.scanner.QrScannerActivity">
+        tools:context=".order.scanner.QrScannerActivity">
 
         <Button
             style="@style/Direct.Scanner.Button"

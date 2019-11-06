@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.ExitDialogViewModel
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib.buy.BuyActivityViewModel
+import com.cexdirect.lib.buy.CalcActivityViewModel
 import com.cexdirect.lib.check.CheckActivityViewModel
 import com.cexdirect.lib.di.annotation.BuyActivityFactory
 import com.cexdirect.lib.di.annotation.CheckActivityFactory
@@ -51,7 +51,7 @@ class VmModule {
         messenger: Messenger,
         stringProvider: StringProvider
     ): ViewModelProvider.Factory =
-        BuyActivityViewModel.Factory(
+        CalcActivityViewModel.Factory(
             merchantApi,
             paymentApi,
             analyticsApi,
