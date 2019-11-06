@@ -17,7 +17,6 @@
 package com.cexdirect.lib.network
 
 import com.cexdirect.lib.BuildConfig
-import com.cexdirect.lib.Direct
 import com.cexdirect.lib.ExecutableLiveData
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.models.ApiResponse
@@ -28,8 +27,8 @@ import kotlinx.coroutines.async
 @OpenForTesting
 class PaymentApi(private val service: PaymentService) {
 
-    fun getExchangeRates(scope: CoroutineScope) =
-        ExecutableLiveData(scope) { service.getExchangeRatesAsync(Direct.credentials.placementId) }
+    fun getExchangeRates(scope: CoroutineScope, placementId: String) =
+        ExecutableLiveData(scope) { service.getExchangeRatesAsync(placementId) }
 
     fun verifyWalletAddress(scope: CoroutineScope, block: () -> WalletAddressData) =
         ExecutableLiveData(scope) {
@@ -38,7 +37,6 @@ class PaymentApi(private val service: PaymentService) {
                 service.verifyWalletAddressAsync(address, currency)
             } else {
                 scope.async {
-                    @Suppress("RemoveExplicitTypeArguments") // won't compile if type is removed
                     ApiResponse<Void>()
                     // TODO: move this part to dev flavor
                 }

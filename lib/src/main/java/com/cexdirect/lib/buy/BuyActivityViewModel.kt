@@ -53,7 +53,7 @@ class BuyActivityViewModel(
     final val currencyClickEvent = StringLiveEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
-    final val api = CalculatorApi(merchantApi, paymentApi, analyticsApi, messenger, this)
+    final val api = CalculatorApi(analyticsApi, merchantApi, paymentApi, messenger, this)
     val calcData = api.calcData
     val buyEvent = buyClickEvent.switchMap {
         api.sendBuyEvent(
