@@ -41,7 +41,7 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.network.models.Additional
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.Images
-import com.cexdirect.lib.network.ws.CexdSocket
+import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.OrderActivityViewModel
 import com.cexdirect.lib.order.OrderStep
@@ -72,7 +72,7 @@ class IdentityFragmentTest {
     lateinit var messenger: Messenger
 
     @Mock
-    lateinit var cexdSocket: CexdSocket
+    lateinit var cexdSocket: LiveSocket
 
     private val mockServer = MockWebServer()
 

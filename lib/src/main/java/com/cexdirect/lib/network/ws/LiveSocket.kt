@@ -19,18 +19,17 @@ package com.cexdirect.lib.network.ws
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib.map
+import com.cexdirect.livedatax.map
 import com.google.gson.Gson
 import okhttp3.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 @OpenForTesting
-class CexdSocket(
+class LiveSocket(
     private val client: OkHttpClient,
     private val wsUrlProvider: WsUrlProvider,
     private val gson: Gson
@@ -44,9 +43,9 @@ class CexdSocket(
     private val lastPongTimestamp = AtomicLong(0)
 
     private val socketMessage = MutableLiveData<String>()
-    val parsedMessage = socketMessage.map(Function<String, Pair<String, String>> {
+    val parsedMessage = socketMessage.map {
         gson.fromJson(it, BaseSocketMessage::class.java).event to it
-    })
+    }
 
     private val pingPongObserver = Observer<Pair<String, String>> { data ->
         if (data.first == "pong") {

@@ -16,28 +16,36 @@
 
 package com.cexdirect.lib.network.ws
 
-import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib.filter
-import com.cexdirect.lib.map
 import com.cexdirect.lib.network.Resource
-import com.cexdirect.lib.network.models.*
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.OrderInfoBody
+import com.cexdirect.lib.network.models.OrderInfoData
+import com.cexdirect.livedatax.distinctUntilChanged
+import com.cexdirect.livedatax.filter
+import com.cexdirect.livedatax.map
 import com.google.gson.Gson
 
 @OpenForTesting
-class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
+class Messenger(private val cexdSocket: LiveSocket, private val gson: Gson) {
 
     fun subscribeToOrderInfo(): LiveData<Resource<OrderInfoData>> =
         cexdSocket.run {
             sendMessage { OrderInfoSubscription(OrderInfoBody(), "orderInfo") }
             parsedMessage
                 .filter { it.first == "orderInfo" }
-                .map(Function<Pair<String, String>, OrderInfoResponse> {
-                    gson.fromJson(it.second, OrderInfoMessage::class.java).data
-                })
-                .map(Function { mapResponse(it) })
+                .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
+                .map { mapResponse(it) }
+                .distinctUntilChanged { previous, current ->
+                    if (previous is Success && current is Success) {
+                        previous.data == current.data
+                    } else {
+                        false
+                    }
+                }
         }
 
     fun removeOrderInfoSubscription() {
@@ -54,10 +62,8 @@ class Messenger(private val cexdSocket: CexdSocket, private val gson: Gson) {
             sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
             parsedMessage
                 .filter { it.first == "currencies" }
-                .map(Function<Pair<String, String>, ExchangeRatesResponse> {
-                    gson.fromJson(it.second, ExchangeRatesMessage::class.java).data
-                })
-                .map(Function { mapResponse(it) })
+                .map { gson.fromJson(it.second, ExchangeRatesMessage::class.java).data }
+                .map { mapResponse(it) }
         }
 
     fun removeExchangesSubscription() {

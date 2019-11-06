@@ -23,7 +23,7 @@ import com.cexdirect.lib.network.deserializers.OrderStatusDeserializer
 import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.serializers.DateDeserializer
 import com.cexdirect.lib.network.webview.Client
-import com.cexdirect.lib.network.ws.CexdSocket
+import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.network.ws.WsUrlProvider
 import com.google.gson.Gson
@@ -84,11 +84,11 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideCexdSocket(client: OkHttpClient, wsUrlProvider: WsUrlProvider, gson: Gson) =
-        CexdSocket(client, wsUrlProvider, gson)
+        LiveSocket(client, wsUrlProvider, gson)
 
     @Provides
     @Singleton
-    fun provideMessenger(cexdSocket: CexdSocket, gson: Gson) = Messenger(cexdSocket, gson)
+    fun provideMessenger(cexdSocket: LiveSocket, gson: Gson) = Messenger(cexdSocket, gson)
 
     @Provides
     @Singleton

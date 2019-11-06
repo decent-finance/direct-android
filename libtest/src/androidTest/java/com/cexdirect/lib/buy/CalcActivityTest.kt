@@ -30,7 +30,7 @@ import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.network.models.RuleData
-import com.cexdirect.lib.network.ws.CexdSocket
+import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.stub.StubActivity
 import com.cexdirect.lib.util.MockServerIdlingResource
@@ -59,7 +59,7 @@ class CalcActivityTest {
     lateinit var messenger: Messenger
 
     @Mock
-    lateinit var cexdSocket: CexdSocket
+    lateinit var cexdSocket: LiveSocket
 
     private val mockServer = MockWebServer()
 

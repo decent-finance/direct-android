@@ -22,7 +22,7 @@ import com.cexdirect.lib.buy.PairSelectionBottomSheetDialog
 import com.cexdirect.lib.check.CheckActivity
 import com.cexdirect.lib.error.BaseErrorFragment
 import com.cexdirect.lib.error.ErrorActivity
-import com.cexdirect.lib.network.ws.CexdSocket
+import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.terms.TermsActivity
 import com.google.gson.Gson
 import dagger.Component
@@ -46,7 +46,7 @@ interface DirectComponent {
 
     fun inject(pairSelectionBottomSheetDialog: PairSelectionBottomSheetDialog)
 
-    fun socket(): CexdSocket
+    fun socket(): LiveSocket
 
     fun inject(exitDialog: ExitDialog)
 
