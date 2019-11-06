@@ -25,7 +25,6 @@ import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.ApiResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import java.util.concurrent.atomic.AtomicInteger
 
 class CollectibleLiveData<T : ApiResponse<V>, V, A, C : Collection<D>, D>(
     scope: CoroutineScope,
@@ -35,8 +34,8 @@ class CollectibleLiveData<T : ApiResponse<V>, V, A, C : Collection<D>, D>(
     private val block: (item: D) -> Deferred<T>
 ) : LiveData<Resource<A>>() {
 
+    private var iterator = items.iterator()
     private var accumulator: A = initial
-    private val counter = AtomicInteger(0)
     private var current: D? = null
     private val liveData: ExecutableLiveData<T, V> = ExecutableLiveData(scope) {
         block.invoke(current ?: error("current is null"))
@@ -47,9 +46,11 @@ class CollectibleLiveData<T : ApiResponse<V>, V, A, C : Collection<D>, D>(
                 is Loading -> postValue(Loading())
                 is Failure -> postValue(Failure(value.code, value.message))
                 is Success -> {
-                    val counter = counter.incrementAndGet()
                     accumulator = operation.invoke(accumulator, value.data!!)
-                    if (counter >= items.size) {
+                    if (iterator.hasNext()) {
+                        getNextAndExecute()
+                    } else {
+                        iterator = items.iterator()
                         postValue(Success(accumulator))
                     }
                 }
@@ -70,9 +71,13 @@ class CollectibleLiveData<T : ApiResponse<V>, V, A, C : Collection<D>, D>(
     }
 
     fun execute() {
-        items.forEach {
-            current = it
-            liveData.execute()
+        if (iterator.hasNext()) {
+            getNextAndExecute()
         }
+    }
+
+    private fun getNextAndExecute() {
+        current = iterator.next()
+        liveData.execute()
     }
 }
