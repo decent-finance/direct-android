@@ -41,9 +41,9 @@ class Messenger(private val cexdSocket: LiveSocket, private val gson: Gson) {
                 .map { mapResponse(it) }
                 .distinctUntilChanged { previous, current ->
                     if (previous is Success && current is Success) {
-                        previous.data == current.data
+                        previous.data != current.data
                     } else {
-                        false
+                        true
                     }
                 }
         }

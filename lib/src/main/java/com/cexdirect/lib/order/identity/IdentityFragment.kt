@@ -117,8 +117,7 @@ class IdentityFragment : BaseOrderFragment() {
             sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendToProcessingRequest.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))
-            newOrderInfoRequest.observe(
-                viewLifecycleOwner, restObserver(
+            newOrderInfoRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = {
                     setRequiredImages(it!!.basic.images)
                     setPaymentBase()
@@ -132,13 +131,11 @@ class IdentityFragment : BaseOrderFragment() {
                     }
                 }
             ))
-            uploadPhotoRequest.observe(
-                viewLifecycleOwner, restObserver(
+            uploadPhotoRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = { setDocumentStatusToValid() },
                 onFail = { purchaseFailed(it.message) }
             ))
-            sendToVerificationRequest.observe(
-                viewLifecycleOwner, restObserver(
+            sendToVerificationRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = {},
                 onFail = {
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
@@ -175,8 +172,7 @@ class IdentityFragment : BaseOrderFragment() {
     }
 
     private fun subscribeToOrderInfoUpdates() {
-        model.subscribeToOrderInfo().observe(
-            viewLifecycleOwner, socketObserver(
+        model.subscribeToOrderInfo().observe(viewLifecycleOwner, socketObserver(
             onOk = {
                 model.updateOrderStatus(
                     it,
