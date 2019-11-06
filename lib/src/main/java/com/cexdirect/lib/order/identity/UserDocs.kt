@@ -150,7 +150,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     lateinit var currentPhotoType: PhotoType
-    lateinit var uploadAction: () -> Unit
+    lateinit var uploadAction: (type: PhotoType) -> Unit
 
     init {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
@@ -166,10 +166,10 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                     }
                     BR.shouldSendPhoto -> {
                         if (shouldSendPhoto) {
-                            uploadAction.invoke()
+                            uploadAction.invoke(currentPhotoType)
                         }
                     }
-                    BR.selfieBase64 -> uploadAction.invoke()
+                    BR.selfieBase64 -> uploadAction.invoke(currentPhotoType)
                     BR.selectedDocType -> {
                         when (selectedDocType) {
                             R.id.fiIdCard -> {

@@ -114,13 +114,13 @@ class IdentityFragment : BaseOrderFragment() {
                 scanQrCodeWithPermissionCheck()
             })
             nextClickEvent.observe(viewLifecycleOwner, Observer { handleNextClick() })
-            basePaymentData.observe(viewLifecycleOwner, paymentDataObserver)
-            extraPaymentData.observe(viewLifecycleOwner, paymentDataObserver)
-            processingResult.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))
-            createOrder.observe(
+            sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
+            sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
+            sendToProcessingRequest.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))
+            newOrderInfoRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = {
-                    model.updateOrderId(it!!.orderId)
+                    setRequiredImages(it!!.basic.images)
                     setPaymentBase()
                     subscribeToOrderInfoUpdates()
                 },
@@ -133,16 +133,12 @@ class IdentityFragment : BaseOrderFragment() {
                     }
                 }
             ))
-            getOrderInfo.observe(
-                viewLifecycleOwner, restObserver(
-                onOk = { setRequiredImages(it!!.basic.images) }
-            ))
-            uploadImage.observe(
+            uploadPhotoRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = { setDocumentStatusToValid() },
                 onFail = { purchaseFailed(it.message) }
             ))
-            verificationResult.observe(
+            sendToVerificationRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = {},
                 onFail = {

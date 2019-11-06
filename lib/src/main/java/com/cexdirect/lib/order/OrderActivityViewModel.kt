@@ -18,13 +18,13 @@ package com.cexdirect.lib.order
 
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.*
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
 import com.cexdirect.lib.network.OrderApi
 import com.cexdirect.lib.network.PaymentApi
-import com.cexdirect.lib.network.enqueueWith
+import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.confirmation.CheckCode
@@ -38,11 +38,12 @@ import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.symbolMap
 import com.cexdirect.lib.views.CollapsibleLayout
+import com.cexdirect.livedatax.switchMap
 
 @Suppress("MagicNumber")
 class OrderActivityViewModel(
     paymentApi: PaymentApi,
-    private val orderApi: OrderApi,
+    orderApi: OrderApi,
     stringProvider: StringProvider,
     private val messenger: Messenger,
     dh: DH,
@@ -83,10 +84,7 @@ class OrderActivityViewModel(
     val userCardData = UserCardData(dh)
     val userWallet = UserWallet()
     val userSsn = UserSsn()
-    val userDocs: UserDocs /* intentionally specified explicitly */ =
-        UserDocs(stringProvider).apply {
-            uploadAction = { uploadImage.execute() }
-        }
+    val userDocs = UserDocs(stringProvider)
     val userTerms = Terms()
     var extras = ObservableArrayMap<String, String>()
     val validationMap = ObservableArrayMap<String, FieldStatus>()
@@ -112,118 +110,18 @@ class OrderActivityViewModel(
     val statusWatcher = StatusWatcher()
 
     // --- Requests --- //
-    val createOrder = orderApi.createNewOrder(this) {
-        NewOrderData(
-            userEmail.email,
-            userCountry.selectedCountry.code,
-            userCountry.selectedState.code.ifBlank { null },
-            MonetaryData(orderAmounts.selectedFiatAmount, orderAmounts.selectedFiatCurrency),
-            MonetaryData(orderAmounts.selectedCryptoAmount, orderAmounts.selectedCryptoCurrency)
-        )
+    private val api = OrderProcessingApi(paymentApi, orderApi, messenger, this)
+    val newOrderInfoRequest = api.newOrderInfo
+    val sendToVerificationRequest = api.verificationResult
+    val sendToProcessingRequest = api.processingResult
+    val uploadPhotoRequest: LiveData<Resource<Void>> = api.uploadResult
+    val sendBasePaymentDataRequest: LiveData<Resource<OrderInfoData>> = api.basePaymentDataResult
+    val sendExtraPaymentDataRequest = api.extraPaymentDataResult
+    val changeEmailRequest = emailChangedEvent.switchMap {
+        api.apply { changeEmail(it) }.changeEmailResult
     }
-
-    private val walletVerification =
-        paymentApi.verifyWalletAddress(this) {
-            WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency)
-        }
-
-    private val verificationKey =
-        Transformations.switchMap(walletVerification) {
-            it.enqueueWith({
-                orderApi.getVerificationKey(this) {
-                    PublicKeyData(userCardData.getPublicKey())
-                }.apply { execute() }
-            })
-        }
-
-    val verificationResult =
-        Transformations.switchMap(verificationKey) { resource ->
-            resource.enqueueWith({
-                it.data.let {
-                    orderApi.sendToVerification(this) {
-                        VerificationData(
-                            secretId = it!!.secretId,
-                            cardData = userCardData.generateVerificationCardData(it.publicKey)
-                        )
-                    }.apply { execute() }
-                }
-            })
-        }
-
-    private val processingKey =
-        orderApi.getProcessingKey(this) {
-            PublicKeyData(userCardData.getPublicKey())
-        }
-
-    val processingResult = Transformations.switchMap(processingKey) { resource ->
-        resource.enqueueWith({
-            it.data.let {
-                orderApi.sendToProcessing(this) {
-                    VerificationData(
-                        secretId = it!!.secretId,
-                        cardData = userCardData.generateProcessingCardData(it.publicKey)
-                    )
-                }.apply { execute() }
-            }
-        })
-    }
-
-    val getOrderInfo = orderApi.checkOrderInfo(this)
-
-    val uploadImage = orderApi.uploadImage(this) {
-        when (userDocs.currentPhotoType) {
-            PhotoType.SELFIE -> {
-                ImageBody(
-                    ImageData(
-                        documentType = DocumentType.SELFIE.value,
-                        base64image = userDocs.getSelfieArray()
-                    )
-                )
-            }
-            PhotoType.ID, PhotoType.ID_BACK -> {
-                ImageBody(
-                    ImageData(
-                        documentType = userDocs.documentType.value,
-                        base64image = userDocs.getDocumentPhotosArray()
-                    )
-                )
-            }
-        }
-    }
-
-    val basePaymentData = orderApi.sendPaymentData(this) {
-        val payment = Payment(
-            userCardData.getCardBin(),
-            userCardData.expiry,
-            Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
-        )
-
-        val additional = if (userCountry.shouldShowState) {
-            mapOf("billingSsn" to userSsn.getFormattedValue())
-        } else {
-            emptyMap()
-        }
-        PaymentData(payment, additional)
-    }
-
-    val extraPaymentData = orderApi.updatePaymentData(this) {
-        extras.apply {
-            // Do not send the following entries
-            remove("userResidentialCountry")
-            remove("billingCountry")
-            remove("billingState")
-        }.let { PaymentData(paymentData = null, additional = it, termUrl = null) }
-    }
-
-    val changeEmail = Transformations.switchMap(emailChangedEvent) {
-        orderApi.changeEmail(this) { ChangeEmailRequest(newEmail = it) }.apply { execute() }
-    }
-
-    val newCheckCode = orderApi.resendCheckCode(this) { orderId.get()!! }
-
-    val checkCodeResult = orderApi.checkCode(this) {
-        CheckCodeData(orderId.get()!!, checkCode.code)
-    }
+    val changeCheckCodeRequest = api.newCheckCode
+    val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
     init {
@@ -259,6 +157,28 @@ class OrderActivityViewModel(
                 }
             }
         })
+        userDocs.uploadAction = {
+            api.uploadPhoto {
+                when (it) {
+                    PhotoType.SELFIE -> {
+                        ImageBody(
+                            ImageData(
+                                documentType = DocumentType.SELFIE.value,
+                                base64image = userDocs.getSelfieArray()
+                            )
+                        )
+                    }
+                    PhotoType.ID, PhotoType.ID_BACK -> {
+                        ImageBody(
+                            ImageData(
+                                documentType = userDocs.documentType.value,
+                                base64image = userDocs.getDocumentPhotosArray()
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun setOrderAmounts(crypto: String, cryptoAmount: String, fiat: String, fiatAmount: String) {
@@ -283,7 +203,7 @@ class OrderActivityViewModel(
         }
     }
 
-    fun updateOrderId(orderId: String) {
+    private fun updateOrderId(orderId: String) {
         this.orderId.set(orderId)
         Direct.pendingOrderId = orderId
     }
@@ -292,13 +212,27 @@ class OrderActivityViewModel(
         copyEvent.postValue(orderId.get())
     }
 
-    fun createOrder() {
+    private fun createOrder() {
         userEmail.forceValidate()
         userCountry.forceValidate()
 
         if (userEmail.isValid() && userCountry.isValid()) {
             Direct.userEmail = userEmail.email
-            createOrder.execute()
+            api.createNewOrder(
+                NewOrderData(
+                    userEmail.email,
+                    userCountry.selectedCountry.code,
+                    userCountry.selectedState.code.ifBlank { null },
+                    MonetaryData(
+                        orderAmounts.selectedFiatAmount,
+                        orderAmounts.selectedFiatCurrency
+                    ),
+                    MonetaryData(
+                        orderAmounts.selectedCryptoAmount,
+                        orderAmounts.selectedCryptoCurrency
+                    )
+                )
+            ) { updateOrderId(it) }
         }
     }
 
@@ -364,7 +298,6 @@ class OrderActivityViewModel(
     }
 
     fun setPaymentBase() {
-        getOrderInfo.execute()
         orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -380,7 +313,20 @@ class OrderActivityViewModel(
         }
 
         if (paymentDataValid()) {
-            basePaymentData.execute()
+            api.sendBasePaymentData {
+                val payment = Payment(
+                    userCardData.getCardBin(),
+                    userCardData.expiry,
+                    Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
+                )
+
+                val additional = if (userCountry.shouldShowState) {
+                    mapOf("billingSsn" to userSsn.getFormattedValue())
+                } else {
+                    emptyMap()
+                }
+                PaymentData(payment, additional)
+            }
         }
     }
 
@@ -391,14 +337,30 @@ class OrderActivityViewModel(
             ssnPresent()
 
     private fun startVerificationChain() {
-        walletVerification.execute()
+        api.startVerification(
+            { WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency) },
+            { userCardData.getPublicKey() },
+            {
+                VerificationData(
+                    secretId = it.secretId,
+                    cardData = userCardData.generateVerificationCardData(it.publicKey)
+                )
+            }
+        )
     }
 
     fun uploadExtraPaymentData() {
         forceValidateExtras()
 
         if (extrasValid()) {
-            extraPaymentData.execute()
+            api.sendExtraPaymentData {
+                extras.apply {
+                    // Do not send the following entries
+                    remove("userResidentialCountry")
+                    remove("billingCountry")
+                    remove("billingState")
+                }.let { PaymentData(paymentData = null, additional = it, termUrl = null) }
+            }
         }
     }
 
@@ -478,7 +440,17 @@ class OrderActivityViewModel(
                     scrollAction.invoke()
                 }
             }
-            OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) { processingKey.execute() }
+            OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) {
+                api.startProcessing(
+                    { userCardData.getPublicKey() },
+                    {
+                        VerificationData(
+                            secretId = it.secretId,
+                            cardData = userCardData.generateProcessingCardData(it.publicKey)
+                        )
+                    }
+                )
+            }
             OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
@@ -538,11 +510,11 @@ class OrderActivityViewModel(
     }
 
     fun submitCode() {
-        checkCodeResult.execute()
+        api.checkCode(orderId.get()!!, checkCode.code)
     }
 
     fun requestNewCheckCode() {
-        newCheckCode.execute()
+        api.requestNewCheckCode(orderId.get()!!)
     }
 
     fun updateUserEmail(email: String) {

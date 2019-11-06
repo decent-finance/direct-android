@@ -76,7 +76,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
             editEmailEvent.observe(viewLifecycleOwner, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCodeResult.observe(
+            checkCodeRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = { /* Don't do anything here, because order status will be updated via WS */ },
                 onFail = {
@@ -87,7 +87,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                     }
                 }
             ))
-            newCheckCode.observe(
+            changeCheckCodeRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = {
                     toast(R.string.cexd_check_mail)
@@ -95,7 +95,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                 },
                 onFail = { purchaseFailed(it.message) }
             ))
-            changeEmail.observe(
+            changeEmailRequest.observe(
                 viewLifecycleOwner, restObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
