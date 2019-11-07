@@ -61,8 +61,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
 
         model.apply {
             statusWatcher.setScreenChanged()
-            subscribeToOrderInfo().observe(
-                viewLifecycleOwner, socketObserver(
+            subscribeToOrderInfo().observe(viewLifecycleOwner, socketObserver(
                 onOk = {
                     updateConfirmationStatus(it) {
                         // TODO: for now, only REJECTED is possible here
@@ -72,14 +71,10 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                 },
                 onFail = { purchaseFailed(it.message) }
             ))
-            resendCodeEvent.observe(viewLifecycleOwner, Observer {
-                requestNewCheckCode()
-            })
             editEmailEvent.observe(viewLifecycleOwner, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCodeRequest.observe(
-                viewLifecycleOwner, restObserver(
+            checkCodeRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = { /* Don't do anything here, because order status will be updated via WS */ },
                 onFail = {
                     if (it.code == CODE_BAD_REQUEST) {
@@ -88,18 +83,16 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                         purchaseFailed(it.message)
                     }
                 },
-                    final = {}
+                final = {}
             ))
-            changeCheckCodeRequest.observe(
-                viewLifecycleOwner, restObserver(
+            changeCheckCodeRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = {
                     toast(R.string.cexd_check_mail)
                     restartResendTimer()
                 },
                 onFail = { purchaseFailed(it.message) }
             ))
-            changeEmailRequest.observe(
-                viewLifecycleOwner, restObserver(
+            changeEmailRequest.observe(viewLifecycleOwner, restObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)

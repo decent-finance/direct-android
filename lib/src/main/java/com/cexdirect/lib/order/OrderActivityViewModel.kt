@@ -120,7 +120,9 @@ class OrderActivityViewModel(
     val changeEmailRequest = emailChangedEvent.switchMap {
         api.apply { changeEmail(it) }.changeEmailResult
     }
-    val changeCheckCodeRequest = api.newCheckCode
+    val changeCheckCodeRequest = resendCodeEvent.switchMap {
+        api.apply { requestNewCheckCode(orderId.get()!!) }.newCheckCode
+    }
     val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
@@ -519,10 +521,6 @@ class OrderActivityViewModel(
 
     fun submitCode() {
         api.checkCode(orderId.get()!!, checkCode.code)
-    }
-
-    fun requestNewCheckCode() {
-        api.requestNewCheckCode(orderId.get()!!)
     }
 
     fun updateUserEmail(email: String) {
