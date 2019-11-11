@@ -30,78 +30,95 @@
             type="com.cexdirect.lib.order.OrderActivityViewModel" />
     </data>
 
-    <ScrollView
-        android:id="@+id/avScroll"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:scrollbars="none">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="36dp">
+            android:orientation="vertical">
 
             <include
+                android:id="@+id/aoToolbar"
                 layout="@layout/layout_title_detailed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:model="@{model}" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/avScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingTop="16dp">
+                android:paddingBottom="36dp">
 
-                <TextView
-                    android:id="@+id/avCexdPurchase"
-                    style="@style/Direct.Textfield.L"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@{@string/cexd_purchase(model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatCurrency)}" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp">
 
-                <com.cexdirect.lib.views.SuperDuperViewPager
-                    android:id="@+id/avStepsViewPager"
+                    <TextView
+                        android:id="@+id/avCexdPurchase"
+                        style="@style/Direct.Textfield.L"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@{@string/cexd_purchase(model.orderAmounts.selectedCryptoCurrency, model.orderAmounts.selectedFiatCurrency)}" />
+
+                    <com.cexdirect.lib.views.SuperDuperViewPager
+                        android:id="@+id/avStepsViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:layout_marginTop="16dp"
+                        android:clipToPadding="false"
+                        android:paddingLeft="48dp"
+                        android:paddingRight="48dp"
+                        app:currentPosition="@{model.currentStep}"
+                        app:offscreenPages="@{4}"
+                        app:orderStep="@{model.orderStep}"
+                        app:pagerAdapter="@{model.pagerAdapter}" />
+
+                    <com.cexdirect.lib.views.PageIndicatorView
+                        android:id="@+id/avIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:currentStep="@{model.currentStep}" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/avFragmentFrame"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:clipToPadding="false"
-                    android:paddingLeft="48dp"
-                    android:paddingRight="48dp"
-                    app:currentPosition="@{model.currentStep}"
-                    app:offscreenPages="@{4}"
-                    app:orderStep="@{model.orderStep}"
-                    app:pagerAdapter="@{model.pagerAdapter}" />
+                    android:animateLayoutChanges="true" />
 
-                <com.cexdirect.lib.views.PageIndicatorView
-                    android:id="@+id/avIndicator"
-                    android:layout_width="wrap_content"
+                <include
+                    android:id="@+id/aoLegal"
+                    layout="@layout/layout_legal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:currentStep="@{model.currentStep}" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    app:model="@{model}" />
 
             </LinearLayout>
 
-            <FrameLayout
-                android:animateLayoutChanges="true"
-                android:id="@+id/avFragmentFrame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+        </androidx.core.widget.NestedScrollView>
 
-            <include
-                android:id="@+id/aoLegal"
-                layout="@layout/layout_legal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:model="@{model}" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -19,7 +19,7 @@
     <style name="Direct" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="android:windowBackground">@color/cexd_screen_bg</item>
         <item name="colorPrimary">@color/cexd_title_bg</item>
-        <item name="colorPrimaryDark">@color/cexd_title_bg</item>
+        <item name="colorPrimaryDark">@color/cexd_textfield_bg</item>
         <item name="colorAccent">@color/cexd_accent</item>
         <item name="fontFamily">@font/open_sans</item>
     </style>

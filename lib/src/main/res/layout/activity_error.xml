@@ -17,46 +17,64 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".error.ErrorActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".error.ErrorActivity">
 
     <data>
 
         <variable
             name="model"
-            type="com.cexdirect.lib.error.ErrorActivityViewModel"/>
+            type="com.cexdirect.lib.error.ErrorActivityViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="36dp">
-
-            <include layout="@layout/layout_title"/>
-
-            <FrameLayout
-                android:id="@+id/aeErrorFrame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                tools:fragment="com.cexdirect.direct.error.PurchaseFailedFragment"/>
+            android:orientation="vertical">
 
             <include
-                android:id="@+id/aeLegal"
-                layout="@layout/layout_legal"
+                layout="@layout/layout_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:model="@{model}"/>
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
 
-        </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-    </ScrollView>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="36dp">
+
+                <FrameLayout
+                    android:id="@+id/aeErrorFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    tools:fragment="com.cexdirect.direct.error.PurchaseFailedFragment" />
+
+                <include
+                    android:id="@+id/aeLegal"
+                    layout="@layout/layout_legal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    app:model="@{model}" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
