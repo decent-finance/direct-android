@@ -82,8 +82,8 @@ class OrderActivity : BaseActivity() {
                 model.proceed()
                 replaceFragment(model.currentStep.get() - 1)
             })
-            editClickEvent.observe(this@OrderActivity, goToBuyActivityObserver)
-            returnEvent.observe(this@OrderActivity, goToBuyActivityObserver)
+            editClick.observe(this@OrderActivity, goToBuyActivityObserver)
+            returnClick.observe(this@OrderActivity, goToBuyActivityObserver)
             copyEvent.observe(this@OrderActivity, Observer { orderId ->
                 if (!orderId.isNullOrBlank()) {
                     (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =

@@ -39,6 +39,8 @@ import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.symbolMap
 import com.cexdirect.lib.views.CollapsibleLayout
 import com.cexdirect.livedatax.switchMap
+import com.cexdirect.livedatax.throttleFirst
+import java.util.concurrent.TimeUnit
 
 @Suppress("MagicNumber")
 class OrderActivityViewModel(
@@ -51,9 +53,23 @@ class OrderActivityViewModel(
 ) : LegalViewModel() {
 
     // --- Events --- //
-    val nextClickEvent = VoidLiveEvent()
+    private val nextClickEvent = VoidLiveEvent()
+    private val resendCodeEvent = VoidLiveEvent()
+    private val buyMoreEvent = VoidLiveEvent()
+    private val scanQrClickEvent = VoidLiveEvent()
+    private val returnClickEvent = VoidLiveEvent()
+    private val editClickEvent = VoidLiveEvent()
+    val nextClick = nextClickEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val buyMoreClick = buyMoreEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val scanQrClick = scanQrClickEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val returnClick = returnClickEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val editClick = editClickEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val stepChangeEvent = VoidLiveEvent()
-    val returnEvent = VoidLiveEvent()
     val copyEvent = StringLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
     val chooseStateEvent = VoidLiveEvent()
@@ -62,13 +78,9 @@ class OrderActivityViewModel(
     val countryClickEvent = CountryClickEvent()
     val countryPickerExitEvent = VoidLiveEvent()
     val toggleSearchEvent = BooleanLiveEvent()
-    val resendCodeEvent = VoidLiveEvent()
     val editEmailEvent = VoidLiveEvent()
-    val buyMoreEvent = VoidLiveEvent()
     val txIdCopyEvent = StringLiveEvent()
     val txIdOpenEvent = StringLiveEvent()
-    val scanQrEvent = VoidLiveEvent()
-    val editClickEvent = VoidLiveEvent()
     val scrollRequestEvent = IntLiveEvent()
     // --- Events --- //
 
@@ -120,9 +132,9 @@ class OrderActivityViewModel(
     val changeEmailRequest = emailChangedEvent.switchMap {
         api.apply { changeEmail(it) }.changeEmailResult
     }
-    val changeCheckCodeRequest = resendCodeEvent.switchMap {
-        api.apply { requestNewCheckCode(orderId.get()!!) }.newCheckCode
-    }
+    val changeCheckCodeRequest = resendCodeEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+        .switchMap { api.apply { requestNewCheckCode(orderId.get()!!) }.newCheckCode }
     val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
@@ -195,7 +207,7 @@ class OrderActivityViewModel(
         if (currentStep.get() < 3) {
             stepChangeEvent.call()
         } else {
-            returnEvent.call()
+            returnClickEvent.call()
         }
     }
 
@@ -375,7 +387,7 @@ class OrderActivityViewModel(
     }
 
     fun scanQrCode() {
-        scanQrEvent.call()
+        scanQrClickEvent.call()
     }
 
     fun setImage(imgRef: ImageReference) {

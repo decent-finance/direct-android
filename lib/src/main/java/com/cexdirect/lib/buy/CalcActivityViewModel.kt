@@ -29,6 +29,8 @@ import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.Precision
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.livedatax.switchMap
+import com.cexdirect.livedatax.throttleFirst
+import java.util.concurrent.TimeUnit
 
 @OpenForTesting
 class CalcActivityViewModel(
@@ -55,14 +57,16 @@ class CalcActivityViewModel(
 
     final val api = CalculatorApi(analyticsApi, merchantApi, paymentApi, messenger, this)
     val calcData = api.calcData
-    val buyEvent = buyClickEvent.switchMap {
-        api.sendBuyEvent(
-            EventData(
-                fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
-                crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
+    val buyEvent = buyClickEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+        .switchMap {
+            api.sendBuyEvent(
+                EventData(
+                    fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
+                    crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
+                )
             )
-        )
-    }
+        }
 
     fun loadData() {
         api.loadCalcData()

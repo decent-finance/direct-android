@@ -110,10 +110,10 @@ class IdentityFragment : BaseOrderFragment() {
             cvvInfoEvent.observe(viewLifecycleOwner, Observer {
                 CvvInfoDialog().show(parentFragmentManager, "cvv")
             })
-            scanQrEvent.observe(viewLifecycleOwner, Observer {
+            scanQrClick.observe(viewLifecycleOwner, Observer {
                 scanQrCodeWithPermissionCheck()
             })
-            nextClickEvent.observe(viewLifecycleOwner, Observer { handleNextClick() })
+            nextClick.observe(viewLifecycleOwner, Observer { handleNextClick() })
             sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendToProcessingRequest.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))

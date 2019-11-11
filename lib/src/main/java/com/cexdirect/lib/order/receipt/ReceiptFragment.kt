@@ -63,7 +63,7 @@ class ReceiptFragment : BaseOrderFragment() {
                 onOk = { model.updatePaymentInfo(it) },
                 onFail = { purchaseFailed(it.message) }
             ))
-            buyMoreEvent.observe(viewLifecycleOwner, Observer {
+            buyMoreClick.observe(viewLifecycleOwner, Observer {
                 context!!.startBuyActivity(
                     AmountData(
                         model.orderAmounts.selectedFiatAmount,

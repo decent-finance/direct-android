@@ -24,6 +24,8 @@ android {
         versionName this.version
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
+
+        buildConfigField 'long', 'THROTTLE_DELAY_MILLIS', "300"
     }
 
     testOptions {
