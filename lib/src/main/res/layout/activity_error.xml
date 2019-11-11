@@ -48,7 +48,7 @@
                 tools:fragment="com.cexdirect.direct.error.PurchaseFailedFragment"/>
 
             <include
-                android:id="@+id/abLegal"
+                android:id="@+id/aeLegal"
                 layout="@layout/layout_legal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -54,8 +54,7 @@ class CalcActivity : BaseActivity() {
 
         model.apply {
             applyLegalObservers()
-            buyEvent.observe(
-                this@CalcActivity, requestObserver(
+            buyEvent.observe(this@CalcActivity, requestObserver(
                 onOk = {
                     val intent = with(Intent(this@CalcActivity, OrderActivity::class.java)) {
                         model.extractMonetaryData { cryptoAmount, cryptoCurrency, fiatAmount, fiatCurrency ->
@@ -74,8 +73,7 @@ class CalcActivity : BaseActivity() {
                     showStubScreen()
                 }
             ))
-            calcData.observe(
-                this@CalcActivity, requestObserver(
+            calcData.observe(this@CalcActivity, requestObserver(
                 onOk = {
                     model.initPrecisions(it!!.first)
                     model.initRates(
@@ -88,7 +86,7 @@ class CalcActivity : BaseActivity() {
                 onFail = { showStubScreen() }
             ))
             popularClickEvent.observe(this@CalcActivity, Observer {
-                binding.abAmount.requestFocus()
+                binding.acAmount.requestFocus()
                 model.amount.fiatAmount = it
             })
             switchBaseCurrencyEvent.observe(this@CalcActivity, Observer {

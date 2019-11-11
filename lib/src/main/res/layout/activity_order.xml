@@ -93,7 +93,7 @@
                 android:layout_marginTop="16dp" />
 
             <include
-                android:id="@+id/abLegal"
+                android:id="@+id/aoLegal"
                 layout="@layout/layout_legal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
