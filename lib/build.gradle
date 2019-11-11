@@ -116,8 +116,8 @@ allOpen {
 
 ext {
     // lib deps versions
-    daggerVersion = '2.24'
-    permissionDispatcherVersion = '4.5.0'
+    daggerVersion = '2.25.2'
+    permissionDispatcherVersion = '4.6.0'
     okHttpVersion = '4.2.2'
     retrofitVersion = '2.6.2'
     glideVersion = '4.10.0'
@@ -144,7 +144,7 @@ dependencies {
     api 'com.mcxiaoke.koi:core:0.5.5'
     api 'ru.noties.markwon:core:3.1.0'
     api 'me.dm7.barcodescanner:zxing:1.9.13'
-    api 'com.cexdirect:livedatax:0.2.0'
+    api 'com.cexdirect:livedatax:0.3.0'
 
     api "com.squareup.okhttp3:okhttp:$okHttpVersion"
     api "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
@@ -157,7 +157,7 @@ dependencies {
 
     api 'org.bouncycastle:bcprov-jdk15on:1.64'
 
-    debugApi 'androidx.fragment:fragment-testing:1.2.0-beta02'
+    debugApi 'androidx.fragment:fragment-testing:1.2.0-rc02'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:$assertjVersion"
