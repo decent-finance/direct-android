@@ -18,6 +18,7 @@ package com.cexdirect.lib.error
 
 import android.content.Intent
 import android.net.Uri
+import android.os.SystemClock
 import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -82,7 +83,13 @@ class ErrorActivityTest {
                 isAssignableFrom(TextView::class.java),
                 hasSibling(withText("Refund"))
             )
-        ).perform(nestedScrollTo(), click())
+        ).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+
+        SystemClock.sleep(500)
 
         intended(
             allOf(
@@ -99,7 +106,12 @@ class ErrorActivityTest {
 
         activityRule.launchActivity(intent)
         onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
-        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(matches(isDisplayed()))
     }
@@ -109,7 +121,13 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
         onView(withText(R.string.cexd_cancel)).perform(click())
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(doesNotExist())
@@ -121,7 +139,13 @@ class ErrorActivityTest {
 
         activityRule.launchActivity(intent)
         onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
-        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
+        onView(withText(R.string.cexd_exit)).perform(click())
 
         @Suppress("UsePropertyAccessSyntax")
         assertjThat(activityRule.activity.isFinishing).isTrue()
@@ -177,7 +201,10 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_try_again)).perform(nestedScrollTo(), click())
+        onView(withText(R.string.cexd_try_again)).apply {
+            perform(nestedScrollTo())
+            perform(click())
+        }
 
         intended(hasComponent(CalcActivity::class.java.name))
     }

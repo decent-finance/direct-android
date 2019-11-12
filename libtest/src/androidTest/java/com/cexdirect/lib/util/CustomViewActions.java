@@ -23,8 +23,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 public class CustomViewActions {
 
     /**
-     * @see <a href="https://stackoverflow.com/a/46037284>https://stackoverflow.com/a/46037284</a>
      * @return
+     * @see <a href="https://stackoverflow.com/a/46037284>https://stackoverflow.com/a/46037284</a>
      */
     public static ViewAction nestedScrollTo() {
         return new ViewAction() {
@@ -47,7 +47,7 @@ public class CustomViewActions {
                     NestedScrollView nestedScrollView = (NestedScrollView)
                             findFirstParentLayoutOfClass(view, NestedScrollView.class);
                     if (nestedScrollView != null) {
-                        nestedScrollView.scrollTo(0, view.getTop());
+                        nestedScrollView.scrollTo(0, findCoordinatesInParent(view, view.getTop()));
                     } else {
                         throw new Exception("Unable to find NestedScrollView parent.");
                     }
@@ -62,6 +62,15 @@ public class CustomViewActions {
             }
 
         };
+    }
+
+    private static int findCoordinatesInParent(View view, int initialTop) {
+        if (view.getParent() instanceof NestedScrollView) {
+            return initialTop;
+        } else {
+            View v = (View) view.getParent();
+            return findCoordinatesInParent(v, initialTop + v.getTop());
+        }
     }
 
     private static View findFirstParentLayoutOfClass(View view, Class<? extends View> parentClass) {
@@ -89,8 +98,8 @@ public class CustomViewActions {
     }
 
     /**
-     * @see <a href="https://stackoverflow.com/a/40443373>https://stackoverflow.com/a/40443373</a>
      * @return
+     * @see <a href="https://stackoverflow.com/a/40443373>https://stackoverflow.com/a/40443373</a>
      */
     public static ViewAction collapseAppBarLayout() {
         return new ViewAction() {
