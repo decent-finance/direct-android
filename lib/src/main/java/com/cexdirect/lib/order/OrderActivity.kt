@@ -66,7 +66,7 @@ class OrderActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Direct.identitySubcomponent?.inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order)
-        binding.avStepsViewPager.pageMargin = VIEWPAGER_ELEMENT_MARGIN
+        binding.aoStepsViewPager.pageMargin = VIEWPAGER_ELEMENT_MARGIN
 
         model.apply {
             intent.let {
@@ -93,7 +93,7 @@ class OrderActivity : BaseActivity() {
             })
             scrollRequestEvent.observe(this@OrderActivity, Observer {
                 val view = findViewById<View>(it)
-                binding.avScroll.requestChildFocus(view, view)
+                binding.aoScroll.requestChildFocus(view, view)
             })
         }.let { binding.model = it }
 
@@ -104,7 +104,7 @@ class OrderActivity : BaseActivity() {
     fun replaceFragment(position: Int) {
         hideLoader()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.avFragmentFrame, fragments[position])
+            .replace(R.id.aoFragmentFrame, fragments[position])
             .commit()
     }
 
