@@ -21,7 +21,6 @@ import android.net.Uri
 import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intended
@@ -33,7 +32,10 @@ import com.cexdirect.lib.*
 import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.TermsActivity
+import com.cexdirect.lib.util.CustomViewActions.collapseAppBarLayout
+import com.cexdirect.lib.util.CustomViewActions.nestedScrollTo
 import com.cexdirect.lib.util.TEST_PLACEMENT
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.notNullValue
@@ -73,13 +75,14 @@ class ErrorActivityTest {
 
         activityRule.launchActivity(intent)
 
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
         onView(
             allOf(
                 withText("Terms"),
                 isAssignableFrom(TextView::class.java),
                 hasSibling(withText("Refund"))
             )
-        ).perform(scrollTo(), click())
+        ).perform(nestedScrollTo(), click())
 
         intended(
             allOf(
@@ -95,7 +98,8 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(matches(isDisplayed()))
     }
@@ -105,7 +109,7 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
+        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
         onView(withText(R.string.cexd_cancel)).perform(click())
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(doesNotExist())
@@ -116,8 +120,8 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
-        onView(withText(R.string.cexd_exit)).perform(click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).perform(nestedScrollTo(), click())
 
         @Suppress("UsePropertyAccessSyntax")
         assertjThat(activityRule.activity.isFinishing).isTrue()
@@ -173,7 +177,7 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_try_again)).perform(scrollTo(), click())
+        onView(withText(R.string.cexd_try_again)).perform(nestedScrollTo(), click())
 
         intended(hasComponent(CalcActivity::class.java.name))
     }
@@ -202,7 +206,8 @@ class ErrorActivityTest {
         val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_support)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_support)).perform(nestedScrollTo(), click())
 
         val resolved = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(BaseActivity.SUPPORT_EMAIL)

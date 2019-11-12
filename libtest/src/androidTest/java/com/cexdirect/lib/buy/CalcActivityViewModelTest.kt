@@ -24,8 +24,10 @@ import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.Precision
 import com.cexdirect.lib.network.ws.Messenger
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -54,11 +56,13 @@ class CalcActivityViewModelTest {
         MockitoAnnotations.initMocks(this)
         val stringProvider =
             StringProvider(InstrumentationRegistry.getInstrumentation().targetContext)
+        whenever(analyticsApi.sendBuyEvent(any(), any())).thenReturn(mock())
+        whenever(analyticsApi.sendOpenEvent(any())).thenReturn(mock())
         model = CalcActivityViewModel(
-            mock(),
-            mock(),
-            mock(),
-            mock(),
+            merchantApi,
+            paymentApi,
+            analyticsApi,
+            messenger,
             stringProvider
         )
     }
