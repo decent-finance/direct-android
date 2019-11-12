@@ -73,7 +73,7 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.order.OrderActivityViewModel" />
+            type="com.cexdirect.lib.AmountViewModel" />
     </data>
 
 </layout>

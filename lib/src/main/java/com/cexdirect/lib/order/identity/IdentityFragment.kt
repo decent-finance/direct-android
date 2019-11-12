@@ -70,9 +70,9 @@ class IdentityFragment : BaseOrderFragment() {
 
     private var currentPhotoPath: String = ""
 
-    private val paymentDataObserver = restObserver<OrderInfoData>(
+    private val paymentDataObserver = requestObserver<OrderInfoData>(
         onOk = { /* Order status will be updated via WS connection */ },
-        onFail = { purchaseFailed(it.message) },
+        onFail = { purchaseFailed(it.message, model.extractAmounts()) },
         final = { /* do not hide loader here */ }
     )
 
@@ -116,8 +116,8 @@ class IdentityFragment : BaseOrderFragment() {
             nextClick.observe(viewLifecycleOwner, Observer { handleNextClick() })
             sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
-            sendToProcessingRequest.observe(viewLifecycleOwner, restObserver(onOk = {}, final = {}))
-            newOrderInfoRequest.observe(viewLifecycleOwner, restObserver(
+            sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(onOk = {}, final = {}))
+            newOrderInfoRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
                     setRequiredImages(it!!.basic.images)
                     setPaymentBase()
@@ -125,23 +125,23 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onFail = {
                     if (it.code == COUNTRY_NOT_SUPPORTED) {
-                        locationNotSupported()
+                        locationNotSupported(extractAmounts())
                     } else {
-                        purchaseFailed(it.message)
+                        purchaseFailed(it.message, extractAmounts())
                     }
                 }
             ))
-            uploadPhotoRequest.observe(viewLifecycleOwner, restObserver(
+            uploadPhotoRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = { setDocumentStatusToValid() },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
-            sendToVerificationRequest.observe(viewLifecycleOwner, restObserver(
+            sendToVerificationRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {},
                 onFail = {
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
                         userWallet.walletStatus = FieldStatus.INVALID
                     } else {
-                        purchaseFailed(it.message)
+                        purchaseFailed(it.message, model.extractAmounts())
                     }
                 },
                 final = {}
@@ -177,7 +177,7 @@ class IdentityFragment : BaseOrderFragment() {
                 model.updateOrderStatus(
                     it,
                     {
-                        requireContext().paymentRejected(it)
+                        requireContext().paymentRejected(it, model.extractAmounts())
                         finish()
                     },
                     { hideLoader() },
@@ -190,7 +190,7 @@ class IdentityFragment : BaseOrderFragment() {
                     }
                 )
             },
-            onFail = { purchaseFailed(it.message) }
+            onFail = { purchaseFailed(it.message, model.extractAmounts()) }
         ))
     }
 

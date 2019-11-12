@@ -50,7 +50,7 @@ class OrderActivityViewModel(
     private val messenger: Messenger,
     dh: DH,
     val emailChangedEvent: StringLiveEvent
-) : LegalViewModel() {
+) : AmountViewModel() {
 
     // --- Events --- //
     private val nextClickEvent = VoidLiveEvent()
@@ -70,7 +70,6 @@ class OrderActivityViewModel(
     val editClick = editClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val stepChangeEvent = VoidLiveEvent()
-    val copyEvent = StringLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
     val chooseStateEvent = VoidLiveEvent()
     val uploadPhotoEvent = UploadPhotoEvent()
@@ -84,8 +83,6 @@ class OrderActivityViewModel(
     val scrollRequestEvent = IntLiveEvent()
     // --- Events --- //
 
-    val orderAmounts = OrderAmounts()
-    val orderId = ObservableField("")
     val currentStep = ObservableInt(1)
     val pagerAdapter = ObservableField(StepsPagerAdapter(stringProvider, editClickEvent))
 
@@ -220,10 +217,6 @@ class OrderActivityViewModel(
     private fun updateOrderId(orderId: String) {
         this.orderId.set(orderId)
         Direct.pendingOrderId = orderId
-    }
-
-    fun copyOrderId() {
-        copyEvent.postValue(orderId.get())
     }
 
     private fun createOrder() {

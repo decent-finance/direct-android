@@ -216,12 +216,14 @@ class ErrorActivityTest {
         Intent().apply {
             putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
             putExtra("reason", "Test reason")
+            putExtra("info", LastKnownOrderInfo("", "", "", "", ""))
         }
 
     private fun givenPurchaseFailedIntent() =
         Intent().apply {
             putExtra("type", ErrorType.PURCHASE_FAILED.name)
             putExtra("reason", "Test reason")
+            putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
         }
 
     private fun givenGenericErrorIntent() =
@@ -232,5 +234,6 @@ class ErrorActivityTest {
     private fun givenVerificationRejectedIntent() =
         Intent().apply {
             putExtra("type", ErrorType.NOT_VERIFIED.name)
+            putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
         }
 }

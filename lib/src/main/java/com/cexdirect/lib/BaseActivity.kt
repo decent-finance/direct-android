@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.cexdirect.lib.error.LastKnownOrderInfo
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Loading
@@ -93,7 +94,12 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun <T> requestObserver(
         onLoading: () -> Unit = { showLoader() },
         onOk: (res: T?) -> Unit,
-        onFail: (res: Failure<T>) -> Unit = { purchaseFailed(it.message) },
+        onFail: (res: Failure<T>) -> Unit = {
+            purchaseFailed(
+                it.message,
+                LastKnownOrderInfo("", "", "", "", "")
+            )
+        },
         final: () -> Unit = { hideLoader() }
     ) = Observer<Resource<T>> {
         when (it) {

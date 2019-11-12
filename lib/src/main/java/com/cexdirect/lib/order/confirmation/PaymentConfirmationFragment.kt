@@ -65,40 +65,40 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                 onOk = {
                     updateConfirmationStatus(it) {
                         // TODO: for now, only REJECTED is possible here
-                        requireContext().paymentRejected(OrderStatus.REJECTED)
+                        requireContext().paymentRejected(OrderStatus.REJECTED, extractAmounts())
                         finish()
                     }
                 },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { purchaseFailed(it.message,extractAmounts()) }
             ))
             editEmailEvent.observe(viewLifecycleOwner, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
             })
-            checkCodeRequest.observe(viewLifecycleOwner, restObserver(
+            checkCodeRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = { /* Don't do anything here, because order status will be updated via WS */ },
                 onFail = {
                     if (it.code == CODE_BAD_REQUEST) {
                         toast(R.string.cexd_wrong_code)
                     } else {
-                        purchaseFailed(it.message)
+                        purchaseFailed(it.message,extractAmounts())
                     }
                 },
                 final = {}
             ))
-            changeCheckCodeRequest.observe(viewLifecycleOwner, restObserver(
+            changeCheckCodeRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
                     toast(R.string.cexd_check_mail)
                     restartResendTimer()
                 },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { purchaseFailed(it.message,extractAmounts()) }
             ))
-            changeEmailRequest.observe(viewLifecycleOwner, restObserver(
+            changeEmailRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
                     updateUserEmail(emailChangedEvent.value ?: it!!)
                     toast(R.string.cexd_email_updated)
                     restartResendTimer()
                 },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { purchaseFailed(it.message,extractAmounts()) }
             ))
         }.let { binding.model = it }
     }

@@ -52,6 +52,15 @@ class ErrorActivity : BaseActivity() {
             ?.takeIf { it.isNotBlank() }
             ?.let { model.reason.set(it) }
             ?: model.reason.set("Unknown Error")
+        intent.getParcelableExtra<LastKnownOrderInfo>("info")
+            ?.let {
+                model.orderId.set(it.orderId)
+                model.orderAmounts.selectedCryptoAmount = it.cryptoAmount
+                model.orderAmounts.selectedCryptoCurrency = it.cryptoCurrency
+                model.orderAmounts.selectedFiatAmount = it.fiatAmount
+                model.orderAmounts.selectedFiatCurrency = it.fiatCurrency
+            }
+
 
         model.applyLegalObservers()
 
@@ -86,48 +95,53 @@ class ErrorActivity : BaseActivity() {
     }
 }
 
-fun Context.paymentRejected(rejectStatus: OrderStatus) {
+fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrderInfo) {
     when (rejectStatus) {
         OrderStatus.IVS_REJECTED -> {
             Intent(this, ErrorActivity::class.java).apply {
                 putExtra("type", ErrorType.NOT_VERIFIED.name)
+                putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
         OrderStatus.IVS_FAILED -> {
             Intent(this, ErrorActivity::class.java).apply {
                 putExtra("type", ErrorType.VERIFICATION_ERROR.name)
+                putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
         OrderStatus.REJECTED -> {
             Intent(this, ErrorActivity::class.java).apply {
                 putExtra("type", ErrorType.PURCHASE_FAILED.name)
                 putExtra("reason", "Rejected")
+                putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
         else -> error("Illegal reject status: ${rejectStatus.name}")
     }
 }
 
-fun Fragment.purchaseFailed(reason: String?) {
-    this.context!!.showPurchaseFailedScreen(reason)
+fun Fragment.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
+    this.context!!.showPurchaseFailedScreen(reason, orderInfo)
     finish()
 }
 
-fun Activity.purchaseFailed(reason: String?) {
-    showPurchaseFailedScreen(reason)
+fun Activity.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
+    showPurchaseFailedScreen(reason, orderInfo)
     finish()
 }
 
-internal fun Context.showPurchaseFailedScreen(reason: String?) {
+internal fun Context.showPurchaseFailedScreen(reason: String?, orderInfo: LastKnownOrderInfo) {
     Intent(this, ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.PURCHASE_FAILED.name)
         putExtra("reason", reason)
+        putExtra("info", orderInfo)
     }.let { startActivity(it) }
 }
 
-fun Fragment.locationNotSupported() {
+fun Fragment.locationNotSupported(orderInfo: LastKnownOrderInfo) {
     Intent(requireContext(), ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
+        putExtra("info", orderInfo)
     }.let {
         startActivity(it)
         finish()

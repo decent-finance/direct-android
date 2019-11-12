@@ -27,6 +27,7 @@ import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.ActivityCalcBinding
 import com.cexdirect.lib.di.annotation.BuyActivityFactory
+import com.cexdirect.lib.error.LastKnownOrderInfo
 import com.cexdirect.lib.error.purchaseFailed
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.order.OrderActivity
@@ -41,7 +42,7 @@ class CalcActivity : BaseActivity() {
 
     private val ratesObserver = messageObserver<List<ExchangeRate>>(
         onOk = { model.updateRates(it) },
-        onFail = { purchaseFailed(it.message) }
+        onFail = { purchaseFailed(it.message, LastKnownOrderInfo("", "", "", "", "")) }
     )
 
     private lateinit var binding: ActivityCalcBinding
@@ -114,6 +115,7 @@ class CalcActivity : BaseActivity() {
         @JvmStatic
         fun Context.startBuyActivity(data: AmountData? = null) {
             val intent = Intent(this, CalcActivity::class.java)
+            // TODO: use @Parcelize here
             data?.let { (fiatAmount, fiatCurrency, cryptoCurrency) ->
                 intent.apply {
                     putExtra("lastFiatAmount", fiatAmount)

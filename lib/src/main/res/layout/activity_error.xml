@@ -23,6 +23,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.error.ErrorActivityViewModel" />
@@ -37,11 +39,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/layout_title"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways|snap" />
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                <include
+                    layout="@layout/layout_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{model.orderId.isEmpty ? View.VISIBLE : View.GONE}" />
+
+                <include
+                    layout="@layout/layout_title_detailed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{model.orderId.isEmpty ? View.GONE : View.VISIBLE}"
+                    app:model="@{model}" />
+
+            </FrameLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

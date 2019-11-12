@@ -61,7 +61,7 @@ class ReceiptFragment : BaseOrderFragment() {
             subscribeToOrderInfo().observe(
                 viewLifecycleOwner, socketObserver(
                 onOk = { model.updatePaymentInfo(it) },
-                onFail = { purchaseFailed(it.message) }
+                onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
             buyMoreClick.observe(viewLifecycleOwner, Observer {
                 context!!.startBuyActivity(

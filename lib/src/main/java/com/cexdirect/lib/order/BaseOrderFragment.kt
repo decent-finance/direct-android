@@ -19,10 +19,16 @@ package com.cexdirect.lib.order
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.di.annotation.VerificationActivityFactory
+import com.cexdirect.lib.error.purchaseFailed
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Loading
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
 import javax.inject.Inject
 
 abstract class BaseOrderFragment : BaseFragment() {
@@ -36,5 +42,24 @@ abstract class BaseOrderFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Direct.identitySubcomponent?.inject(this)
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    protected fun <T> requestObserver(
+        onLoading: () -> Unit = { showLoader() },
+        onOk: (res: T?) -> Unit,
+        onFail: (res: Failure<T>) -> Unit = { purchaseFailed(it.message, model.extractAmounts()) },
+        final: () -> Unit = { hideLoader() }
+    ) = Observer<Resource<T>> {
+        when (it) {
+            is Loading -> onLoading.invoke()
+            is Success -> {
+                final.invoke()
+                onOk.invoke(it.data)
+            }
+            is Failure -> {
+                final.invoke()
+                onFail.invoke(it)
+            }
+        }
     }
 }
