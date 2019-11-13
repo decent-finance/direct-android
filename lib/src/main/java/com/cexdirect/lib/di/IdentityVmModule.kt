@@ -23,10 +23,11 @@ import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.di.annotation.IdentityScope
 import com.cexdirect.lib.di.annotation.PhotoSourceDialogFactory
 import com.cexdirect.lib.di.annotation.VerificationActivityFactory
-import com.cexdirect.lib.network.OrderApi
-import com.cexdirect.lib.network.PaymentApi
+import com.cexdirect.lib.network.OrderFlow
+import com.cexdirect.lib.network.PaymentFlow
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.OrderActivityViewModel
+import com.cexdirect.lib.order.OrderProcessingApi
 import com.cexdirect.lib.order.confirmation.ChangeEmailDialogViewModel
 import com.cexdirect.lib.order.identity.CvvInfoDialogViewModel
 import com.cexdirect.lib.order.identity.PhotoSourceDialogViewModel
@@ -43,18 +44,16 @@ class IdentityVmModule {
     @VerificationActivityFactory
     @IdentityScope
     fun provideVerificationActivityViewModel(
-        paymentApi: PaymentApi,
-        orderApi: OrderApi,
+        paymentFlow: PaymentFlow,
+        orderFlow: OrderFlow,
         stringProvider: StringProvider,
         messenger: Messenger,
         dh: DH,
         emailChangedEvent: StringLiveEvent
     ): ViewModelProvider.Factory =
         OrderActivityViewModel.Factory(
-            paymentApi,
-            orderApi,
+            OrderProcessingApi(paymentFlow, orderFlow, messenger),
             stringProvider,
-            messenger,
             dh,
             emailChangedEvent
         )

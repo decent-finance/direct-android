@@ -26,8 +26,12 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.databinding.ActivityCheckBinding
 import com.cexdirect.lib.di.annotation.CheckActivityFactory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class CheckActivity : BaseActivity() {
 
     @field:[Inject CheckActivityFactory]

@@ -19,18 +19,17 @@ package com.cexdirect.lib.network
 import com.cexdirect.lib.network.models.PlacementInfoResponse
 import com.cexdirect.lib.network.models.PrecisionsResponse
 import com.cexdirect.lib.network.models.RuleResponse
-import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MerchantService {
 
     @GET("api/v1/merchant/precisions/{placementId}")
-    fun getCurrencyPrecisionsAsync(@Path("placementId") placementId: String): Deferred<PrecisionsResponse>
+    suspend fun getCurrencyPrecisions(@Path("placementId") placementId: String): PrecisionsResponse
 
     @GET("api/v1/merchant/placement/check/{placementId}")
-    fun getPlacementInfoAsync(@Path("placementId") placementId: String): Deferred<PlacementInfoResponse>
+    suspend fun getPlacementInfo(@Path("placementId") placementId: String): PlacementInfoResponse
 
     @GET("api/v1/merchant/rules/{ruleId}")
-    fun getRuleAsync(@Path("ruleId") ruleId: String): Deferred<RuleResponse>
+    suspend fun getRule(@Path("ruleId") ruleId: String): RuleResponse
 }

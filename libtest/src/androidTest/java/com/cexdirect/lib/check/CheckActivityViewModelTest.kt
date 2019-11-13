@@ -20,19 +20,13 @@ import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DispatcherRule
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.MerchantService
-import com.cexdirect.lib.network.PaymentApi
-import com.cexdirect.lib.network.PaymentService
 import com.cexdirect.lib.terms.TermsActivity
 import com.cexdirect.lib.util.PlacementValidator
-import com.nhaarman.mockitokotlin2.reset
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -45,10 +39,7 @@ class CheckActivityViewModelTest {
     val dispatcherRule = DispatcherRule()
 
     @Mock
-    lateinit var merchantService: MerchantService
-
-    @Mock
-    lateinit var paymentService: PaymentService
+    lateinit var placementApi: PlacementApi
 
     @Mock
     lateinit var placementValidator: PlacementValidator
@@ -58,16 +49,13 @@ class CheckActivityViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        model = CheckActivityViewModel(
-            MerchantApi(merchantService),
-            PaymentApi(paymentService),
-            placementValidator
-        )
+        whenever(placementApi.checkResult).thenReturn(mock())
+        model = CheckActivityViewModel(placementApi, placementValidator)
     }
 
     @After
     fun tearDown() {
-        reset(merchantService, paymentService, placementValidator)
+        reset(placementApi, placementValidator)
     }
 
     @Test
@@ -77,6 +65,6 @@ class CheckActivityViewModelTest {
         model.loadPlacementData()
 
         @Suppress("DeferredResultUnused")
-        verify(merchantService).getPlacementInfoAsync(anyString())
+        verify(placementApi).loadPlacementData(any(), any())
     }
 }

@@ -17,32 +17,34 @@
 package com.cexdirect.lib.network
 
 import com.cexdirect.lib.BuildConfig
-import com.cexdirect.lib.ExecutableLiveData
+import com.cexdirect.lib.DispatcherRegistry
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.models.ApiResponse
 import com.cexdirect.lib.network.models.WalletAddressData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
+@ExperimentalCoroutinesApi
 @OpenForTesting
-class PaymentApi(private val service: PaymentService) {
+class PaymentFlow(private val service: PaymentService) {
 
-    fun getExchangeRates(scope: CoroutineScope, placementId: String) =
-        ExecutableLiveData(scope) { service.getExchangeRatesAsync(placementId) }
+    fun getExchangeRates(placementId: String) =
+        flow { emit(service.getExchangeRates(placementId)) }
+            .flowOn(DispatcherRegistry.io)
 
-    fun verifyWalletAddress(scope: CoroutineScope, block: () -> WalletAddressData) =
-        ExecutableLiveData(scope) {
+    fun verifyWalletAddress(addressData:WalletAddressData) =
+        flow {
             if (!BuildConfig.DEBUG) {
-                val (address, currency) = block.invoke()
-                service.verifyWalletAddressAsync(address, currency)
+                val (address, currency) = addressData
+                emit(service.verifyWalletAddress(address, currency))
             } else {
-                scope.async {
-                    ApiResponse<Void>()
-                    // TODO: move this part to dev flavor
-                }
+                emit(ApiResponse())
             }
-        }
+        }.flowOn(DispatcherRegistry.io)
 
-    fun getCountries(scope: CoroutineScope) =
-        ExecutableLiveData(scope) { service.getCountriesAsync() }
+    fun getCountries() =
+        flow { emit(service.getCountries()) }
+            .flowOn(DispatcherRegistry.io)
+
 }

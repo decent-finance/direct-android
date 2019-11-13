@@ -16,25 +16,27 @@
 
 package com.cexdirect.lib.network
 
-import com.cexdirect.lib.ExecutableLiveData
+import com.cexdirect.lib.DispatcherRegistry
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.models.DefaultEvent
 import com.cexdirect.lib.network.models.EventData
 import com.cexdirect.lib.network.models.MonetaryData
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
+@ExperimentalCoroutinesApi
 @OpenForTesting
-class AnalyticsApi(private val service: AnalyticsService) {
+class AnalyticsFlow(private val service: AnalyticsService) {
 
-    fun sendOpenEvent(scope: CoroutineScope) =
-        ExecutableLiveData(scope) {
-            val eventData = EventData(
-                fiat = MonetaryData("0", "USD"),
-                crypto = MonetaryData("0", "BTC")
-            )
-            service.sendNewOrderEvent(DefaultEvent(eventData))
-        }
+    fun sendOpenEvent() =
+        flow {
+            val eventData =
+                EventData(fiat = MonetaryData("0", "USD"), crypto = MonetaryData("0", "BTC"))
+            emit(service.sendNewOrderEvent(DefaultEvent(eventData)))
+        }.flowOn(DispatcherRegistry.io)
 
-    fun sendBuyEvent(scope: CoroutineScope, block: () -> EventData) =
-        ExecutableLiveData(scope) { service.sendBuyEvent(DefaultEvent(block.invoke())) }
+    fun sendBuyEvent(data: EventData) =
+        flow { emit(service.sendBuyEvent(DefaultEvent(data))) }
+            .flowOn(DispatcherRegistry.io)
 }

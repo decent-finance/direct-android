@@ -19,21 +19,17 @@ package com.cexdirect.lib.network
 import com.cexdirect.lib.network.models.ApiResponse
 import com.cexdirect.lib.network.models.CountriesResponse
 import com.cexdirect.lib.network.models.ExchangeRatesResponse
-import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface PaymentService {
 
     @GET("api/v1/payments/currencies/{placementId}")
-    fun getExchangeRatesAsync(@Path("placementId") placementId: String): Deferred<ExchangeRatesResponse>
+    suspend fun getExchangeRates(@Path("placementId") placementId: String): ExchangeRatesResponse
 
     @GET("api/v1/payments/wallet/{wallet}/{currency}/verify")
-    fun verifyWalletAddressAsync(
-        @Path("wallet") wallet: String,
-        @Path("currency") currency: String
-    ): Deferred<ApiResponse<Void>>
+    suspend fun verifyWalletAddress(@Path("wallet") wallet: String, @Path("currency") currency: String): ApiResponse<Void>
 
     @GET("api/v1/payments/countries")
-    fun getCountriesAsync(): Deferred<CountriesResponse>
+    suspend fun getCountries(): CountriesResponse
 }

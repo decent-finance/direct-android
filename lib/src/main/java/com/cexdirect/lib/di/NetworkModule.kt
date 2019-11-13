@@ -28,7 +28,6 @@ import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.network.ws.WsUrlProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -54,28 +53,27 @@ class NetworkModule {
         .baseUrl(BuildConfig.REST_URL)
         .client(client)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
     @Provides
     @Singleton
     fun provideMerchantRepo(retrofit: Retrofit) =
-        MerchantApi(retrofit.create(MerchantService::class.java))
+        MerchantFlow(retrofit.create(MerchantService::class.java))
 
     @Provides
     @Singleton
     fun providePaymentRepo(retrofit: Retrofit) =
-        PaymentApi(retrofit.create(PaymentService::class.java))
+        PaymentFlow(retrofit.create(PaymentService::class.java))
 
     @Provides
     @Singleton
     fun provideOrderService(retrofit: Retrofit) =
-        OrderApi(retrofit.create(OrderService::class.java))
+        OrderFlow(retrofit.create(OrderService::class.java))
 
     @Provides
     @Singleton
     fun provideAnalyticsApi(retrofit: Retrofit) =
-        AnalyticsApi(retrofit.create(AnalyticsService::class.java))
+        AnalyticsFlow(retrofit.create(AnalyticsService::class.java))
 
     @Provides
     @Singleton

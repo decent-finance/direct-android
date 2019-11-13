@@ -20,24 +20,21 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
-import com.cexdirect.lib.network.AnalyticsApi
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.models.EventData
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.Precision
-import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.livedatax.switchMap
 import com.cexdirect.livedatax.throttleFirst
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.util.concurrent.TimeUnit
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @OpenForTesting
 class CalcActivityViewModel(
-    merchantApi: MerchantApi,
-    paymentApi: PaymentApi,
-    analyticsApi: AnalyticsApi,
-    messenger: Messenger,
+    private val api: CalcApi,
     stringProvider: StringProvider
 ) : LegalViewModel() {
 
@@ -55,12 +52,12 @@ class CalcActivityViewModel(
     final val currencyClickEvent = StringLiveEvent()
     val currencyAdapter = CurrencyAdapter(currencyClickEvent)
 
-    final val api = CalculatorApi(analyticsApi, merchantApi, paymentApi, messenger, this)
     val calcData = api.calcData
     val buyEvent = buyClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
         .switchMap {
             api.sendBuyEvent(
+                this,
                 EventData(
                     fiat = MonetaryData(amount.fiatAmount, amount.selectedFiatCurrency),
                     crypto = MonetaryData(amount.cryptoAmount, amount.selectedCryptoCurrency)
@@ -69,7 +66,7 @@ class CalcActivityViewModel(
         }
 
     fun loadData() {
-        api.loadCalcData()
+        api.loadCalcData(this)
     }
 
     fun buyCrypto() {
@@ -160,22 +157,11 @@ class CalcActivityViewModel(
         amount.rates = data
     }
 
-    class Factory(
-        private val merchantApi: MerchantApi,
-        private val paymentApi: PaymentApi,
-        private val analyticsApi: AnalyticsApi,
-        private val messenger: Messenger,
-        private val stringProvider: StringProvider
-    ) : ViewModelProvider.Factory {
+    class Factory(private val api: CalcApi, private val stringProvider: StringProvider) :
+        ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            CalcActivityViewModel(
-                merchantApi,
-                paymentApi,
-                analyticsApi,
-                messenger,
-                stringProvider
-            ) as T
+            CalcActivityViewModel(api, stringProvider) as T
     }
 }

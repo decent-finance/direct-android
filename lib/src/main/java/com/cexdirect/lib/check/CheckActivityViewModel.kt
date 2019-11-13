@@ -19,24 +19,23 @@ package com.cexdirect.lib.check
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.util.PlacementValidator
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class CheckActivityViewModel(
-    merchantApi: MerchantApi,
-    paymentApi: PaymentApi,
+    private val placementApi: PlacementApi,
     private val placementValidator: PlacementValidator
 ) : BaseObservableViewModel() {
 
-    private val placementApi = PlacementApi(merchantApi, paymentApi, this) {
-        canLaunch(it.activityStatus, it.placementUris)
-    }
-
-    val result = placementApi.placementDataResult
+    val result = placementApi.checkResult
 
     fun loadPlacementData() {
-        placementApi.loadPlacementData()
+        placementApi.loadPlacementData(this) {
+            canLaunch(it.activityStatus, it.placementUris)
+        }
     }
 
     private fun canLaunch(placementActive: Boolean, placementUris: List<String>) =
@@ -47,17 +46,12 @@ class CheckActivityViewModel(
             ?: false
 
     class Factory(
-        private val merchantApi: MerchantApi,
-        private val paymentApi: PaymentApi,
+        private val placementApi: PlacementApi,
         private val placementValidator: PlacementValidator
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            CheckActivityViewModel(
-                merchantApi,
-                paymentApi,
-                placementValidator
-            ) as T
+            CheckActivityViewModel(placementApi, placementValidator) as T
     }
 }

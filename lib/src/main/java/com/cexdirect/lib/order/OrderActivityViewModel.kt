@@ -22,11 +22,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
-import com.cexdirect.lib.network.OrderApi
-import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.models.*
-import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.confirmation.CheckCode
 import com.cexdirect.lib.order.confirmation.TdsData
 import com.cexdirect.lib.order.events.UploadPhotoEvent
@@ -44,10 +41,8 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("MagicNumber")
 class OrderActivityViewModel(
-    paymentApi: PaymentApi,
-    orderApi: OrderApi,
+    private val api: OrderProcessingApi,
     stringProvider: StringProvider,
-    private val messenger: Messenger,
     dh: DH,
     val emailChangedEvent: StringLiveEvent
 ) : AmountViewModel() {
@@ -119,19 +114,18 @@ class OrderActivityViewModel(
     val statusWatcher = StatusWatcher()
 
     // --- Requests --- //
-    private val api = OrderProcessingApi(paymentApi, orderApi, messenger, this)
-    val newOrderInfoRequest = api.newOrderInfo
+    val newOrderInfoRequest = api.newOrderResult
     val sendToVerificationRequest = api.verificationResult
     val sendToProcessingRequest = api.processingResult
     val uploadPhotoRequest: LiveData<Resource<Void>> = api.uploadResult
     val sendBasePaymentDataRequest: LiveData<Resource<OrderInfoData>> = api.basePaymentDataResult
     val sendExtraPaymentDataRequest = api.extraPaymentDataResult
     val changeEmailRequest = emailChangedEvent.switchMap {
-        api.apply { changeEmail(it) }.changeEmailResult
+        api.changeEmail(this@OrderActivityViewModel, it)
     }
     val changeCheckCodeRequest = resendCodeEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
-        .switchMap { api.apply { requestNewCheckCode(orderId.get()!!) }.newCheckCode }
+        .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, orderId.get()!!) }
     val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
@@ -169,7 +163,7 @@ class OrderActivityViewModel(
             }
         })
         userDocs.uploadAction = {
-            api.uploadPhoto {
+            api.uploadPhoto(this) {
                 when (it) {
                     PhotoType.SELFIE -> {
                         ImageBody(
@@ -226,6 +220,7 @@ class OrderActivityViewModel(
         if (userEmail.isValid() && userCountry.isValid()) {
             Direct.userEmail = userEmail.email
             api.createNewOrder(
+                this,
                 NewOrderData(
                     userEmail.email,
                     userCountry.selectedCountry.code,
@@ -276,10 +271,10 @@ class OrderActivityViewModel(
         uploadPhotoEvent.value = type
     }
 
-    fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
+    fun subscribeToOrderInfo() = api.subscribeToOrderInfo()
 
     fun stopSubscriptions() {
-        messenger.clear()
+        api.clear()
     }
 
     fun toggleLocationEmail() {
@@ -320,20 +315,19 @@ class OrderActivityViewModel(
         }
 
         if (paymentDataValid()) {
-            api.sendBasePaymentData {
-                val payment = Payment(
-                    userCardData.getCardBin(),
-                    userCardData.expiry,
-                    Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
-                )
+            val payment = Payment(
+                userCardData.getCardBin(),
+                userCardData.expiry,
+                Wallet(userWallet.address, userWallet.tag.ifEmpty { null })
+            )
 
-                val additional = if (userCountry.shouldShowState) {
-                    mapOf("billingSsn" to userSsn.getFormattedValue())
-                } else {
-                    emptyMap()
-                }
-                PaymentData(payment, additional)
+            val additional = if (userCountry.shouldShowState) {
+                mapOf("billingSsn" to userSsn.getFormattedValue())
+            } else {
+                emptyMap()
             }
+
+            api.sendBasePaymentData(this,PaymentData(payment, additional))
         }
     }
 
@@ -345,29 +339,30 @@ class OrderActivityViewModel(
 
     private fun startVerificationChain() {
         api.startVerification(
-            { WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency) },
-            { userCardData.getPublicKey() },
-            {
-                VerificationData(
-                    secretId = it.secretId,
-                    cardData = userCardData.generateVerificationCardData(it.publicKey)
-                )
-            }
-        )
+            this,
+            WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency),
+            userCardData.getPublicKey()
+        ) {
+            VerificationData(
+                secretId = it.secretId,
+                cardData = userCardData.generateVerificationCardData(it.publicKey)
+            )
+        }
     }
 
     fun uploadExtraPaymentData() {
         forceValidateExtras()
 
         if (extrasValid()) {
-            api.sendExtraPaymentData {
+            api.sendExtraPaymentData(
+                this,
                 extras.apply {
                     // Do not send the following entries
                     remove("userResidentialCountry")
                     remove("billingCountry")
                     remove("billingState")
                 }.let { PaymentData(paymentData = null, additional = it, termUrl = null) }
-            }
+            )
         }
     }
 
@@ -457,14 +452,14 @@ class OrderActivityViewModel(
             }
             OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) {
                 api.startProcessing(
-                    { userCardData.getPublicKey() },
-                    {
-                        VerificationData(
-                            secretId = it.secretId,
-                            cardData = userCardData.generateProcessingCardData(it.publicKey)
-                        )
-                    }
-                )
+                    this,
+                    userCardData.getPublicKey()
+                ) {
+                    VerificationData(
+                        secretId = it.secretId,
+                        cardData = userCardData.generateProcessingCardData(it.publicKey)
+                    )
+                }
             }
             OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
@@ -525,7 +520,7 @@ class OrderActivityViewModel(
     }
 
     fun submitCode() {
-        api.checkCode(orderId.get()!!, checkCode.code)
+        api.checkCode(this, orderId.get()!!, checkCode.code)
     }
 
     fun updateUserEmail(email: String) {
@@ -581,7 +576,7 @@ class OrderActivityViewModel(
             OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
-                messenger.removeOrderInfoSubscription()
+                api.removeOrderInfoSubscription()
             }
             else -> { // do nothing
             }
@@ -607,23 +602,14 @@ class OrderActivityViewModel(
     }
 
     class Factory(
-        private val paymentApi: PaymentApi,
-        private val orderApi: OrderApi,
+        private val api: OrderProcessingApi,
         private val stringProvider: StringProvider,
-        private val messenger: Messenger,
         private val dh: DH,
         private val emailChangedEvent: StringLiveEvent
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            OrderActivityViewModel(
-                paymentApi,
-                orderApi,
-                stringProvider,
-                messenger,
-                dh,
-                emailChangedEvent
-            ) as T
+            OrderActivityViewModel(api, stringProvider, dh, emailChangedEvent) as T
     }
 }

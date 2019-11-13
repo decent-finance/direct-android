@@ -73,6 +73,12 @@ object Direct {
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun updateRules(newRules: Collection<RuleData>) {
+        rules.clear()
+        rules.addAll(newRules)
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun releaseIdentitySubcomponent() {
         identitySubcomponent = null
     }

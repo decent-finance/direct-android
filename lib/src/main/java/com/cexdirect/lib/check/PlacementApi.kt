@@ -18,45 +18,40 @@ package com.cexdirect.lib.check
 
 import androidx.lifecycle.MutableLiveData
 import com.cexdirect.lib.Direct
+import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.*
 import com.cexdirect.lib.network.models.PlacementInfo
-import com.cexdirect.livedatax.map
-import com.cexdirect.livedatax.switchMap
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 
-class PlacementApi(
-    private val merchantApi: MerchantApi,
-    private val paymentApi: PaymentApi,
-    private val scope: CoroutineScope,
-    private val checkPlacementAction: (info: PlacementInfo) -> Boolean
-) {
+@FlowPreview
+@ExperimentalCoroutinesApi
+@OpenForTesting
+class PlacementApi(private val merchantFlow: MerchantFlow, private val paymentFlow: PaymentFlow) {
 
-    private val checkResult = merchantApi.getPlacementInfo(scope, Direct.credentials.placementId)
+    val checkResult = MutableLiveData<Resource<Boolean>>()
 
-    val placementDataResult = checkResult.map {
-        if (it is Success && !checkPlacementAction.invoke(it.data!!)) {
-            Failure(-1, "Placement inactive")
-        } else {
-            it
-        }
-    }.switchMap {
-        it.enqueueWith({ merchantApi.getRules(scope, it.data!!.rulesIds).apply { execute() } })
-    }.switchMap {
-        it.enqueueWith({
-            Direct.rules.apply {
-                clear()
-                addAll(it.data!!)
+    fun loadPlacementData(scope: CoroutineScope, predicate: (info: PlacementInfo) -> Boolean) {
+        checkResult.value = Loading()
+        merchantFlow.getPlacementInfo(Direct.credentials.placementId)
+            .onStart { checkResult.value = Loading() }
+            .map {
+                if (predicate.invoke(it.data)) {
+                    it
+                } else {
+                    error("Placement inactive")
+                }
             }
-            paymentApi.getCountries(scope).apply { execute() }
-        })
-    }.switchMap {
-        it.enqueueWith({
-            Direct.countries = it.data!!
-            MutableLiveData<Resource<Boolean>>(Success(true))
-        })
-    }
-
-    fun loadPlacementData() {
-        checkResult.execute()
+            .flatMapConcat { merchantFlow.getRules(it.data.rulesIds) }
+            .onEach { Direct.updateRules(it) }
+            .flatMapConcat { paymentFlow.getCountries() }
+            .catch { checkResult.value = it.mapFailure() }
+            .onEach {
+                Direct.countries = it.data
+                checkResult.value = Success(true)
+            }
+            .launchIn(scope)
     }
 }

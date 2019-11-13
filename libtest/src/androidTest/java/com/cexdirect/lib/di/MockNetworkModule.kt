@@ -18,7 +18,6 @@ package com.cexdirect.lib.di
 
 import com.cexdirect.lib.OpenForTesting
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,6 +31,5 @@ class MockNetworkModule : NetworkModule() {
         .baseUrl("http://localhost:8080/api/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }

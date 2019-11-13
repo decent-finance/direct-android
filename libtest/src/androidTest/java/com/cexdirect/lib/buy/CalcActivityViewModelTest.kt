@@ -18,12 +18,8 @@ package com.cexdirect.lib.buy
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib.network.AnalyticsApi
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.PaymentApi
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.Precision
-import com.cexdirect.lib.network.ws.Messenger
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
@@ -38,16 +34,7 @@ import org.mockito.MockitoAnnotations
 class CalcActivityViewModelTest {
 
     @Mock
-    lateinit var merchantApi: MerchantApi
-
-    @Mock
-    lateinit var paymentApi: PaymentApi
-
-    @Mock
-    lateinit var analyticsApi: AnalyticsApi
-
-    @Mock
-    lateinit var messenger: Messenger
+    lateinit var calcApi: CalcApi
 
     private lateinit var model: CalcActivityViewModel
 
@@ -56,20 +43,17 @@ class CalcActivityViewModelTest {
         MockitoAnnotations.initMocks(this)
         val stringProvider =
             StringProvider(InstrumentationRegistry.getInstrumentation().targetContext)
-        whenever(analyticsApi.sendBuyEvent(any(), any())).thenReturn(mock())
-        whenever(analyticsApi.sendOpenEvent(any())).thenReturn(mock())
+        whenever(calcApi.sendBuyEvent(any(), any())).thenReturn(mock())
+        whenever(calcApi.calcData).thenReturn(mock())
         model = CalcActivityViewModel(
-            merchantApi,
-            paymentApi,
-            analyticsApi,
-            messenger,
+            calcApi,
             stringProvider
         )
     }
 
     @After
     fun tearDown() {
-        reset(merchantApi, paymentApi, analyticsApi, messenger)
+        reset(calcApi)
     }
 
     @Test

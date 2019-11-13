@@ -21,15 +21,17 @@ import com.cexdirect.lib.ExitDialogViewModel
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.buy.CalcActivityViewModel
+import com.cexdirect.lib.buy.CalcApi
 import com.cexdirect.lib.check.CheckActivityViewModel
+import com.cexdirect.lib.check.PlacementApi
 import com.cexdirect.lib.di.annotation.BuyActivityFactory
 import com.cexdirect.lib.di.annotation.CheckActivityFactory
 import com.cexdirect.lib.di.annotation.ErrorActivityFactory
 import com.cexdirect.lib.di.annotation.TermsActivityFactory
 import com.cexdirect.lib.error.ErrorActivityViewModel
-import com.cexdirect.lib.network.AnalyticsApi
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.PaymentApi
+import com.cexdirect.lib.network.AnalyticsFlow
+import com.cexdirect.lib.network.MerchantFlow
+import com.cexdirect.lib.network.PaymentFlow
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.terms.TermsActivityViewModel
 import com.cexdirect.lib.util.PlacementValidator
@@ -45,18 +47,14 @@ class VmModule {
     @BuyActivityFactory
     @Singleton
     fun provideBuyActivityViewModel(
-        merchantApi: MerchantApi,
-        paymentApi: PaymentApi,
-        analyticsApi: AnalyticsApi,
+        merchantApi: MerchantFlow,
+        paymentApi: PaymentFlow,
+        analyticsApi: AnalyticsFlow,
         messenger: Messenger,
         stringProvider: StringProvider
     ): ViewModelProvider.Factory =
         CalcActivityViewModel.Factory(
-            merchantApi,
-            paymentApi,
-            analyticsApi,
-            messenger,
-            stringProvider
+            CalcApi(analyticsApi, merchantApi, paymentApi, messenger), stringProvider
         )
 
     @Provides
@@ -69,15 +67,11 @@ class VmModule {
     @CheckActivityFactory
     @Singleton
     fun provideCheckActivityViewModel(
-        merchantApi: MerchantApi,
-        paymentApi: PaymentApi,
+        merchantFlow: MerchantFlow,
+        paymentFlow: PaymentFlow,
         placementValidator: PlacementValidator
     ): ViewModelProvider.Factory =
-        CheckActivityViewModel.Factory(
-            merchantApi,
-            paymentApi,
-            placementValidator
-        )
+        CheckActivityViewModel.Factory(PlacementApi(merchantFlow, paymentFlow), placementValidator)
 
     @Provides
     @TermsActivityFactory

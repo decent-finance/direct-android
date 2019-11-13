@@ -16,134 +16,136 @@
 
 package com.cexdirect.lib.order
 
-import com.cexdirect.lib.network.OrderApi
-import com.cexdirect.lib.network.PaymentApi
-import com.cexdirect.lib.network.enqueueWith
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.cexdirect.lib.network.*
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
-import com.cexdirect.livedatax.switchMap
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class OrderProcessingApi(
-    paymentApi: PaymentApi,
-    private val orderApi: OrderApi,
-    private val messenger: Messenger,
-    private val scope: CoroutineScope
+    private val paymentFlow: PaymentFlow,
+    private val orderFlow: OrderFlow,
+    private val messenger: Messenger
 ) {
 
-    private lateinit var newOrderData: NewOrderData
-    private lateinit var onOrderCreated: (orderId: String) -> Unit
-    private lateinit var walletAddressData: () -> WalletAddressData
-    private lateinit var verificationPubKey: () -> String
-    private lateinit var verificationData: (data: PublicKeyResponseData) -> VerificationData
-    private lateinit var processingPubKey: () -> String
-    private lateinit var processingData: (data: PublicKeyResponseData) -> VerificationData
-    private lateinit var imageData: () -> ImageBody
-    private lateinit var basePaymentData: () -> PaymentData
-    private lateinit var extraPaymentData: () -> PaymentData
-    private lateinit var newEmail: String
-    private lateinit var orderId: String
-    private lateinit var code: String
+    val newOrderResult = MutableLiveData<Resource<OrderInfoData>>()
+    val verificationResult = MutableLiveData<Resource<Void>>()
+    val processingResult = MutableLiveData<Resource<Void>>()
+    val uploadResult = MutableLiveData<Resource<Void>>()
+    val basePaymentDataResult = MutableLiveData<Resource<OrderInfoData>>()
+    val extraPaymentDataResult = MutableLiveData<Resource<OrderInfoData>>()
+    val checkCode = MutableLiveData<Resource<OrderData>>()
+    private val changeEmailResult = MutableLiveData<Resource<String>>()
+    private val newCheckCode = MutableLiveData<Resource<OrderData>>()
 
-    private val newOrder = orderApi.createNewOrder(scope) { newOrderData }
-    val newOrderInfo = newOrder.switchMap {
-        it.enqueueWith({
-            onOrderCreated.invoke(it.data!!.orderId)
-            orderApi.checkOrderInfo(scope).apply { execute() }
-        })
-    }
-
-    private val walletCheckResult =
-        paymentApi.verifyWalletAddress(scope) { walletAddressData.invoke() }
-    val verificationResult = walletCheckResult.switchMap {
-        it.enqueueWith({
-            orderApi.getVerificationKey(scope) { PublicKeyData(verificationPubKey.invoke()) }
-                .apply { execute() }
-        })
-    }.switchMap {
-        it.enqueueWith({
-            orderApi.sendToVerification(scope) { verificationData.invoke(it.data!!) }
-                .apply { execute() }
-        })
-    }
-
-    private val processingKey =
-        orderApi.getProcessingKey(scope) { PublicKeyData(processingPubKey.invoke()) }
-    val processingResult = processingKey.switchMap {
-        it.enqueueWith({
-            orderApi.sendToProcessing(scope) { processingData.invoke(it.data!!) }
-                .apply { execute() }
-        })
-    }
-
-    val uploadResult = orderApi.uploadImage(scope) {
-        imageData.invoke()
-    }
-
-    val basePaymentDataResult = orderApi.sendPaymentData(scope) { basePaymentData.invoke() }
-
-    val extraPaymentDataResult = orderApi.updatePaymentData(scope) { extraPaymentData.invoke() }
-
-    val changeEmailResult = orderApi.changeEmail(scope) { ChangeEmailRequest(newEmail = newEmail) }
-
-    val newCheckCode = orderApi.resendCheckCode(scope) { orderId }
-
-    val checkCode = orderApi.checkCode(scope) { CheckCodeData(orderId, code) }
-
-    fun createNewOrder(data: NewOrderData, onOrderCreated: (orderId: String) -> Unit) {
-        this.newOrderData = data
-        this.onOrderCreated = onOrderCreated
-        newOrder.execute()
+    fun createNewOrder(
+        scope: CoroutineScope,
+        data: NewOrderData,
+        onOrderCreated: (orderId: String) -> Unit
+    ) {
+        orderFlow.createNewOrder(data)
+            .onStart { newOrderResult.value = Loading() }
+            .onEach { onOrderCreated.invoke(it.data.orderId) }
+            .flatMapConcat { orderFlow.checkOrderInfo() }
+            .catch { newOrderResult.value = it.mapFailure() }
+            .onEach { newOrderResult.value = Success(it.data) }
+            .launchIn(scope)
     }
 
     fun startVerification(
-        walletAddress: () -> WalletAddressData,
-        publicKey: () -> String,
+        scope: CoroutineScope,
+        walletAddress: WalletAddressData,
+        pubKey: String,
         verificationData: (data: PublicKeyResponseData) -> VerificationData
     ) {
-        this.walletAddressData = walletAddress
-        this.verificationPubKey = publicKey
-        this.verificationData = verificationData
-        walletCheckResult.execute()
+        paymentFlow.verifyWalletAddress(walletAddress)
+            .onStart { verificationResult.value = Loading() }
+            .flatMapConcat { orderFlow.getVerificationKey(PublicKeyData(pubKey)) }
+            .flatMapConcat { orderFlow.sendToVerification { verificationData.invoke(it.data) } }
+            .catch { verificationResult.value = it.mapFailure() }
+            .onEach { verificationResult.value = Success(null) }
+            .launchIn(scope)
     }
 
     fun startProcessing(
-        processingPubKey: () -> String,
+        scope: CoroutineScope,
+        pubKey: String,
         processingData: (data: PublicKeyResponseData) -> VerificationData
     ) {
-        this.processingPubKey = processingPubKey
-        this.processingData = processingData
-        processingKey.execute()
+        orderFlow.getProcessingKey(PublicKeyData(pubKey))
+            .onStart { processingResult.value = Loading() }
+            .flatMapConcat { orderFlow.sendToProcessing { processingData.invoke(it.data) } }
+            .catch { processingResult.value = it.mapFailure() }
+            .onEach { processingResult.value = Success(null) }
+            .launchIn(scope)
     }
 
-    fun uploadPhoto(imageData: () -> ImageBody) {
-        this.imageData = imageData
-        uploadResult.execute()
+    fun uploadPhoto(scope: CoroutineScope, imageData: () -> ImageBody) {
+        orderFlow.uploadImage(imageData)
+            .onStart { uploadResult.value = Loading() }
+            .catch { uploadResult.value = it.mapFailure() }
+            .onEach { uploadResult.value = Success(null) }
+            .launchIn(scope)
     }
 
-    fun sendBasePaymentData(paymentData: () -> PaymentData) {
-        this.basePaymentData = paymentData
-        basePaymentDataResult.execute()
+    fun sendBasePaymentData(scope: CoroutineScope, paymentData: PaymentData) {
+        orderFlow.sendPaymentData(paymentData)
+            .onStart { basePaymentDataResult.value = Loading() }
+            .catch { basePaymentDataResult.value = it.mapFailure() }
+            .onEach { basePaymentDataResult.value = Success(it.data) }
+            .launchIn(scope)
     }
 
-    fun sendExtraPaymentData(paymentData: () -> PaymentData) {
-        this.extraPaymentData = paymentData
-        extraPaymentDataResult.execute()
+    fun sendExtraPaymentData(scope: CoroutineScope, paymentData: PaymentData) {
+        orderFlow.updatePaymentData(paymentData)
+            .onStart { extraPaymentDataResult.value = Loading() }
+            .catch { extraPaymentDataResult.value = it.mapFailure() }
+            .onEach { extraPaymentDataResult.value = Success(it.data) }
+            .launchIn(scope)
     }
 
-    fun changeEmail(newEmail: String) {
-        this.newEmail = newEmail
-        changeEmailResult.execute()
+    fun changeEmail(scope: CoroutineScope, newEmail: String): LiveData<Resource<String>> {
+        orderFlow.changeEmail(ChangeEmailRequest(newEmail = newEmail))
+            .onStart { changeEmailResult.value = Loading() }
+            .catch { changeEmailResult.value = it.mapFailure() }
+            .onEach { changeEmailResult.value = Success(it.data.userEmail) }
+            .launchIn(scope)
+        return changeEmailResult
     }
 
-    fun requestNewCheckCode(orderId: String) {
-        this.orderId = orderId
-        newCheckCode.execute()
+    fun requestNewCheckCode(
+        scope: CoroutineScope,
+        orderId: String
+    ): LiveData<Resource<OrderData>> {
+        orderFlow.resendCheckCode(orderId)
+            .onStart { newCheckCode.value = Loading() }
+            .catch { newCheckCode.value = it.mapFailure() }
+            .onEach { newCheckCode.value = Success(it.data) }
+            .launchIn(scope)
+        return newCheckCode
     }
 
-    fun checkCode(orderId: String, code: String) {
-        this.orderId = orderId
-        this.code = code
-        checkCode.execute()
+    fun checkCode(scope: CoroutineScope, orderId: String, code: String) {
+        orderFlow.checkCode(CheckCodeData(orderId, code))
+            .onStart { checkCode.value = Loading() }
+            .catch { checkCode.value = it.mapFailure() }
+            .onEach { checkCode.value = Success(it.data) }
+            .launchIn(scope)
+    }
+
+    fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
+
+    fun clear() {
+        messenger.clear()
+    }
+
+    fun removeOrderInfoSubscription() {
+        messenger.removeOrderInfoSubscription()
     }
 }
