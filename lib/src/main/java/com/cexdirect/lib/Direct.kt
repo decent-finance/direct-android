@@ -36,8 +36,6 @@ object Direct {
 
     val fingerprint by lazy { UUID.randomUUID().toString() }
 
-    var theme: Theme = Theme.LIGHT
-
     var credentials: Credentials = Credentials("", "")
     var userEmail = ""
 

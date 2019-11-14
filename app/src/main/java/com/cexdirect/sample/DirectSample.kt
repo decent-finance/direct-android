@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib.Theme
 
 @SuppressLint("Registered")
 @Suppress("unused")
@@ -28,7 +27,6 @@ open class DirectSample : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Direct.theme = Theme.LIGHT
         Direct.credentials = Credentials(BuildConfig.PLACEMENT_ID, BuildConfig.SECRET)
     }
 }

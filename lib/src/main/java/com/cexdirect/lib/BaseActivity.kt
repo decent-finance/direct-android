@@ -18,10 +18,7 @@ package com.cexdirect.lib
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -39,11 +36,6 @@ import com.mcxiaoke.koi.ext.toast
 abstract class BaseActivity : AppCompatActivity() {
 
     private var loader: LoaderView? = null
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        AppCompatDelegate.setDefaultNightMode(Direct.theme.mode)
-    }
 
     protected inline fun <reified VM : BaseObservableViewModel> viewModelProvider(
         crossinline factory: () -> ViewModelProvider.Factory
