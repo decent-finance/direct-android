@@ -42,6 +42,7 @@ import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assume.assumeThat
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -228,6 +229,7 @@ class ErrorActivityTest {
         intended(hasComponent(CalcActivity::class.java.name))
     }
 
+    @Ignore
     @Test
     fun contactSupport() {
         val intent = givenGenericErrorIntent()

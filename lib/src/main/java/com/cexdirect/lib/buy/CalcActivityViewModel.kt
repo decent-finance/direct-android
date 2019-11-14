@@ -123,6 +123,7 @@ class CalcActivityViewModel(
 
     fun filterQuoteCurrencies(action: () -> Unit) {
         currencyAdapter.items = amount.rates
+            .filter { it.crypto == amount.selectedCryptoCurrency }
             .distinctBy { it.fiat }
             .map { it.fiat }
         currencyAdapter.selectedCurrency = amount.selectedFiatCurrency

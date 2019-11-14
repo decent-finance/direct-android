@@ -45,10 +45,7 @@ class CalcActivityViewModelTest {
             StringProvider(InstrumentationRegistry.getInstrumentation().targetContext)
         whenever(calcApi.sendBuyEvent(any(), any())).thenReturn(mock())
         whenever(calcApi.calcData).thenReturn(mock())
-        model = CalcActivityViewModel(
-            calcApi,
-            stringProvider
-        )
+        model = CalcActivityViewModel(calcApi, stringProvider)
     }
 
     @After
@@ -82,6 +79,21 @@ class CalcActivityViewModelTest {
 
         assertThat(model.currencyAdapter.selectedCurrency).isEqualTo("BTC")
         assertThat(model.currencyAdapter.items).containsOnly("BTC")
+    }
+
+    @Test
+    fun filterQuoteCurrenciesForBch() {
+        model.amount.apply {
+            precisionList = givenPrecisions()
+            rates = givenRates()
+            selectedFiatCurrency = "USD"
+            selectedCryptoCurrency = "BCH"
+        }
+
+        model.filterQuoteCurrencies {  }
+
+        assertThat(model.currencyAdapter.selectedCurrency).isEqualTo("USD")
+        assertThat(model.currencyAdapter.items).containsOnly("USD")
     }
 
     @Test
