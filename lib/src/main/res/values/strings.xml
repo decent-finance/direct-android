@@ -46,7 +46,7 @@
     <string name="cexd_cancel">Cancel</string>
     <string name="cexd_country">Country</string>
     <string name="cexd_order_completed">You have successfully completed your purchase.</string>
-    <string name="cexd_code">Code</string>
+    <string name="cexd_code">Enter code from email</string>
     <string name="cexd_emailed_to">We have emailed a code to</string>
     <string name="cexd_take_pic_id">Take Picture of your ID</string>
     <string name="cexd_take_pic_licence">Take Picture of your drivers licence</string>

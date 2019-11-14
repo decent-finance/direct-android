@@ -123,6 +123,7 @@
                     android:layout_marginStart="16dp"
                     android:clipChildren="false"
                     android:hint="@string/cexd_code"
+                    android:orientation="vertical"
                     app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
