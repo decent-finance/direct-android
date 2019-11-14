@@ -28,9 +28,12 @@ import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.network.ws.WsUrlProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import okhttp3.Call
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -42,16 +45,20 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson() = GsonBuilder()
+    fun provideGson(): Gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, DateDeserializer())
         .registerTypeAdapter(OrderStatus::class.java, OrderStatusDeserializer())
         .create()
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient, gson: Gson) = Retrofit.Builder()
+    fun provideRetrofit(client: Lazy<OkHttpClient>, gson: Gson): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.REST_URL)
-        .client(client)
+        .callFactory(object : Call.Factory {
+            override fun newCall(request: Request): Call {
+                return client.get().newCall(request)
+            }
+        })
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
