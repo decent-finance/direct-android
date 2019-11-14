@@ -83,8 +83,8 @@ class ReceiptFragment : BaseOrderFragment() {
     private fun copyTxId(txId: String?) {
         if (!txId.isNullOrBlank()) {
             (context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).primaryClip =
-                ClipData.newPlainText(getString(R.string.cexd_order_id_label), txId)
-            toast(getString(R.string.cexd_order_id_copied))
+                ClipData.newPlainText(getString(R.string.cexd_tx_label), txId)
+            toast(getString(R.string.cexd_tx_id_copied))
         }
     }
 

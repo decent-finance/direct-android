@@ -112,6 +112,8 @@
     <string name="cexd_popular_placeholder">%1s %2s</string>
     <string name="cexd_order_id_label">Order ID</string>
     <string name="cexd_order_id_copied">Order ID copied</string>
+    <string name="cexd_tx_label">Transaction ID</string>
+    <string name="cexd_tx_id_copied">Transaction ID copied</string>
     <string name="cexd_email_updated">Email updated</string>
     <string name="cexd_check_mail">Check your e-mail for code</string>
     <string name="cexd_wrong_code">Wrong code</string>

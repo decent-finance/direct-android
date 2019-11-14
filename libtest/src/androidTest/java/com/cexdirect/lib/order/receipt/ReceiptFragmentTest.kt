@@ -16,23 +16,28 @@
 
 package com.cexdirect.lib.order.receipt
 
+import android.content.ClipboardManager
 import android.widget.ProgressBar
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.PaymentInfo
 import com.cexdirect.lib.network.models.Wallet
 import com.cexdirect.lib.order.OrderActivityViewModel
+import com.cexdirect.lib.util.isToast
 import com.cexdirect.lib.util.symbolMap
+import org.assertj.core.api.Java6Assertions.assertThat
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
@@ -131,6 +136,27 @@ class ReceiptFragmentTest {
         onView(withText(TX_ID)).perform(click())
 
         intended(hasData("${symbolMap.getValue("BTC").transactionBrowserAddress}$TX_ID"))
+    }
+
+    @Test
+    fun copyTxId() {
+        scenario.onFragment {
+            givenAmounts(it.model)
+            it.model.paymentInfo.set(givenPaymentInfo())
+            it.model.txId.set(TX_ID)
+        }
+
+        onView(withText(TX_ID)).perform(longClick())
+
+        onView(withText(R.string.cexd_tx_id_copied)).inRoot(isToast()).check(matches(isDisplayed()))
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            val clipboardManager =
+                InstrumentationRegistry.getInstrumentation().targetContext.getSystemService(
+                    ClipboardManager::class.java
+                )!!
+            assertThat(clipboardManager.hasPrimaryClip()).isTrue()
+            assertThat(clipboardManager.primaryClip!!.getItemAt(0).text).isEqualTo(TX_ID)
+        }
     }
 
     private fun givenPaymentInfo() = PaymentInfo(
