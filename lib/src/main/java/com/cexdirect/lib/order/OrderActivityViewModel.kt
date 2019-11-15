@@ -327,7 +327,7 @@ class OrderActivityViewModel(
                 emptyMap()
             }
 
-            api.sendBasePaymentData(this,PaymentData(payment, additional))
+            api.sendBasePaymentData(this, PaymentData(payment, additional))
         }
     }
 
@@ -478,6 +478,11 @@ class OrderActivityViewModel(
     private fun addCrutchedData(additional: Map<String, Additional>?): Map<String, Additional> =
         additional?.let {
             HashMap(it).apply {
+                this["userResidentialAptSuite"] = Additional(
+                    this["userResidentialAptSuite"]!!.value?.ifEmpty { "-" } ?: "-",
+                    this["userResidentialAptSuite"]!!.req,
+                    this["userResidentialAptSuite"]!!.editable
+                )
                 this["userResidentialCountry"] = Additional(
                     userCountry.selectedCountry.code,
                     this["userResidentialCountry"]!!.req,
