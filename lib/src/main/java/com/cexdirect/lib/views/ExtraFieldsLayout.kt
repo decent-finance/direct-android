@@ -32,10 +32,6 @@ import com.cexdirect.lib.network.models.Additional
 import com.cexdirect.lib.util.FieldStatus
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.LinkedHashMap
 
 class ExtraFieldsLayout @JvmOverloads constructor(
     context: Context,
@@ -45,7 +41,7 @@ class ExtraFieldsLayout @JvmOverloads constructor(
 
     var additional: Map<String, Additional> = emptyMap()
         set(value) {
-            field = value.sortNameFields()
+            field = value
 
             removeAllViews()
             updateLayout()
@@ -57,18 +53,19 @@ class ExtraFieldsLayout @JvmOverloads constructor(
     @Suppress("NestedBlockDepth")
     private fun updateLayout() {
         val inflater = LayoutInflater.from(context)
-        additional.forEach { entry ->
-            if (entry.value.req) {
+        fieldRules.forEach { entry ->
+            if (additional[entry.key]?.req == true) {
                 val binding: LayoutExtraFieldBinding = DataBindingUtil.inflate(
                     inflater, R.layout.layout_extra_field, this, false
                 )
                 binding.apply {
-                    entry.value.value?.takeIf { it.isNotBlank() }
+                    val value = additional.getValue(entry.key)
+                    value.value?.takeIf { it.isNotBlank() }
                         ?.let { this@ExtraFieldsLayout.input[entry.key] = it }
-                    editable = entry.value.editable
+                    editable = value.editable
                     key = entry.key
                     input = this@ExtraFieldsLayout.input
-                    rule = fieldRules[entry.key]
+                    rule = entry.value
                     validation = this@ExtraFieldsLayout.validation
                 }
                 addView(binding.root)
@@ -106,58 +103,23 @@ fun ExtraFieldsLayout.applyAdditionalFields(additional: Map<String, Additional>)
     this.additional = additional
 }
 
-val fieldRules = HashMap<String, ExtraFieldRule>().apply {
+val fieldRules = LinkedHashMap<String, ExtraFieldRule>().apply {
     put(
-        "billingSsn",
-        ExtraFieldRule(
-            InputType.TYPE_CLASS_NUMBER,
-            null,
-            R.string.cexd_ssn,
-            R.string.cexd_invalid_ssn
-        )
-    )
-    put(
-        "billingCity",
+        "userFirstName",
         ExtraFieldRule(
             InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_city,
-            R.string.cexd_invalid_city
-        )
-    )
-    put(
-        "userRuPhone",
-        ExtraFieldRule(
-            InputType.TYPE_CLASS_PHONE,
-            null,
-            R.string.cexd_phone_number,
-            R.string.cexd_invalid_phone
-        )
-    )
-    put(
-        "billingState",
-        ExtraFieldRule(
-            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_state
+            InputFilter.LengthFilter(MAX_SUPPORTED_NAME_LENGTH),
+            R.string.cexd_first_name,
+            R.string.cexd_invalid_first_name
         )
     )
     put(
         "userLastName",
         ExtraFieldRule(
             InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
+            InputFilter.LengthFilter(MAX_SUPPORTED_NAME_LENGTH),
             R.string.cexd_last_name,
             R.string.cexd_invalid_last_name
-        )
-    )
-    put(
-        "userFirstName",
-        ExtraFieldRule(
-            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_first_name,
-            R.string.cexd_invalid_first_name
         )
     )
     put(
@@ -165,7 +127,55 @@ val fieldRules = HashMap<String, ExtraFieldRule>().apply {
         ExtraFieldRule(
             InputType.TYPE_TEXT_FLAG_CAP_WORDS,
             null,
-            R.string.cexd_country
+            R.string.cexd_billing_country
+        )
+    )
+    put(
+        "userResidentialCountry",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            null,
+            R.string.cexd_billing_country,
+            R.string.cexd_invalid_country
+        )
+    )
+    put(
+        "billingState",
+        ExtraFieldRule(InputType.TYPE_TEXT_FLAG_CAP_WORDS, null, R.string.cexd_billing_state)
+    )
+    put(
+        "billingCity",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_CITY_NAME_LENGTH),
+            R.string.cexd_city,
+            R.string.cexd_invalid_city
+        )
+    )
+    put(
+        "userResidentialCity",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_CITY_NAME_LENGTH),
+            R.string.cexd_city,
+            R.string.cexd_invalid_city
+        )
+    )
+    put(
+        "userResidentialStreet",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_BILLING_ADDRESS_LENGTH),
+            R.string.cexd_residential_street,
+            R.string.cexd_invalid_street
+        )
+    )
+    put(
+        "userResidentialAptSuite",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_residential_apt
         )
     )
     put(
@@ -178,12 +188,40 @@ val fieldRules = HashMap<String, ExtraFieldRule>().apply {
         )
     )
     put(
+        "userResidentialPostcode",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_residential_postcode,
+            R.string.cexd_invalid_mid_postcode
+        )
+    )
+    put(
+        "userResidentialPostcodeUK",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_residential_postcode,
+            R.string.cexd_invalid_mid_postcode
+        )
+    )
+    // unused
+    put(
         "userMiddleName",
         ExtraFieldRule(
             InputType.TYPE_TEXT_FLAG_CAP_WORDS,
             null,
             R.string.cexd_middle_name,
             R.string.cexd_invalid_mid_name
+        )
+    )
+    put(
+        "billingSsn",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_NUMBER,
+            null,
+            R.string.cexd_ssn,
+            R.string.cexd_invalid_ssn
         )
     )
     put(
@@ -196,55 +234,11 @@ val fieldRules = HashMap<String, ExtraFieldRule>().apply {
         )
     )
     put(
-        "userResidentialCity",
-        ExtraFieldRule(
-            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_residential_city,
-            R.string.cexd_invalid_city
-        )
-    )
-    put(
-        "userResidentialStreet",
-        ExtraFieldRule(
-            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_residential_street,
-            R.string.cexd_invalid_street
-        )
-    )
-    put(
-        "userResidentialCountry",
-        ExtraFieldRule(
-            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-            null,
-            R.string.cexd_residential_country,
-            R.string.cexd_invalid_country
-        )
-    )
-    put(
         "userRuPassportIssuedBy",
         ExtraFieldRule(
             InputType.TYPE_TEXT_FLAG_CAP_WORDS,
             null,
             R.string.cexd_issued_by
-        )
-    )
-    put(
-        "userResidentialAptSuite",
-        ExtraFieldRule(
-            InputType.TYPE_CLASS_TEXT,
-            null,
-            R.string.cexd_residential_apt
-        )
-    )
-    put(
-        "userResidentialPostcode",
-        ExtraFieldRule(
-            InputType.TYPE_CLASS_TEXT,
-            null,
-            R.string.cexd_residential_postcode,
-            R.string.cexd_invalid_mid_postcode
         )
     )
     put(
@@ -256,12 +250,12 @@ val fieldRules = HashMap<String, ExtraFieldRule>().apply {
         )
     )
     put(
-        "userResidentialPostcodeUK",
+        "userRuPhone",
         ExtraFieldRule(
-            InputType.TYPE_CLASS_TEXT,
+            InputType.TYPE_CLASS_PHONE,
             null,
-            R.string.cexd_residential_postcode,
-            R.string.cexd_invalid_mid_postcode
+            R.string.cexd_phone_number,
+            R.string.cexd_invalid_phone
         )
     )
 }
@@ -280,9 +274,7 @@ fun TextInputEditText.applyInputType(inputType: Int) {
 
 @BindingAdapter("inputFilter")
 fun TextInputEditText.applyInputFilter(filter: InputFilter?) {
-    filter?.let {
-        filters = arrayOf(filter)
-    }
+    filter?.let { filters = arrayOf(it) }
 }
 
 @BindingAdapter("android:hint")
@@ -290,21 +282,6 @@ fun TextInputLayout.applyHintRes(@StringRes id: Int) {
     hint = context.getString(id)
 }
 
-fun Map<String, Additional>.sortNameFields() =
-    if (this.containsKey("userLastName") && this.containsKey("userFirstName")) {
-        val keys = ArrayList<String>().apply { addAll(this@sortNameFields.keys) }
-        val lastNameIndex = keys.indexOf("userLastName")
-        val firstNameIndex = keys.indexOf("userFirstName")
-
-        if (lastNameIndex < firstNameIndex) {
-            Collections.swap(keys, lastNameIndex, firstNameIndex)
-        }
-
-        val sorted = LinkedHashMap<String, Additional>()
-        keys.forEach {
-            sorted[it] = this[it] ?: error("")
-        }
-        sorted
-    } else {
-        this
-    }
+const val MAX_SUPPORTED_NAME_LENGTH = 255
+const val MAX_CITY_NAME_LENGTH = 256
+const val MAX_BILLING_ADDRESS_LENGTH = 512
