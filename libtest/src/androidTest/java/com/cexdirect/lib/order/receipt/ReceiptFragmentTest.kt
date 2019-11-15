@@ -20,6 +20,7 @@ import android.content.ClipboardManager
 import android.widget.ProgressBar
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
@@ -29,28 +30,52 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.CalcActivity
-import com.cexdirect.lib.network.models.MonetaryData
-import com.cexdirect.lib.network.models.PaymentInfo
-import com.cexdirect.lib.network.models.Wallet
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.order.OrderActivityViewModel
+import com.cexdirect.lib.order.OrderProcessingApi
 import com.cexdirect.lib.util.isToast
 import com.cexdirect.lib.util.symbolMap
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mock
+import java.util.*
 
 class ReceiptFragmentTest {
+
+    @get:Rule
+    val networkMockRule = DirectNetworkMockRule()
+
+    @Mock
+    lateinit var api: OrderProcessingApi
+
+    private val orderInfo = MutableLiveData<Resource<OrderInfoData>>()
 
     private lateinit var scenario: FragmentScenario<ReceiptFragment>
 
     @Before
     fun setUp() {
         Intents.init()
+        whenever(api.subscribeToOrderInfo()).thenReturn(orderInfo)
+        whenever(api.newOrderResult).thenReturn(mock())
+        whenever(api.verificationResult).thenReturn(mock())
+        whenever(api.processingResult).thenReturn(mock())
+        whenever(api.uploadResult).thenReturn(mock())
+        whenever(api.basePaymentDataResult).thenReturn(mock())
+        whenever(api.extraPaymentDataResult).thenReturn(mock())
+        whenever(api.checkCode).thenReturn(mock())
         scenario = launchFragmentInContainer(
             themeResId = R.style.Direct, instantiate = { ReceiptFragment() }
         )
@@ -157,6 +182,49 @@ class ReceiptFragmentTest {
             assertThat(clipboardManager.hasPrimaryClip()).isTrue()
             assertThat(clipboardManager.primaryClip!!.getItemAt(0).text).isEqualTo(TX_ID)
         }
+    }
+
+    @Test
+    fun unsubscribeWhenOrderFinished() {
+        scenario.onFragment {
+            givenAmounts(it.model)
+        }
+
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            orderInfo.value = givenFinishedValue()
+        }
+
+        verify(api).removeOrderInfoSubscription()
+    }
+
+    private fun givenFinishedValue(): Success<OrderInfoData> {
+        return Success(
+            OrderInfoData(
+                "abc123",
+                OrderStatus.FINISHED,
+                Date(),
+                "somebody@somewhere.net",
+                "DE",
+                Basic(
+                    Images(true, true),
+                    "0000",
+                    MonetaryData("10", "USD"),
+                    MonetaryData("1", "BTC"),
+                    Wallet(".", null),
+                    true,
+                    false,
+                    "https://example.com"
+                ),
+                null,
+                PaymentInfo(
+                    MonetaryData("10", "USD"),
+                    MonetaryData("1", "BTC"),
+                    Wallet(".", null),
+                    "test"
+                ),
+                emptyMap()
+            )
+        )
     }
 
     private fun givenPaymentInfo() = PaymentInfo(

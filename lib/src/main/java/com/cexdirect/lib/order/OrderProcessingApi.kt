@@ -18,6 +18,7 @@ package com.cexdirect.lib.order
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.*
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.Messenger
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
 @FlowPreview
+@OpenForTesting
 class OrderProcessingApi(
     private val paymentFlow: PaymentFlow,
     private val orderFlow: OrderFlow,

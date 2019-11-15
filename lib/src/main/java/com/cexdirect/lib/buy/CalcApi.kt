@@ -34,9 +34,9 @@ import kotlinx.coroutines.flow.*
 @ExperimentalCoroutinesApi
 @OpenForTesting
 class CalcApi(
-    private val analyticsApi: AnalyticsFlow,
-    private val merchantApi: MerchantFlow,
-    private val paymentApi: PaymentFlow,
+    private val analyticsFlow: AnalyticsFlow,
+    private val merchantFlow: MerchantFlow,
+    private val paymentFlow: PaymentFlow,
     private val messenger: Messenger
 ) {
 
@@ -44,11 +44,11 @@ class CalcApi(
     private val buyEvent = MutableLiveData<Resource<Void>>()
 
     fun loadCalcData(scope: CoroutineScope) {
-        analyticsApi.sendOpenEvent()
+        analyticsFlow.sendOpenEvent()
             .onStart { calcData.value = Loading() }
             .flatMapConcat {
-                merchantApi.getCurrencyPrecisions(Direct.credentials.placementId).combine(
-                    paymentApi.getExchangeRates(Direct.credentials.placementId)
+                merchantFlow.getCurrencyPrecisions(Direct.credentials.placementId).combine(
+                    paymentFlow.getExchangeRates(Direct.credentials.placementId)
                 ) { precisions, rates ->
                     precisions.data.precisions to rates.data.currencies
                 }.take(1)
@@ -59,7 +59,7 @@ class CalcApi(
     }
 
     fun sendBuyEvent(scope: CoroutineScope, eventData: EventData): LiveData<Resource<Void>> {
-        analyticsApi.sendBuyEvent(eventData)
+        analyticsFlow.sendBuyEvent(eventData)
             .onStart { buyEvent.value = Loading() }
             .catch { buyEvent.value = it.mapFailure() }
             .onEach { buyEvent.value = Success(null) }

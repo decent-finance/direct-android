@@ -46,5 +46,4 @@ class PaymentFlow(private val service: PaymentService) {
     fun getCountries() =
         flow { emit(service.getCountries()) }
             .flowOn(DispatcherRegistry.io)
-
 }

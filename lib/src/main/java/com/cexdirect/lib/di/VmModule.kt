@@ -29,9 +29,6 @@ import com.cexdirect.lib.di.annotation.CheckActivityFactory
 import com.cexdirect.lib.di.annotation.ErrorActivityFactory
 import com.cexdirect.lib.di.annotation.TermsActivityFactory
 import com.cexdirect.lib.error.ErrorActivityViewModel
-import com.cexdirect.lib.network.AnalyticsFlow
-import com.cexdirect.lib.network.MerchantFlow
-import com.cexdirect.lib.network.PaymentFlow
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.terms.TermsActivityViewModel
 import com.cexdirect.lib.util.PlacementValidator
@@ -47,15 +44,10 @@ class VmModule {
     @BuyActivityFactory
     @Singleton
     fun provideBuyActivityViewModel(
-        merchantApi: MerchantFlow,
-        paymentApi: PaymentFlow,
-        analyticsApi: AnalyticsFlow,
-        messenger: Messenger,
+        calcApi: CalcApi,
         stringProvider: StringProvider
     ): ViewModelProvider.Factory =
-        CalcActivityViewModel.Factory(
-            CalcApi(analyticsApi, merchantApi, paymentApi, messenger), stringProvider
-        )
+        CalcActivityViewModel.Factory(calcApi, stringProvider)
 
     @Provides
     @ErrorActivityFactory
@@ -67,11 +59,10 @@ class VmModule {
     @CheckActivityFactory
     @Singleton
     fun provideCheckActivityViewModel(
-        merchantFlow: MerchantFlow,
-        paymentFlow: PaymentFlow,
+        placementApi: PlacementApi,
         placementValidator: PlacementValidator
     ): ViewModelProvider.Factory =
-        CheckActivityViewModel.Factory(PlacementApi(merchantFlow, paymentFlow), placementValidator)
+        CheckActivityViewModel.Factory(placementApi, placementValidator)
 
     @Provides
     @TermsActivityFactory

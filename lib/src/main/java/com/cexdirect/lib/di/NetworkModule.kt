@@ -18,6 +18,8 @@ package com.cexdirect.lib.di
 
 import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.buy.CalcApi
+import com.cexdirect.lib.check.PlacementApi
 import com.cexdirect.lib.network.*
 import com.cexdirect.lib.network.deserializers.OrderStatusDeserializer
 import com.cexdirect.lib.network.models.OrderStatus
@@ -26,6 +28,7 @@ import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.network.ws.WsUrlProvider
+import com.cexdirect.lib.order.OrderProcessingApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Lazy
@@ -81,6 +84,32 @@ class NetworkModule {
     @Singleton
     fun provideAnalyticsApi(retrofit: Retrofit) =
         AnalyticsFlow(retrofit.create(AnalyticsService::class.java))
+
+    @Provides
+    @Singleton
+    fun provideCalcApi(
+        analyticsFlow: AnalyticsFlow,
+        merchantFlow: MerchantFlow,
+        paymentFlow: PaymentFlow,
+        messenger: Messenger
+    ): CalcApi =
+        CalcApi(analyticsFlow, merchantFlow, paymentFlow, messenger)
+
+    @Provides
+    @Singleton
+    fun providePlacementApi(
+        merchantFlow: MerchantFlow,
+        paymentFlow: PaymentFlow
+    ): PlacementApi =
+        PlacementApi(merchantFlow, paymentFlow)
+
+    @Provides
+    fun provideOrderApi(
+        paymentFlow: PaymentFlow,
+        orderFlow: OrderFlow,
+        messenger: Messenger
+    ): OrderProcessingApi =
+        OrderProcessingApi(paymentFlow, orderFlow, messenger)
 
     @Provides
     @Singleton
