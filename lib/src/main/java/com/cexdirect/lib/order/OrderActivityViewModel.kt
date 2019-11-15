@@ -259,11 +259,15 @@ class OrderActivityViewModel(
     }
 
     fun chooseCountry() {
-        chooseCountryEvent.call()
+        if (OrderStep.LOCATION_EMAIL == orderStep.get()) {
+            chooseCountryEvent.call()
+        }
     }
 
     fun chooseState() {
-        chooseStateEvent.call()
+        if (OrderStep.LOCATION_EMAIL == orderStep.get()) {
+            chooseStateEvent.call()
+        }
     }
 
     fun uploadPhoto(type: PhotoType) {
