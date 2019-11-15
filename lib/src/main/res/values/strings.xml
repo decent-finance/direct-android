@@ -49,7 +49,7 @@
     <string name="cexd_code">Enter code from email</string>
     <string name="cexd_emailed_to">We have emailed a code to</string>
     <string name="cexd_take_pic_id">Take Picture of your ID</string>
-    <string name="cexd_take_pic_licence">Take Picture of your driver licence</string>
+    <string name="cexd_take_pic_licence">Take Picture of your driver license</string>
     <string name="cexd_take_pic_passport">Take Picture of your passport</string>
     <string name="cexd_save">Save</string>
     <string name="cexd_amount_template">%1s %2s</string>

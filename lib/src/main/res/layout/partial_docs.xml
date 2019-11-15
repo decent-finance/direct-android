@@ -92,7 +92,7 @@
                     android:elevation="4dp"
                     android:enabled="@{model.orderStep == OrderStep.PAYMENT_BASE}"
                     android:outlineProvider="paddedBounds"
-                    app:text="Driver Licence" />
+                    app:text="Driver License" />
 
                 <com.cexdirect.lib.views.DocumentTypeButton
                     android:id="@+id/fiPassport"
