@@ -483,7 +483,7 @@ class OrderActivityViewModel(
         additional?.let {
             HashMap(it).apply {
                 this["userResidentialAptSuite"] = Additional(
-                    this["userResidentialAptSuite"]!!.value?.ifEmpty { "-" } ?: "-",
+                    this["userResidentialAptSuite"]!!.value ?: "-",
                     this["userResidentialAptSuite"]!!.req,
                     this["userResidentialAptSuite"]!!.editable
                 )

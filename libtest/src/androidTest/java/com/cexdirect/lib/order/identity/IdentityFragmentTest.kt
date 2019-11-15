@@ -30,17 +30,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
-import com.cexdirect.lib.network.models.Additional
-import com.cexdirect.lib.network.models.CountryData
-import com.cexdirect.lib.network.models.Images
+import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.OrderActivityViewModel
@@ -52,14 +52,17 @@ import com.cexdirect.lib.util.hasVisibility
 import com.cexdirect.lib.views.CollapsibleLayout
 import com.nhaarman.mockitokotlin2.whenever
 import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Java6Assertions.assertThat
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
+import java.util.*
+import org.assertj.core.api.Java6Assertions.assertThat as asserjThat
 
+@LargeTest
 class IdentityFragmentTest {
 
     @get:Rule
@@ -111,6 +114,18 @@ class IdentityFragmentTest {
         onView(withHint(R.string.cexd_email)).perform(typeText("aaaaaaa"))
 
         onView(withText(R.string.cexd_invalid_email)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun disableCountrySelectionAfterOrderIsCreated() {
+        scenario.onFragment {
+            goToBase(it.model)
+        }
+
+        onView(withText("Email and Country")).perform(scrollTo(), click())
+        onView(withHint(R.string.cexd_country)).perform(click())
+
+        onView(withText(R.string.cexd_choose_country)).check(doesNotExist())
     }
 
     @Test
@@ -256,7 +271,7 @@ class IdentityFragmentTest {
             goToExtras(it.model)
             givenAdditionalFields(it.model)
 
-            assertThat(it.model.validationMap).hasSize(2)
+            asserjThat(it.model.validationMap).hasSize(2)
                 .hasEntrySatisfying(entryData("userLastName", FieldStatus.EMPTY))
                 .hasEntrySatisfying(entryData("userFirstName", FieldStatus.EMPTY))
         }
@@ -275,12 +290,66 @@ class IdentityFragmentTest {
 
         scenario.onFragment {
             it.model.uploadExtraPaymentData()
-            assertThat(it.model.validationMap)
+            asserjThat(it.model.validationMap)
                 .hasSize(2)
                 .hasEntrySatisfying(entryData("userLastName", FieldStatus.VALID))
                 .hasEntrySatisfying(entryData("userFirstName", FieldStatus.INVALID))
         }
     }
+
+    @Test
+    fun disableFilledFields() {
+        scenario.onFragment {
+            goToExtras(it.model)
+            givenFilledAdditionalFields(it.model)
+        }
+
+        SystemClock.sleep(500)
+
+        onView(withHint(R.string.cexd_last_name))
+            .perform(scrollTo())
+            .check(matches(not(isEnabled())))
+    }
+
+    @Test
+    fun displayAptDashByDefault() {
+        scenario.onFragment {
+            it.model.updateOrderStatus(givenOrderInfo(), { }, {}, {})
+        }
+
+        SystemClock.sleep(500)
+
+        onView(allOf(withHint(R.string.cexd_residential_apt), withText("-")))
+            .perform(scrollTo())
+            .check(matches(isDisplayed()))
+    }
+
+    private fun givenOrderInfo() =
+        OrderInfoData(
+            "abc123",
+            OrderStatus.PSS_WAITDATA,
+            Date(),
+            "poststelle@bundeskanzlerin.de-mail.de",
+            "DE",
+            Basic(
+                Images(false, false),
+                "0007",
+                MonetaryData("10", "EUR"),
+                MonetaryData("1", "BTC"),
+                Wallet("test"),
+                false,
+                false,
+                "https://example.com"
+            ),
+            null,
+            null,
+            hashMapOf(
+                "userResidentialAptSuite" to Additional(null, true, true),
+                "userResidentialCountry" to Additional(null, false, true),
+                "billingCountry" to Additional(null, false, true),
+                "billingState" to Additional(null, false, true)
+            )
+        )
 
     private fun goToBase(model: OrderActivityViewModel) {
         model.apply {
@@ -308,6 +377,17 @@ class IdentityFragmentTest {
                 hashMapOf(
                     "userFirstName" to Additional(null, true, true),
                     "userLastName" to Additional(null, true, true)
+                )
+            )
+        }
+    }
+
+    private fun givenFilledAdditionalFields(model: OrderActivityViewModel) {
+        model.apply {
+            additionalFields.set(
+                hashMapOf(
+                    "userFirstName" to Additional("Abraham", true, false),
+                    "userLastName" to Additional("Lincoln", true, false)
                 )
             )
         }
