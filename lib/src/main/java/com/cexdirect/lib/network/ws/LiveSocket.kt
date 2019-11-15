@@ -19,6 +19,7 @@ package com.cexdirect.lib.network.ws
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.OpenForTesting
@@ -35,7 +36,34 @@ class LiveSocket(
     private val gson: Gson
 ) {
 
-    private val subscriptions = HashMap<String, SubscriptionMessage<BaseSocketMessage>>()
+    @VisibleForTesting
+    internal val subscriptions = HashMap<String, SubscriptionMessage<BaseSocketMessage>>()
+
+    @VisibleForTesting
+    internal val listener = object : WebSocketListener() {
+
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            connected = true
+            connecting.set(false)
+            sendPingRunnable.run()
+            subscriptions.entries.forEach { sendMessage(it.value) }
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            connected = false
+            Log.e("Socket", response?.message, t)
+            reconnect()
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            Log.d("Socket", "Received $text")
+            socketMessage.postValue(text)
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            // do nothing
+        }
+    }
 
     private var webSocket: WebSocket? = null
     private var connected = false
@@ -74,29 +102,7 @@ class LiveSocket(
             .url(wsUrlProvider.provideWsUrl())
             .build()
 
-        webSocket = client.newWebSocket(request, object : WebSocketListener() {
-            override fun onOpen(webSocket: WebSocket, response: Response) {
-                connected = true
-                connecting.set(false)
-                sendPingRunnable.run()
-                subscriptions.entries.forEach { sendMessage(it.value) }
-            }
-
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                connected = false
-                Log.e("Socket", response?.message, t)
-                reconnect()
-            }
-
-            override fun onMessage(webSocket: WebSocket, text: String) {
-                Log.d("Socket", "Received $text")
-                socketMessage.postValue(text)
-            }
-
-            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                // do nothing
-            }
-        })
+        webSocket = client.newWebSocket(request, listener)
     }
 
     private fun reconnect() {
@@ -122,7 +128,11 @@ class LiveSocket(
     }
 
     fun <T : BaseSocketMessage> sendMessage(msg: SubscriptionMessage<T>) {
-        subscriptions[msg.invoke().event] = msg
+        sendMessage(true, msg)
+    }
+
+    fun <T : BaseSocketMessage> sendMessage(addToSubs: Boolean, msg: SubscriptionMessage<T>) {
+        if (addToSubs) subscriptions[msg.invoke().event] = msg
         if (connected) {
             val json = gson.toJson(msg.invoke())
             webSocket?.send(json)
