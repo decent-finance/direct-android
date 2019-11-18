@@ -19,17 +19,23 @@ package com.cexdirect.lib.order.identity.img
 import android.content.ContentResolver
 import android.net.Uri
 import com.cexdirect.lib.order.identity.util.convertStreamToBase64
+import com.cexdirect.lib.order.identity.util.convertStreamToBytes
 import java.io.FileInputStream
 
 interface ImageReference {
 
     fun encodeToBase64(): String
+
+    fun getBytes(): ByteArray
 }
 
 class CameraImageReference(private val imgPath: String) : ImageReference {
 
     override fun encodeToBase64(): String =
         FileInputStream(imgPath).use { input -> convertStreamToBase64(input) }
+
+    override fun getBytes(): ByteArray =
+        FileInputStream(imgPath).use { input -> convertStreamToBytes(input) }
 }
 
 class GalleryImageReference(
@@ -39,5 +45,9 @@ class GalleryImageReference(
 
     override fun encodeToBase64(): String =
         resolver.openInputStream(imgUri)?.use { input -> convertStreamToBase64(input) }
-            ?: error("Failed to open input stream")
+            ?: error("Failed to open input stream from ${imgUri.path}")
+
+    override fun getBytes(): ByteArray =
+        resolver.openInputStream(imgUri)?.use { input -> convertStreamToBytes(input) }
+            ?: error("Failed to open input stream from ${imgUri.path}")
 }

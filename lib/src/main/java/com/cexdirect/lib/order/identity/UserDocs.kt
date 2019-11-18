@@ -21,12 +21,17 @@ import androidx.databinding.*
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
-import com.cexdirect.lib.network.models.Base64Image
-import com.cexdirect.lib.network.models.Images
+import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.order.identity.img.ImageReference
+import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.util.encodeToString
+import org.bouncycastle.util.encoders.Base64
 
-class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
+class UserDocs(
+    private val stringProvider: StringProvider,
+    private val dh: DH
+) : BaseObservable() {
 
     @get:Bindable
     var documentType: DocumentType = DocumentType.PASSPORT
@@ -147,24 +152,24 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
             notifyPropertyChanged(BR.selfieErrorText)
         }
 
-    var imagesBase64 = ObservableArrayMap<String, ImageReference>()
+    var imageRefs = ObservableArrayMap<String, ImageReference>()
 
     @get:Bindable
-    var selfieBase64: ImageReference? = null
+    var selfieRef: ImageReference? = null
         set(value) {
             field = value
-            notifyPropertyChanged(BR.selfieBase64)
+            notifyPropertyChanged(BR.selfieRef)
         }
 
     lateinit var currentPhotoType: PhotoType
-    lateinit var uploadAction: (type: PhotoType) -> Unit
+    lateinit var uploadAction: (type: PhotoType, amount: Int) -> Unit
 
     init {
         addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 when (propertyId) {
                     BR.documentType -> {
-                        imagesBase64.clear()
+                        imageRefs.clear()
                         requiredImagesAmount = when (documentType) {
                             DocumentType.PASSPORT -> 1
                             DocumentType.DRIVER_LICENCE, DocumentType.ID_CARD -> 2
@@ -173,10 +178,10 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                     }
                     BR.shouldSendPhoto -> {
                         if (shouldSendPhoto) {
-                            uploadAction.invoke(currentPhotoType)
+                            uploadAction.invoke(currentPhotoType, requiredImagesAmount)
                         }
                     }
-                    BR.selfieBase64 -> uploadAction.invoke(currentPhotoType)
+                    BR.selfieRef -> uploadAction.invoke(currentPhotoType, requiredImagesAmount)
                     BR.selectedDocType -> {
                         when (selectedDocType) {
                             R.id.fiIdCard -> {
@@ -214,7 +219,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                 }
             }
         })
-        imagesBase64.addOnMapChangedCallback(object :
+        imageRefs.addOnMapChangedCallback(object :
             ObservableMap.OnMapChangedCallback<ObservableMap<String, ImageReference>, String, ImageReference>() {
             override fun onMapChanged(sender: ObservableMap<String, ImageReference>, key: String?) {
                 if (sender.keys.size == requiredImagesAmount) {
@@ -230,15 +235,15 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         when (currentPhotoType) {
             PhotoType.SELFIE -> {
                 selfieStatus = FieldStatus.VALID
-                selfieBase64 = imgRef
+                selfieRef = imgRef
             }
             PhotoType.ID -> {
                 documentFrontStatus = FieldStatus.VALID
-                imagesBase64["front"] = imgRef
+                imageRefs["front"] = imgRef
             }
             PhotoType.ID_BACK -> {
                 documentBackStatus = FieldStatus.VALID
-                imagesBase64["back"] = imgRef
+                imageRefs["back"] = imgRef
             }
         }
     }
@@ -332,15 +337,72 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
     fun getDocumentPhotosArray() =
         Array(requiredImagesAmount) {
             when (it) {
-                0 -> Base64Image(0, imagesBase64.getValue("front").encodeToBase64())
-                1 -> Base64Image(1, imagesBase64.getValue("back").encodeToBase64())
+                0 -> Base64Image(0, imageRefs.getValue("front").encodeToBase64())
+                1 -> Base64Image(1, imageRefs.getValue("back").encodeToBase64())
                 else -> error("Illegal index $it")
             }
         }
 
     fun getSelfieArray() = arrayOf(
-        Base64Image(
-            0, selfieBase64?.encodeToBase64() ?: error("Selfie reference not set")
-        )
+        Base64Image(0, selfieRef?.encodeToBase64() ?: error("Selfie reference not set"))
     )
+
+    fun getPublicKey() = dh.publicKey.y.toByteArray().encodeToString()
+
+    fun generateSelfieData(data: PublicKeyResponseData): EncryptedImageData {
+        val vector = dh.byteGenerator(GENERATOR_BYTES)
+
+        val content = EncryptedImage(
+            0,
+            Base64.toBase64String(vector),
+            data.secretId,
+            encryptData(
+                selfieRef?.getBytes() ?: error("Selfie reference not set"),
+                data.publicKey,
+                vector
+            )
+        )
+
+        return EncryptedImageData(
+            documentType = DocumentType.SELFIE.value,
+            encryptedContent = listOf(content)
+        )
+    }
+
+    private fun encryptData(data: ByteArray, pubKey: String, vector: ByteArray) =
+        dh.encrypt(
+            data,
+            android.util.Base64.decode(pubKey, android.util.Base64.NO_WRAP),
+            vector
+        )!!
+
+    fun generateDocumentData(keys: List<PublicKeyResponseData>): EncryptedImageData {
+        val vector = dh.byteGenerator(GENERATOR_BYTES)
+
+        val content = Array(requiredImagesAmount) {
+            when (it) {
+                0 -> EncryptedImage(
+                    0,
+                    Base64.toBase64String(vector),
+                    keys[0].secretId,
+                    encryptData(imageRefs.getValue("front").getBytes(), keys[0].publicKey, vector)
+                )
+                1 -> EncryptedImage(
+                    1,
+                    Base64.toBase64String(vector),
+                    keys[1].secretId,
+                    encryptData(imageRefs.getValue("back").getBytes(), keys[1].publicKey, vector)
+                )
+                else -> error("Illegal index $it")
+            }
+        }
+        return EncryptedImageData(
+            documentType = documentType.value,
+            encryptedContent = content.toList()
+        )
+    }
+
+    companion object {
+        private const val GENERATOR_BYTES = 16
+    }
 }

@@ -53,9 +53,16 @@ class OrderFlow(private val service: OrderService) {
         flow { emit(service.updatePaymentData(PaymentBody(paymentData))) }
             .flowOn(DispatcherRegistry.io)
 
-    fun uploadImage(block: () -> ImageBody) =
-        flow { emit(service.uploadImage(block.invoke())) }
+    fun uploadEncryptedImage(body: EncryptedImageBody) =
+        flow { emit(service.uploadEncryptedImage(body)) }
             .flowOn(DispatcherRegistry.io)
+
+    fun getImageKey(amount: Int, data: () -> ImagePubKeyData) =
+        flow {
+            val keys = ArrayList<PublicKeyResponseData>(amount)
+            repeat(amount) { keys.add(service.getImagePublicKey(ImagePubKeyBody(data.invoke())).data) }
+            emit(keys)
+        }.flowOn(DispatcherRegistry.io)
 
     fun getVerificationKey(data: PublicKeyData) =
         flow { emit(service.getVerificationPublicKey(PublicKeyBody(data))) }

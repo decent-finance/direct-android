@@ -19,6 +19,7 @@ package com.cexdirect.lib.order.identity
 import com.cexdirect.lib.R
 import com.cexdirect.lib.StringProvider
 import com.cexdirect.lib.network.models.Images
+import com.cexdirect.lib.util.DH
 import com.cexdirect.lib.util.FieldStatus
 import com.nhaarman.mockitokotlin2.*
 import org.assertj.core.api.Java6Assertions.assertThat
@@ -36,15 +37,18 @@ class UserDocsTest {
     @Mock
     lateinit var stringProvider: StringProvider
 
+    @Mock
+    lateinit var dh: DH
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        userDocs = UserDocs(stringProvider)
+        userDocs = UserDocs(stringProvider, dh)
     }
 
     @After
     fun tearDown() {
-        reset(stringProvider)
+        reset(stringProvider, dh)
     }
 
     @Test
@@ -77,7 +81,7 @@ class UserDocsTest {
     @Test
     fun invokeUploadActionWhenShouldSendPhoto() {
         val mock: Runnable = mock()
-        userDocs.uploadAction = { mock.run() }
+        userDocs.uploadAction = { _, _ -> mock.run() }
         userDocs.currentPhotoType = PhotoType.SELFIE
 
         userDocs.shouldSendPhoto = true
@@ -88,7 +92,7 @@ class UserDocsTest {
     @Test
     fun dontInvokeUploadActionWhenShouldNotSendPhoto() {
         val mock: Runnable = mock()
-        userDocs.uploadAction = { mock.run() }
+        userDocs.uploadAction = { _, _ -> mock.run() }
 
         userDocs.shouldSendPhoto = false
 
@@ -97,11 +101,11 @@ class UserDocsTest {
 
     @Test
     fun setSendPhotosToTrueWhenReqAmountReached() {
-        userDocs.uploadAction = { }
+        userDocs.uploadAction = { _, _ -> }
         userDocs.requiredImagesAmount = 2
         userDocs.currentPhotoType = PhotoType.SELFIE
 
-        userDocs.imagesBase64.let {
+        userDocs.imageRefs.let {
             it["abc"] = mock()
             it["def"] = mock()
         }
@@ -113,7 +117,7 @@ class UserDocsTest {
     fun dontSetSendPhotosToTrueWhenReqAmountNotReached() {
         userDocs.requiredImagesAmount = 2
 
-        userDocs.imagesBase64.let {
+        userDocs.imageRefs.let {
             it["abc"] = mock()
         }
 
@@ -164,10 +168,10 @@ class UserDocsTest {
     @Test
     fun invokeUploadWhenSelfieSet() {
         val mock: Runnable = mock()
-        userDocs.uploadAction = { mock.run() }
+        userDocs.uploadAction = { _, _ -> mock.run() }
         userDocs.currentPhotoType = PhotoType.SELFIE
 
-        userDocs.selfieBase64 = mock()
+        userDocs.selfieRef = mock()
 
         verify(mock).run()
     }
@@ -197,7 +201,7 @@ class UserDocsTest {
     fun validateSelfieStatus() {
         userDocs.documentTypeSelected = true
         userDocs.requiredImages = Images(false, true)
-        userDocs.uploadAction = { }
+        userDocs.uploadAction = { _, _ -> }
         userDocs.selfieStatus = FieldStatus.VALID
 
         userDocs.forceValidate()

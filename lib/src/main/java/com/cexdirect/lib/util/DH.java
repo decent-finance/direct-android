@@ -136,6 +136,24 @@ public class DH {
     }
 
     @Nullable
+    public String encrypt(byte[] message, byte[] key, byte[] salt) {
+        prepareToEncryption(key);
+
+        byte[] secret = getKeyAgree().generateSecret();
+        String secret64 = encode(secret);
+        Log.w("SECRET", secret64);
+
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(HASH.INSTANCE.sha256Bytes(secret64.getBytes()), "AES"), new IvParameterSpec(salt));
+            byte[] cipherText = cipher.doFinal(message);
+            return encode(cipherText);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Nullable
     public String decrypt(String message, byte[] key, byte[] salt) {
         prepareToEncryption(key);
 

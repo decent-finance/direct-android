@@ -86,8 +86,14 @@ class OrderProcessingApi(
             .launchIn(scope)
     }
 
-    fun uploadPhoto(scope: CoroutineScope, imageData: () -> ImageBody) {
-        orderFlow.uploadImage(imageData)
+    fun sendEncryptedImage(
+        scope: CoroutineScope,
+        amount:Int,
+        imagePubKey: () -> ImagePubKeyData,
+        encryptedImageData: (keys: List<PublicKeyResponseData>) -> EncryptedImageBody
+    ) {
+        orderFlow.getImageKey(amount, imagePubKey)
+            .flatMapConcat { orderFlow.uploadEncryptedImage(encryptedImageData.invoke(it)) }
             .onStart { uploadResult.value = Loading() }
             .catch { uploadResult.value = it.mapFailure() }
             .onEach { uploadResult.value = Success() }

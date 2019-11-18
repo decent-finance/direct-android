@@ -91,7 +91,7 @@ class OrderActivityViewModel(
     val userCardData = UserCardData(dh)
     val userWallet = UserWallet()
     val userSsn = UserSsn()
-    val userDocs = UserDocs(stringProvider)
+    val userDocs = UserDocs(stringProvider, dh)
     val userTerms = Terms()
     var extras = ObservableArrayMap<String, String>()
     val validationMap = ObservableArrayMap<String, FieldStatus>()
@@ -165,27 +165,22 @@ class OrderActivityViewModel(
                 }
             }
         })
-        userDocs.uploadAction = {
-            api.uploadPhoto(this) {
-                when (it) {
-                    PhotoType.SELFIE -> {
-                        ImageBody(
-                            ImageData(
-                                documentType = DocumentType.SELFIE.value,
-                                base64image = userDocs.getSelfieArray()
-                            )
-                        )
-                    }
-                    PhotoType.ID, PhotoType.ID_BACK -> {
-                        ImageBody(
-                            ImageData(
-                                documentType = userDocs.documentType.value,
-                                base64image = userDocs.getDocumentPhotosArray()
-                            )
-                        )
+        userDocs.uploadAction = { type, amount ->
+            api.sendEncryptedImage(
+                this,
+                amount,
+                { ImagePubKeyData(userDocs.getPublicKey()) },
+                {
+                    when (type) {
+                        PhotoType.SELFIE -> {
+                            EncryptedImageBody(userDocs.generateSelfieData(it.first()))
+                        }
+                        PhotoType.ID, PhotoType.ID_BACK -> {
+                            EncryptedImageBody(userDocs.generateDocumentData(it))
+                        }
                     }
                 }
-            }
+            )
         }
     }
 

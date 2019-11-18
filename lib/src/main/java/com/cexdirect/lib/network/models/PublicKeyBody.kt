@@ -30,3 +30,18 @@ data class PublicKeyData(
     val orderId: String = Direct.pendingOrderId,
     var orderSecret: String = ""
 )
+
+class ImagePubKeyBody(data: ImagePubKeyData) : BaseBody<ImagePubKeyData>(data = data) {
+    init {
+        data.orderSecret =
+            "${Direct.userEmail}${Direct.pendingOrderId}${serviceData.nonce}".sha512()
+    }
+}
+
+data class ImagePubKeyData(
+    val clientPublicKey: String,
+    val orderId: String = Direct.pendingOrderId,
+    var orderSecret: String = "",
+    val serviceId: String = "tuc"
+)
+

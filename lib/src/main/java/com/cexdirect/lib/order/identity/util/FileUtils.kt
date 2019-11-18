@@ -72,6 +72,12 @@ fun convertStreamToBase64(input: InputStream): String = ByteArrayOutputStream().
     }
 }
 
+fun convertStreamToBytes(input: InputStream): ByteArray =
+    ByteArrayOutputStream().use { out ->
+        input.copyTo(out)
+        out.toByteArray()
+    }
+
 fun fileSizeValid(length: Long) = (length / BYTES_IN_MB) <= MAX_FILE_SIZE_MB
 
 const val MAX_FILE_SIZE_MB = 15

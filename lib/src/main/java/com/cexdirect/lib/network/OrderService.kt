@@ -27,9 +27,6 @@ interface OrderService {
     @PUT("api/v1/orders/new")
     suspend fun createNewOrder(@Body body: NewOrderBody): OrderDataResponse
 
-    @POST("api/v1/orders/send2processing")
-    suspend fun sendToProcessing(@Body body: ProcessingBody): ApiResponse<Void>
-
     @POST("api/v1/orders/check")
     suspend fun checkCode(@Body body: CheckCodeBody): OrderDataResponse
 
@@ -45,8 +42,11 @@ interface OrderService {
     @POST("api/v1/orders/payment")
     suspend fun updatePaymentData(@Body body: PaymentBody): OrderInfoResponse
 
-    @PUT("api/v1/orders/image")
-    suspend fun uploadImage(@Body body: ImageBody): ApiResponse<Void>
+    @PUT("api/v1/orders/encryptedImage")
+    suspend fun uploadEncryptedImage(@Body body: EncryptedImageBody): ApiResponse<Void>
+
+    @POST("api/v1/orders/getServerPublicKey")
+    suspend fun getImagePublicKey(@Body body: ImagePubKeyBody): PublicKeyResponse
 
     @POST("api/v1/orders/crypto/verification")
     suspend fun getVerificationPublicKey(@Body body: PublicKeyBody): PublicKeyResponse

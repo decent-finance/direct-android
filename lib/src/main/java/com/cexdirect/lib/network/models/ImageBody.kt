@@ -35,4 +35,26 @@ data class ImageData(
     val base64image: Array<Base64Image>
 )
 
+class EncryptedImageBody(data: EncryptedImageData) : BaseBody<EncryptedImageData>(data = data) {
+
+    init {
+        data.orderSecret =
+            "${Direct.userEmail}${Direct.pendingOrderId}${serviceData.nonce}".sha512()
+    }
+}
+
+data class EncryptedImageData(
+    val orderId: String = Direct.pendingOrderId,
+    var orderSecret: String = "",
+    val documentType: String,
+    val encryptedContent: List<EncryptedImage>
+)
+
+data class EncryptedImage(
+    val index: Int,
+    val vector: String,
+    val keyId: String,
+    val content: String
+)
+
 data class Base64Image(val index: Int, val content: String)
