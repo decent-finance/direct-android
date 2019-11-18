@@ -528,8 +528,16 @@ class OrderActivityViewModel(
         editEmailEvent.call()
     }
 
+    fun setCodeInvalid() {
+        checkCode.setCodeInvalid()
+    }
+
     fun submitCode() {
-        api.checkCode(this, orderId.get()!!, checkCode.code)
+        checkCode.forceValidate()
+
+        if (checkCode.isValid()) {
+            api.checkCode(this, orderId.get()!!, checkCode.code)
+        }
     }
 
     fun updateUserEmail(email: String) {

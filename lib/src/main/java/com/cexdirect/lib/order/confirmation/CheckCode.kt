@@ -20,8 +20,10 @@ import android.os.CountDownTimer
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.databinding.Observable
 import com.cexdirect.lib.BR
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.util.FieldStatus
 
 @OpenForTesting
 class CheckCode() : BaseObservable() {
@@ -44,6 +46,13 @@ class CheckCode() : BaseObservable() {
         }
 
     @get:Bindable
+    var codeStatus = FieldStatus.EMPTY
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.codeStatus)
+        }
+
+    @get:Bindable
     var canResend = false
         set(value) {
             field = value
@@ -52,6 +61,16 @@ class CheckCode() : BaseObservable() {
 
     constructor(timer: CountDownTimer) : this() {
         this.timer = timer
+    }
+
+    init {
+        addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                if (propertyId == BR.code) {
+                    codeStatus = validateCheckCode(code)
+                }
+            }
+        })
     }
 
     @VisibleForTesting
@@ -84,6 +103,26 @@ class CheckCode() : BaseObservable() {
         canResend = false
         startTimer()
     }
+
+    @VisibleForTesting
+    internal fun validateCheckCode(code: String) =
+        if (code.isEmpty()) {
+            FieldStatus.EMPTY
+        } else {
+            FieldStatus.VALID
+        }
+
+    fun forceValidate() {
+        if (codeStatus == FieldStatus.EMPTY) {
+            codeStatus = FieldStatus.INVALID
+        }
+    }
+
+    fun setCodeInvalid() {
+        codeStatus = FieldStatus.INVALID
+    }
+
+    fun isValid() = codeStatus == FieldStatus.VALID
 
     companion object {
         private const val RESEND_TIMEOUT_MILLIS = 2 * 60 * 1000L

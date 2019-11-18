@@ -17,6 +17,7 @@
 package com.cexdirect.lib.order.confirmation
 
 import android.os.CountDownTimer
+import com.cexdirect.lib.util.FieldStatus
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
@@ -69,5 +70,51 @@ class CheckCodeTest {
         verify(spy).stopTimer()
         verify(spy).startTimer()
         assertThat(spy.canResend).isFalse()
+    }
+
+    @Test
+    fun returnEmptyForEmptyCode() {
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
+
+        val actual = checkCode.validateCheckCode("")
+
+        assertThat(actual).isEqualTo(FieldStatus.EMPTY)
+    }
+
+    @Test
+    fun returnValidForNonEmptyCode() {
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
+
+        val actual = checkCode.validateCheckCode("123")
+
+        assertThat(actual).isEqualTo(FieldStatus.VALID)
+    }
+
+    @Test
+    fun setInvalidAfterEmptyCodeValidation() {
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
+
+        checkCode.code = ""
+        checkCode.forceValidate()
+
+        assertThat(checkCode.codeStatus).isEqualTo(FieldStatus.INVALID)
+    }
+
+    @Test
+    fun notSetInvalidAfterNonEmptyCodeValidation() {
+        val checkCode = CheckCode().apply {
+            timer = createTimer()
+        }
+
+        checkCode.code = "123"
+        checkCode.forceValidate()
+
+        assertThat(checkCode.codeStatus).isEqualTo(FieldStatus.VALID)
     }
 }

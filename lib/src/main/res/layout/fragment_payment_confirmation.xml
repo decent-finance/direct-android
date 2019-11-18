@@ -24,6 +24,8 @@
 
         <import type="com.cexdirect.lib.order.OrderStep" />
 
+        <import type="com.cexdirect.lib.util.FieldStatus" />
+
         <variable
             name="model"
             type="com.cexdirect.lib.order.OrderActivityViewModel" />
@@ -108,7 +110,8 @@
             <LinearLayout
                 style="@style/Direct.InputLayout"
                 android:layout_width="match_parent"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                app:isActivated="@{model.checkCode.codeStatus == FieldStatus.INVALID}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -136,6 +139,14 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <TextView
+                style="@style/Direct.Textfield.Error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/cexd_invalid_exp_date"
+                android:visibility="@{model.checkCode.codeStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
             <Button
                 android:id="@+id/fpcSubmit"
