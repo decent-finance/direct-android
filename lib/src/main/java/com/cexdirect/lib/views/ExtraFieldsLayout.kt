@@ -192,8 +192,8 @@ val fieldRules = LinkedHashMap<String, ExtraFieldRule>().apply {
         ExtraFieldRule(
             InputType.TYPE_CLASS_TEXT,
             null,
-            R.string.cexd_residential_postcode,
-            R.string.cexd_invalid_mid_postcode
+            R.string.cexd_zip,
+            R.string.cexd_invalid_zip
         )
     )
     put(

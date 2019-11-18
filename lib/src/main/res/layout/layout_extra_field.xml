@@ -45,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="@{safeUnbox(editable)}"
+                    android:focusable="@{safeUnbox(editable)}"
                     android:inputType="@{rule.inputType}"
                     android:text="@={input[key]}"
                     app:inputFilter="@{rule.inputFilter}"
