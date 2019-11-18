@@ -63,13 +63,18 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
             statusWatcher.setScreenChanged()
             subscribeToOrderInfo().observe(viewLifecycleOwner, socketObserver(
                 onOk = {
-                    updateConfirmationStatus(it) {
-                        // TODO: for now, only REJECTED is possible here
-                        requireContext().paymentRejected(OrderStatus.REJECTED, extractAmounts())
-                        finish()
-                    }
+                    updateConfirmationStatus(
+                        it,
+                        { showLoader() },
+                        { hideLoader() },
+                        {
+                            // TODO: for now, only REJECTED is possible here
+                            requireContext().paymentRejected(OrderStatus.REJECTED, extractAmounts())
+                            finish()
+                        }
+                    )
                 },
-                onFail = { purchaseFailed(it.message,extractAmounts()) }
+                onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
             editEmailEvent.observe(viewLifecycleOwner, Observer {
                 ChangeEmailDialog().show(childFragmentManager, "changeEmail")
@@ -81,7 +86,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                         setCodeInvalid()
                         hideLoader()
                     } else {
-                        purchaseFailed(it.message,extractAmounts())
+                        purchaseFailed(it.message, extractAmounts())
                     }
                 },
                 final = {}
@@ -91,7 +96,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                     toast(R.string.cexd_check_mail)
                     restartResendTimer()
                 },
-                onFail = { purchaseFailed(it.message,extractAmounts()) }
+                onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
             changeEmailRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
@@ -99,7 +104,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                     toast(R.string.cexd_email_updated)
                     restartResendTimer()
                 },
-                onFail = { purchaseFailed(it.message,extractAmounts()) }
+                onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
         }.let { binding.model = it }
     }

@@ -82,6 +82,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="@{model.orderStep == OrderStep.EMAIL_CONFIRMATION ? View.VISIBLE : View.GONE}">
@@ -145,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="@string/cexd_invalid_exp_date"
+                android:text="@string/cexd_invalid_code"
                 android:visibility="@{model.checkCode.codeStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
             <Button

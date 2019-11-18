@@ -422,7 +422,7 @@ class OrderActivityViewModel(
     fun updateOrderStatus(
         data: OrderInfoData,
         rejectAction: (status: OrderStatus) -> Unit,
-        hideAction: () -> Unit,
+        hideLoaderAction: () -> Unit,
         scrollAction: () -> Unit
     ) {
         when (data.orderStatus) {
@@ -450,7 +450,7 @@ class OrderActivityViewModel(
                             paymentBaseContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
                             paymentExtraContentState.set(CollapsibleLayout.ContentState.EXPANDED)
                         }
-                    hideAction.invoke()
+                    hideLoaderAction.invoke()
                     scrollAction.invoke()
                 }
             }
@@ -469,7 +469,7 @@ class OrderActivityViewModel(
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
                     changeOrderStep()
-                    hideAction.invoke()
+                    hideLoaderAction.invoke()
                 }
             else -> {
             }
@@ -545,16 +545,31 @@ class OrderActivityViewModel(
         Direct.userEmail = email
     }
 
-    fun updateConfirmationStatus(data: OrderInfoData, rejectAction: () -> Unit) {
+    fun updateConfirmationStatus(
+        data: OrderInfoData,
+        showLoaderAction: () -> Unit,
+        hideLoaderAction: () -> Unit,
+        rejectAction: () -> Unit
+    ) {
         when (data.orderStatus) {
             OrderStatus.PSS_3DS_REQUIRED -> statusWatcher.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
                 askFor3ds(data.threeDS!!)
             }
+            OrderStatus.PSS_3DS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_3DS_PENDING) {
+                showLoaderAction.invoke()
+            }
             OrderStatus.WAITING_FOR_CONFIRMATION -> statusWatcher.updateAndDo(OrderStatus.WAITING_FOR_CONFIRMATION) {
+                hideLoaderAction.invoke()
                 askForEmailConfirmation()
             }
-            OrderStatus.COMPLETE -> statusWatcher.updateAndDo(OrderStatus.COMPLETE) { confirmOrder() }
-            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED, rejectAction)
+            OrderStatus.COMPLETE -> statusWatcher.updateAndDo(OrderStatus.COMPLETE) {
+                hideLoaderAction.invoke()
+                confirmOrder()
+            }
+            OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
+                hideLoaderAction.invoke()
+                rejectAction.invoke()
+            }
             else -> { /* do nothing */
             }
         }

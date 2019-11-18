@@ -97,6 +97,7 @@
     <string name="cexd_invalid_card_number">Please enter valid card number</string>
     <string name="cexd_invalid_cvv">Please enter valid CVV</string>
     <string name="cexd_invalid_exp_date">Please enter expiry date</string>
+    <string name="cexd_invalid_code">Please enter code</string>
     <string name="cexd_password_icon">Password icon</string>
     <string name="cexd_submit">Submit</string>
     <string name="cexd_edit_email">Edit Email</string>
