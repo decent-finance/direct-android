@@ -25,7 +25,7 @@ android {
 
         testInstrumentationRunner 'com.cexdirect.lib.MockRunner'
 
-        buildConfigField 'long', 'THROTTLE_DELAY_MILLIS', "300"
+        buildConfigField 'long', 'THROTTLE_DELAY_MILLIS', "700"
     }
 
     testOptions {
@@ -150,7 +150,7 @@ dependencies {
     api 'com.mcxiaoke.koi:core:0.5.5'
     api 'ru.noties.markwon:core:3.1.0'
     api 'me.dm7.barcodescanner:zxing:1.9.13'
-    api 'com.cexdirect:livedatax:0.3.0'
+    api 'com.cexdirect:livedatax:0.3.1'
 
     api "com.squareup.okhttp3:okhttp:$okHttpVersion"
     api "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
