@@ -58,8 +58,7 @@ class ReceiptFragment : BaseOrderFragment() {
 
         model.apply {
             statusWatcher.setScreenChanged()
-            subscribeToOrderInfo().observe(
-                viewLifecycleOwner, socketObserver(
+            subscribeToOrderInfo().observe(viewLifecycleOwner, socketObserver(
                 onOk = { model.updatePaymentInfo(it) },
                 onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
