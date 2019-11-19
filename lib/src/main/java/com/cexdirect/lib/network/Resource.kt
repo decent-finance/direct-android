@@ -24,7 +24,7 @@ import retrofit2.HttpException
 sealed class Resource<out T>
 
 class Loading<T> : Resource<T>()
-class Success<T>(val data: T?) : Resource<T>()
+class Success<T>(val data: T? = null) : Resource<T>()
 class Failure<T>(val code: Int = 0, val message: String = "Unknown Error") : Resource<T>()
 
 fun <T> Throwable.mapFailure(): Failure<T> =

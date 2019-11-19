@@ -120,9 +120,9 @@ class OrderActivityViewModel(
     val uploadPhotoRequest: LiveData<Resource<Void>> = api.uploadResult
     val sendBasePaymentDataRequest: LiveData<Resource<OrderInfoData>> = api.basePaymentDataResult
     val sendExtraPaymentDataRequest = api.extraPaymentDataResult
-    val changeEmailRequest = emailChangedEvent.switchMap {
-        api.changeEmail(this@OrderActivityViewModel, it)
-    }
+    val changeEmailRequest = emailChangedEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+        .switchMap { api.changeEmail(this@OrderActivityViewModel, it) }
     val changeCheckCodeRequest = resendCodeEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
         .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, orderId.get()!!) }

@@ -41,7 +41,6 @@ class CalcApi(
 ) {
 
     val calcData = MutableLiveData<Resource<Pair<List<Precision>, List<ExchangeRate>>>>()
-    private val buyEvent = MutableLiveData<Resource<Void>>()
 
     fun loadCalcData(scope: CoroutineScope) {
         analyticsFlow.sendOpenEvent()
@@ -58,14 +57,14 @@ class CalcApi(
             .launchIn(scope)
     }
 
-    fun sendBuyEvent(scope: CoroutineScope, eventData: EventData): LiveData<Resource<Void>> {
-        analyticsFlow.sendBuyEvent(eventData)
-            .onStart { buyEvent.value = Loading() }
-            .catch { buyEvent.value = it.mapFailure() }
-            .onEach { buyEvent.value = Success(null) }
-            .launchIn(scope)
-        return buyEvent
-    }
+    fun sendBuyEvent(scope: CoroutineScope, eventData: EventData): LiveData<Resource<Void>> =
+        MutableLiveData<Resource<Void>>().apply {
+            analyticsFlow.sendBuyEvent(eventData)
+                .onStart { this@apply.value = Loading() }
+                .catch { this@apply.value = it.mapFailure() }
+                .onEach { this@apply.value = Success() }
+                .launchIn(scope)
+        }
 
     fun subscribeToExchangeRates() = messenger.subscribeToExchangeRates()
 

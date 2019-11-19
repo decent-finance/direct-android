@@ -43,8 +43,6 @@ class OrderProcessingApi(
     val basePaymentDataResult = MutableLiveData<Resource<OrderInfoData>>()
     val extraPaymentDataResult = MutableLiveData<Resource<OrderInfoData>>()
     val checkCode = MutableLiveData<Resource<OrderData>>()
-    private val changeEmailResult = MutableLiveData<Resource<String>>()
-    private val newCheckCode = MutableLiveData<Resource<OrderData>>()
 
     fun createNewOrder(
         scope: CoroutineScope,
@@ -71,7 +69,7 @@ class OrderProcessingApi(
             .flatMapConcat { orderFlow.getVerificationKey(PublicKeyData(pubKey)) }
             .flatMapConcat { orderFlow.sendToVerification { verificationData.invoke(it.data) } }
             .catch { verificationResult.value = it.mapFailure() }
-            .onEach { verificationResult.value = Success(null) }
+            .onEach { verificationResult.value = Success() }
             .launchIn(scope)
     }
 
@@ -84,7 +82,7 @@ class OrderProcessingApi(
             .onStart { processingResult.value = Loading() }
             .flatMapConcat { orderFlow.sendToProcessing { processingData.invoke(it.data) } }
             .catch { processingResult.value = it.mapFailure() }
-            .onEach { processingResult.value = Success(null) }
+            .onEach { processingResult.value = Success() }
             .launchIn(scope)
     }
 
@@ -92,7 +90,7 @@ class OrderProcessingApi(
         orderFlow.uploadImage(imageData)
             .onStart { uploadResult.value = Loading() }
             .catch { uploadResult.value = it.mapFailure() }
-            .onEach { uploadResult.value = Success(null) }
+            .onEach { uploadResult.value = Success() }
             .launchIn(scope)
     }
 
@@ -112,26 +110,26 @@ class OrderProcessingApi(
             .launchIn(scope)
     }
 
-    fun changeEmail(scope: CoroutineScope, newEmail: String): LiveData<Resource<String>> {
-        orderFlow.changeEmail(ChangeEmailRequest(newEmail = newEmail))
-            .onStart { changeEmailResult.value = Loading() }
-            .catch { changeEmailResult.value = it.mapFailure() }
-            .onEach { changeEmailResult.value = Success(it.data.userEmail) }
-            .launchIn(scope)
-        return changeEmailResult
-    }
+    fun changeEmail(scope: CoroutineScope, newEmail: String): LiveData<Resource<String>> =
+        MutableLiveData<Resource<String>>().apply {
+            orderFlow.changeEmail(ChangeEmailRequest(newEmail = newEmail))
+                .onStart { this@apply.value = Loading() }
+                .catch { this@apply.value = it.mapFailure() }
+                .onEach { this@apply.value = Success(it.data.userEmail) }
+                .launchIn(scope)
+        }
 
     fun requestNewCheckCode(
         scope: CoroutineScope,
         orderId: String
-    ): LiveData<Resource<OrderData>> {
-        orderFlow.resendCheckCode(orderId)
-            .onStart { newCheckCode.value = Loading() }
-            .catch { newCheckCode.value = it.mapFailure() }
-            .onEach { newCheckCode.value = Success(it.data) }
-            .launchIn(scope)
-        return newCheckCode
-    }
+    ): LiveData<Resource<OrderData>> =
+        MutableLiveData<Resource<OrderData>>().apply {
+            orderFlow.resendCheckCode(orderId)
+                .onStart { this@apply.value = Loading() }
+                .catch { this@apply.value = it.mapFailure() }
+                .onEach { this@apply.value = Success(it.data) }
+                .launchIn(scope)
+        }
 
     fun checkCode(scope: CoroutineScope, orderId: String, code: String) {
         orderFlow.checkCode(CheckCodeData(orderId, code))
