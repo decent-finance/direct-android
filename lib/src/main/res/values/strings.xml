@@ -140,7 +140,7 @@
     <string name="cexd_middle_name">Middle Name</string>
     <string name="cexd_dob">Date of Birth</string>
     <string name="cexd_residential_city">Residential City</string>
-    <string name="cexd_residential_street">Enter your address</string>
+    <string name="cexd_residential_street">Enter the address where your reside</string>
     <string name="cexd_residential_country">Residential Country</string>
     <string name="cexd_issued_by">Issued by</string>
     <string name="cexd_residential_apt">Enter your apartment/suite if applicable</string>
