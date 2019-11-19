@@ -360,7 +360,7 @@ class OrderActivityViewModel(
         if (extrasValid()) {
             api.sendExtraPaymentData(
                 this,
-                extras.apply {
+                HashMap(extras).apply {
                     // Do not send the following entries
                     remove("userResidentialCountry")
                     remove("billingCountry")
