@@ -140,6 +140,7 @@ class IdentityFragment : BaseOrderFragment() {
                 onFail = {
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
                         userWallet.walletStatus = FieldStatus.INVALID
+                        hideLoader()
                     } else {
                         purchaseFailed(it.message, model.extractAmounts())
                     }
