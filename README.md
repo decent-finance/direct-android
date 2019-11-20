@@ -8,12 +8,13 @@ Please note, that this library requires `minSdkVersion` to be at least `21`. Thi
 
 ## Installation
 
-Add the following repository to your top-level `build.gradle`
+Add the following repositories to your top-level `build.gradle`
 
 ```gradle
 allprojects {
     repositories {
         maven {	url  'https://dl.bintray.com/decent-finance/direct-android' }
+        maven { url 'https://dl.bintray.com/decent-finance/utils' }
     }
 }
 ```
