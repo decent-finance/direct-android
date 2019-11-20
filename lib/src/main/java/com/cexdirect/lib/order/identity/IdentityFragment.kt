@@ -99,16 +99,16 @@ class IdentityFragment : BaseOrderFragment() {
 
         model.apply {
             chooseCountryEvent.observe(viewLifecycleOwner, Observer {
-                CountryPickerDialog().show(parentFragmentManager, "country")
+                CountryPickerDialog().show(requireFragmentManager(), "country")
             })
             chooseStateEvent.observe(viewLifecycleOwner, Observer {
-                StatePickerDialog().show(parentFragmentManager, "state")
+                StatePickerDialog().show(requireFragmentManager(), "state")
             })
             uploadPhotoEvent.observe(viewLifecycleOwner, Observer {
-                PhotoSourceDialog().show(parentFragmentManager, "choose")
+                PhotoSourceDialog().show(requireFragmentManager(), "choose")
             })
             cvvInfoEvent.observe(viewLifecycleOwner, Observer {
-                CvvInfoDialog().show(parentFragmentManager, "cvv")
+                CvvInfoDialog().show(requireFragmentManager(), "cvv")
             })
             scanQrClick.observe(viewLifecycleOwner, Observer {
                 scanQrCodeWithPermissionCheck()
