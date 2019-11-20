@@ -23,7 +23,7 @@ import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.ErrorDispatcher
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.stub.StubActivity
 import com.cexdirect.lib.util.TEST_PLACEMENT
 import okhttp3.mockwebserver.MockWebServer
@@ -68,7 +68,7 @@ class CheckActivityTest {
         assertThat(mockServer.takeRequest().path).endsWith("v1/merchant/placement/check/$TEST_PLACEMENT")
         assertThat(mockServer.takeRequest().path).endsWith("v1/merchant/rules/1")
 
-        intended(hasComponent(BuyActivity::class.java.name))
+        intended(hasComponent(CalcActivity::class.java.name))
     }
 
     @Ignore

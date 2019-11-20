@@ -29,7 +29,7 @@ data class OrderInfoData(
     val userEmail: String,
     val country: String,
     val basic: Basic,
-    val threeDS: _3Ds?,
+    val threeDS: Tds?,
     val paymentInfo: PaymentInfo?,
     val additional: Map<String, Additional>
 )
@@ -56,15 +56,15 @@ data class Additional(
     val editable: Boolean
 )
 
-data class _3Ds(
+data class Tds(
     val txId: String,
     val method: String,
     val url: String,
     val type: String,
-    val data: _3DsExtras
+    val data: TdsExtras
 )
 
-class _3DsExtras : HashMap<String, String>()
+class TdsExtras : HashMap<String, String>()
 
 data class PaymentInfo(
     val fiat: MonetaryData,

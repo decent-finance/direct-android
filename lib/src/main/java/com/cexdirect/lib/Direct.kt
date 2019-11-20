@@ -21,11 +21,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import androidx.annotation.RestrictTo
-import com.cexdirect.lib._di.CoreModule
-import com.cexdirect.lib._di.DaggerDirectComponent
-import com.cexdirect.lib._di.DirectComponent
-import com.cexdirect.lib._di.IdentitySubcomponent
 import com.cexdirect.lib.check.CheckActivity
+import com.cexdirect.lib.di.CoreModule
+import com.cexdirect.lib.di.DaggerDirectComponent
+import com.cexdirect.lib.di.DirectComponent
+import com.cexdirect.lib.di.IdentitySubcomponent
 import com.cexdirect.lib.network.models.CountryData
 import com.cexdirect.lib.network.models.RuleData
 import java.util.*
@@ -35,8 +35,6 @@ import kotlin.collections.HashSet
 object Direct {
 
     val fingerprint by lazy { UUID.randomUUID().toString() }
-
-    var theme: Theme = Theme.LIGHT
 
     var credentials: Credentials = Credentials("", "")
     var userEmail = ""
@@ -70,6 +68,12 @@ object Direct {
             .builder()
             .coreModule(CoreModule(context))
             .build()
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun updateRules(newRules: Collection<RuleData>) {
+        rules.clear()
+        rules.addAll(newRules)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

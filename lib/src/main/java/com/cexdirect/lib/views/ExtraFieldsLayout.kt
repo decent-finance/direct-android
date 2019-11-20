@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+@file:Suppress("MatchingDeclarationName", "MaxLineLength")
+
 package com.cexdirect.lib.views
 
 import android.content.Context
@@ -30,20 +32,16 @@ import com.cexdirect.lib.network.models.Additional
 import com.cexdirect.lib.util.FieldStatus
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.LinkedHashMap
 
 class ExtraFieldsLayout @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     var additional: Map<String, Additional> = emptyMap()
         set(value) {
-            field = value.sortNameFields()
+            field = value
 
             removeAllViews()
             updateLayout()
@@ -52,19 +50,22 @@ class ExtraFieldsLayout @JvmOverloads constructor(
     var input = ObservableArrayMap<String, String>()
     var validation = ObservableArrayMap<String, FieldStatus>()
 
+    @Suppress("NestedBlockDepth")
     private fun updateLayout() {
         val inflater = LayoutInflater.from(context)
-        additional.forEach { entry ->
-            if (entry.value.req) {
+        fieldRules.forEach { entry ->
+            if (additional[entry.key]?.req == true) {
                 val binding: LayoutExtraFieldBinding = DataBindingUtil.inflate(
-                        inflater, R.layout.layout_extra_field, this, false
+                    inflater, R.layout.layout_extra_field, this, false
                 )
                 binding.apply {
-                    entry.value.value?.takeIf { it.isNotBlank() }?.let { this@ExtraFieldsLayout.input[entry.key] = it }
-                    editable = entry.value.editable
+                    val value = additional.getValue(entry.key)
+                    value.value?.takeIf { it.isNotBlank() }
+                        ?.let { this@ExtraFieldsLayout.input[entry.key] = it }
+                    editable = value.editable
                     key = entry.key
                     input = this@ExtraFieldsLayout.input
-                    rule = fieldRules[entry.key]
+                    rule = entry.value
                     validation = this@ExtraFieldsLayout.validation
                 }
                 addView(binding.root)
@@ -79,16 +80,20 @@ fun ExtraFieldsLayout.retrieveInput() = this.input
 @BindingAdapter("inputAttrChanged")
 fun ExtraFieldsLayout.applyInputChangeListener(listener: InverseBindingListener) {
     this.input.addOnMapChangedCallback(
-            object : ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
-                override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
-                    listener.onChange()
-                }
+        object :
+            ObservableMap.OnMapChangedCallback<ObservableMap<String?, String?>, String?, String?>() {
+            override fun onMapChanged(sender: ObservableMap<String?, String?>, key: String?) {
+                listener.onChange()
             }
+        }
     )
 }
 
 @BindingAdapter("input", "validation")
-fun ExtraFieldsLayout.applyInput(input: ObservableArrayMap<String, String>, validation: ObservableArrayMap<String, FieldStatus>) {
+fun ExtraFieldsLayout.applyInput(
+    input: ObservableArrayMap<String, String>,
+    validation: ObservableArrayMap<String, FieldStatus>
+) {
     this.input = input
     this.validation = validation
 }
@@ -98,171 +103,168 @@ fun ExtraFieldsLayout.applyAdditionalFields(additional: Map<String, Additional>)
     this.additional = additional
 }
 
-val fieldRules = HashMap<String, ExtraFieldRule>().apply {
+val fieldRules = LinkedHashMap<String, ExtraFieldRule>().apply {
     put(
-            "billingSsn",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_NUMBER,
-                    null,
-                    R.string.cexd_ssn,
-                    R.string.cexd_invalid_ssn
-            )
+        "userFirstName",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_SUPPORTED_NAME_LENGTH),
+            R.string.cexd_first_name,
+            R.string.cexd_invalid_first_name
+        )
     )
     put(
-            "billingCity",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_city,
-                    R.string.cexd_invalid_city
-            )
+        "userLastName",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_SUPPORTED_NAME_LENGTH),
+            R.string.cexd_last_name,
+            R.string.cexd_invalid_last_name
+        )
     )
     put(
-            "userRuPhone",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_PHONE,
-                    null,
-                    R.string.cexd_phone_number,
-                    R.string.cexd_invalid_phone
-            )
+        "billingCountry",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            null,
+            R.string.cexd_billing_country
+        )
     )
     put(
-            "billingState",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_state
-            )
+        "userResidentialCountry",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            null,
+            R.string.cexd_billing_country,
+            R.string.cexd_invalid_country
+        )
     )
     put(
-            "userLastName",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_last_name,
-                    R.string.cexd_invalid_last_name
-            )
+        "billingState",
+        ExtraFieldRule(InputType.TYPE_TEXT_FLAG_CAP_WORDS, null, R.string.cexd_billing_state)
     )
     put(
-            "userFirstName",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_first_name,
-                    R.string.cexd_invalid_first_name
-            )
+        "billingCity",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_CITY_NAME_LENGTH),
+            R.string.cexd_city,
+            R.string.cexd_invalid_city
+        )
     )
     put(
-            "billingCountry",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_country
-            )
+        "userResidentialCity",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_CITY_NAME_LENGTH),
+            R.string.cexd_city,
+            R.string.cexd_invalid_city
+        )
     )
     put(
-            "billingZipCode",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_NUMBER,
-                    null,
-                    R.string.cexd_zip,
-                    R.string.cexd_invalid_zip
-            )
+        "userResidentialStreet",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            InputFilter.LengthFilter(MAX_BILLING_ADDRESS_LENGTH),
+            R.string.cexd_residential_street,
+            R.string.cexd_invalid_street
+        )
     )
     put(
-            "userMiddleName",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_middle_name,
-                    R.string.cexd_invalid_mid_name
-            )
+        "userResidentialAptSuite",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_residential_apt
+        )
     )
     put(
-            "userDateOfBirth",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_DATETIME,
-                    null,
-                    R.string.cexd_dob,
-                    R.string.cexd_invalid_dob
-            )
+        "billingZipCode",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_NUMBER,
+            null,
+            R.string.cexd_zip,
+            R.string.cexd_invalid_zip
+        )
     )
     put(
-            "userResidentialCity",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_residential_city,
-                    R.string.cexd_invalid_city
-            )
+        "userResidentialPostcode",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_zip,
+            R.string.cexd_invalid_zip
+        )
     )
     put(
-            "userResidentialStreet",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_residential_street,
-                    R.string.cexd_invalid_street
-            )
+        "userResidentialPostcodeUK",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_TEXT,
+            null,
+            R.string.cexd_residential_postcode,
+            R.string.cexd_invalid_mid_postcode
+        )
+    )
+    // unused
+    put(
+        "userMiddleName",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            null,
+            R.string.cexd_middle_name,
+            R.string.cexd_invalid_mid_name
+        )
     )
     put(
-            "userResidentialCountry",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_residential_country,
-                    R.string.cexd_invalid_country
-            )
+        "billingSsn",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_NUMBER,
+            null,
+            R.string.cexd_ssn,
+            R.string.cexd_invalid_ssn
+        )
     )
     put(
-            "userRuPassportIssuedBy",
-            ExtraFieldRule(
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-                    null,
-                    R.string.cexd_issued_by
-            )
+        "userDateOfBirth",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_DATETIME,
+            null,
+            R.string.cexd_dob,
+            R.string.cexd_invalid_dob
+        )
     )
     put(
-            "userResidentialAptSuite",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_TEXT,
-                    null,
-                    R.string.cexd_residential_apt
-            )
+        "userRuPassportIssuedBy",
+        ExtraFieldRule(
+            InputType.TYPE_TEXT_FLAG_CAP_WORDS,
+            null,
+            R.string.cexd_issued_by
+        )
     )
     put(
-            "userResidentialPostcode",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_TEXT,
-                    null,
-                    R.string.cexd_residential_postcode,
-                    R.string.cexd_invalid_mid_postcode
-            )
+        "userRuPassportIssueDate",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_DATETIME,
+            null,
+            R.string.cexd_issue_date
+        )
     )
     put(
-            "userRuPassportIssueDate",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_DATETIME,
-                    null,
-                    R.string.cexd_issue_date
-            )
-    )
-    put(
-            "userResidentialPostcodeUK",
-            ExtraFieldRule(
-                    InputType.TYPE_CLASS_TEXT,
-                    null,
-                    R.string.cexd_residential_postcode,
-                    R.string.cexd_invalid_mid_postcode
-            )
+        "userRuPhone",
+        ExtraFieldRule(
+            InputType.TYPE_CLASS_PHONE,
+            null,
+            R.string.cexd_phone_number,
+            R.string.cexd_invalid_phone
+        )
     )
 }
 
 data class ExtraFieldRule(
-        val inputType: Int,
-        val inputFilter: InputFilter?,
-        val description: Int,
-        val validationMessage: Int = R.string.cexd_invalid_generic_field
+    val inputType: Int,
+    val inputFilter: InputFilter?,
+    val description: Int,
+    val validationMessage: Int = R.string.cexd_invalid_generic_field
 )
 
 @BindingAdapter("android:inputType")
@@ -272,9 +274,7 @@ fun TextInputEditText.applyInputType(inputType: Int) {
 
 @BindingAdapter("inputFilter")
 fun TextInputEditText.applyInputFilter(filter: InputFilter?) {
-    filter?.let {
-        filters = arrayOf(filter)
-    }
+    filter?.let { filters = arrayOf(it) }
 }
 
 @BindingAdapter("android:hint")
@@ -282,21 +282,6 @@ fun TextInputLayout.applyHintRes(@StringRes id: Int) {
     hint = context.getString(id)
 }
 
-fun Map<String, Additional>.sortNameFields() =
-        if (this.containsKey("userLastName") && this.containsKey("userFirstName")) {
-            val keys = ArrayList<String>().apply { addAll(this@sortNameFields.keys) }
-            val lastNameIndex = keys.indexOf("userLastName")
-            val firstNameIndex = keys.indexOf("userFirstName")
-
-            if (lastNameIndex < firstNameIndex) {
-                Collections.swap(keys, lastNameIndex, firstNameIndex)
-            }
-
-            val sorted = LinkedHashMap<String, Additional>()
-            keys.forEach {
-                sorted[it] = this[it] ?: error("")
-            }
-            sorted
-        } else {
-            this
-        }
+const val MAX_SUPPORTED_NAME_LENGTH = 255
+const val MAX_CITY_NAME_LENGTH = 256
+const val MAX_BILLING_ADDRESS_LENGTH = 512

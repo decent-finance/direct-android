@@ -18,15 +18,14 @@ package com.cexdirect.lib.network
 
 import com.cexdirect.lib.network.models.ApiResponse
 import com.cexdirect.lib.network.models.DefaultEvent
-import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.PUT
 
 interface AnalyticsService {
 
     @PUT("api/v1/orders/buy")
-    fun sendBuyEvent(@Body body: DefaultEvent): Deferred<ApiResponse<Void>>
+    suspend fun sendBuyEvent(@Body body: DefaultEvent): ApiResponse<Void>
 
     @PUT("api/v1/orders/opened")
-    fun sendNewOrderEvent(@Body body: DefaultEvent): Deferred<ApiResponse<Void>>
+    suspend fun sendNewOrderEvent(@Body body: DefaultEvent): ApiResponse<Void>
 }

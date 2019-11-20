@@ -18,10 +18,10 @@ package com.cexdirect.lib.error
 
 import android.content.Intent
 import android.net.Uri
+import android.os.SystemClock
 import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intended
@@ -30,15 +30,19 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.*
-import com.cexdirect.lib.buy.BuyActivity
+import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.network.models.RuleData
 import com.cexdirect.lib.terms.TermsActivity
+import com.cexdirect.lib.util.CustomViewActions.collapseAppBarLayout
+import com.cexdirect.lib.util.CustomViewActions.nestedScrollTo
 import com.cexdirect.lib.util.TEST_PLACEMENT
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assume.assumeThat
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -69,17 +73,24 @@ class ErrorActivityTest {
 
     @Test
     fun showTerms() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
 
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
         onView(
             allOf(
                 withText("Terms"),
                 isAssignableFrom(TextView::class.java),
                 hasSibling(withText("Refund"))
             )
-        ).perform(scrollTo(), click())
+        ).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+
+        SystemClock.sleep(500)
 
         intended(
             allOf(
@@ -92,20 +103,32 @@ class ErrorActivityTest {
 
     @Test
     fun showExitDialog() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(matches(isDisplayed()))
     }
 
     @Test
     fun dismissExitDialog() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
         onView(withText(R.string.cexd_cancel)).perform(click())
 
         onView(withText(R.string.cexd_do_you_want_to_exit)).check(doesNotExist())
@@ -113,10 +136,16 @@ class ErrorActivityTest {
 
     @Test
     fun exit() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_exit)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_exit)).apply {
+            perform(nestedScrollTo())
+            SystemClock.sleep(500)
+            perform(click())
+        }
+        SystemClock.sleep(500)
         onView(withText(R.string.cexd_exit)).perform(click())
 
         @Suppress("UsePropertyAccessSyntax")
@@ -151,22 +180,34 @@ class ErrorActivityTest {
     }
 
     @Test
-    fun displayVerificationError() {
-        val intent = givenVerificationErrorIntent()
+    fun displayGenericError() {
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
 
-        onView(withText("Test reason")).check(matches(isDisplayed()))
+        onView(withText(R.string.cexd_service_offline)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun displayVerificationRejectedError() {
+        val intent = givenVerificationRejectedIntent()
+
+        activityRule.launchActivity(intent)
+
+        onView(withText(R.string.cexd_you_have_not_passed)).check(matches(isDisplayed()))
     }
 
     @Test
     fun relaunchDirectFromVerificationErrorScreen() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_try_again)).perform(click())
+        onView(withText(R.string.cexd_try_again)).apply {
+            perform(nestedScrollTo())
+            perform(click())
+        }
 
-        intended(hasComponent(BuyActivity::class.java.name))
+        intended(hasComponent(CalcActivity::class.java.name))
     }
 
     @Test
@@ -185,15 +226,17 @@ class ErrorActivityTest {
         activityRule.launchActivity(intent)
         onView(withText(R.string.cexd_try_again)).perform(click())
 
-        intended(hasComponent(BuyActivity::class.java.name))
+        intended(hasComponent(CalcActivity::class.java.name))
     }
 
+    @Ignore
     @Test
     fun contactSupport() {
-        val intent = givenVerificationErrorIntent()
+        val intent = givenGenericErrorIntent()
 
         activityRule.launchActivity(intent)
-        onView(withText(R.string.cexd_support)).perform(scrollTo(), click())
+        onView(isAssignableFrom(AppBarLayout::class.java)).perform(collapseAppBarLayout())
+        onView(withText(R.string.cexd_support)).perform(nestedScrollTo(), click())
 
         val resolved = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(BaseActivity.SUPPORT_EMAIL)
@@ -207,17 +250,24 @@ class ErrorActivityTest {
         Intent().apply {
             putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
             putExtra("reason", "Test reason")
+            putExtra("info", LastKnownOrderInfo("", "", "", "", ""))
         }
 
     private fun givenPurchaseFailedIntent() =
         Intent().apply {
             putExtra("type", ErrorType.PURCHASE_FAILED.name)
             putExtra("reason", "Test reason")
+            putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
         }
 
-    private fun givenVerificationErrorIntent() =
+    private fun givenGenericErrorIntent() =
         Intent().apply {
             putExtra("type", ErrorType.VERIFICATION_ERROR.name)
-            putExtra("reason", "Test reason")
+        }
+
+    private fun givenVerificationRejectedIntent() =
+        Intent().apply {
+            putExtra("type", ErrorType.NOT_VERIFIED.name)
+            putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
         }
 }

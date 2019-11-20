@@ -33,7 +33,6 @@ data class VerificationData(
     val cardData: CardData
 )
 
-
 data class CardData(
     val chash: String,
     val rcid: String

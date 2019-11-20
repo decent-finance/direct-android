@@ -17,7 +17,7 @@
 package com.cexdirect.lib
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.cexdirect.lib._di.*
+import com.cexdirect.lib.di.*
 import it.cosenonjaviste.daggermock.DaggerMockRule
 
 class DirectMockRule : DaggerMockRule<DirectComponent>(

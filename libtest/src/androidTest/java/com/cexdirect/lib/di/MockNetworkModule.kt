@@ -17,9 +17,8 @@
 package com.cexdirect.lib.di
 
 import com.cexdirect.lib.OpenForTesting
-import com.cexdirect.lib._di.NetworkModule
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dagger.Lazy
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,10 +28,9 @@ class MockNetworkModule : NetworkModule() {
 
     override fun provideWsUrlProvider() = MockWsUrlProvider()
 
-    override fun provideRetrofit(client: OkHttpClient, gson: Gson) = Retrofit.Builder()
+    override fun provideRetrofit(client: Lazy<OkHttpClient>, gson: Gson) = Retrofit.Builder()
         .baseUrl("http://localhost:8080/api/")
-        .client(client)
+        .client(client.get())
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }

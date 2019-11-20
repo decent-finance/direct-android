@@ -42,12 +42,13 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/Direct.Input2"
-                    inputFilter="@{rule.inputFilter}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="@{safeUnbox(editable)}"
+                    android:focusable="@{safeUnbox(editable)}"
                     android:inputType="@{rule.inputType}"
                     android:text="@={input[key]}"
+                    app:inputFilter="@{rule.inputFilter}"
                     tools:text="" />
 
             </com.google.android.material.textfield.TextInputLayout>

@@ -21,6 +21,8 @@ enum class OrderStatus(val raw: String) {
     IVS_READY("ivs-ready"),
     IVS_PENDING("ivs-pending"),
     IVS_SUCCESS("ivs-success"),
+    IVS_FAILED("ivs-failed"),
+    IVS_REJECTED("ivs-rejected"),
     PSS_WAITDATA("pss-waitdata"),
     PSS_READY("pss-ready"),
     PSS_PENDING("pss-pending"),

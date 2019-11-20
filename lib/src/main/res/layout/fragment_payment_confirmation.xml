@@ -22,11 +22,13 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.OrderStep" />
+        <import type="com.cexdirect.lib.order.OrderStep" />
+
+        <import type="com.cexdirect.lib.util.FieldStatus" />
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+            type="com.cexdirect.lib.order.OrderActivityViewModel" />
     </data>
 
     <LinearLayout
@@ -75,11 +77,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:visibility="@{model.orderStep == OrderStep.TDS ? View.VISIBLE : View.GONE}"
-            app:_3dsData="@{model._3dsData}" />
+            app:_3dsData="@{model.tdsData}" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="@{model.orderStep == OrderStep.EMAIL_CONFIRMATION ? View.VISIBLE : View.GONE}">
@@ -108,7 +111,8 @@
             <LinearLayout
                 style="@style/Direct.InputLayout"
                 android:layout_width="match_parent"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                app:isActivated="@{model.checkCode.codeStatus == FieldStatus.INVALID}">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -123,6 +127,7 @@
                     android:layout_marginStart="16dp"
                     android:clipChildren="false"
                     android:hint="@string/cexd_code"
+                    android:orientation="vertical"
                     app:hintTextAppearance="@style/Direct.TextHint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -135,6 +140,14 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <TextView
+                style="@style/Direct.Textfield.Error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/cexd_invalid_code"
+                android:visibility="@{model.checkCode.codeStatus == FieldStatus.INVALID ? View.VISIBLE : View.GONE}" />
 
             <Button
                 android:id="@+id/fpcSubmit"

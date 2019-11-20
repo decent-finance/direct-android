@@ -27,7 +27,9 @@ import androidx.core.content.res.ResourcesCompat
 import com.cexdirect.lib.R
 
 class LoaderView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val contentView =

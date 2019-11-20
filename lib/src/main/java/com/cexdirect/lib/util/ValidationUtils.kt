@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("MatchingDeclarationName")
+@file:Suppress("MatchingDeclarationName", "MaxLineLength")
 
 package com.cexdirect.lib.util
 

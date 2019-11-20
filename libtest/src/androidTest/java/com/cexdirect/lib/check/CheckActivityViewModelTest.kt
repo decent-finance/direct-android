@@ -16,26 +16,17 @@
 
 package com.cexdirect.lib.check
 
-import android.os.SystemClock
 import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib.MockCoroutineDispatcherProvider
-import com.cexdirect.lib.network.MerchantApi
-import com.cexdirect.lib.network.MerchantService
-import com.cexdirect.lib.network.PaymentApi
-import com.cexdirect.lib.network.PaymentService
-import com.cexdirect.lib.network.models.CountryData
-import com.cexdirect.lib.network.models.PlacementInfo
+import com.cexdirect.lib.DispatcherRule
 import com.cexdirect.lib.terms.TermsActivity
 import com.cexdirect.lib.util.PlacementValidator
 import com.nhaarman.mockitokotlin2.*
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -44,83 +35,36 @@ class CheckActivityViewModelTest {
     @get:Rule
     val activityRule = ActivityTestRule(TermsActivity::class.java, true, false)
 
-    @Mock
-    lateinit var merchantService: MerchantService
+    @get:Rule
+    val dispatcherRule = DispatcherRule()
 
     @Mock
-    lateinit var paymentService: PaymentService
+    lateinit var placementApi: PlacementApi
 
     @Mock
     lateinit var placementValidator: PlacementValidator
-
-    lateinit var ruleIds: RuleIds
 
     lateinit var model: CheckActivityViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        ruleIds = RuleIds()
-        model = CheckActivityViewModel(
-            MerchantApi(merchantService),
-            PaymentApi(paymentService),
-            placementValidator,
-            ruleIds,
-            MockCoroutineDispatcherProvider()
-        )
+        whenever(placementApi.checkResult).thenReturn(mock())
+        model = CheckActivityViewModel(placementApi, placementValidator)
     }
 
     @After
     fun tearDown() {
-        reset(merchantService, paymentService, placementValidator)
-    }
-
-    @Test
-    fun invokeFailForInactivePlacement() {
-        val givenInfo = PlacementInfo("", "", false, emptyList(), listOf("foo", "bar"))
-        val givenRunnable: Runnable = mock()
-
-        model.processPlacementInfo(givenInfo) { givenRunnable.run() }
-
-        verify(givenRunnable).run()
-    }
-
-    @Test
-    fun updateIdsAndLoadCountriesForActivePlacement() {
-        val givenInfo = PlacementInfo("", "", true, emptyList(), listOf("foo", "bar"))
-        val givenRunnable: Runnable = mock()
-
-        model.processPlacementInfo(givenInfo) { givenRunnable.run() }
-
-        verify(givenRunnable, never()).run()
-        assertThat(ruleIds.ids).containsOnly("foo", "bar")
-        @Suppress("DeferredResultUnused")
-        verify(paymentService).getCountriesAsync()
-    }
-
-    @Test
-    fun saveCountriesAndLoadRule() {
-        val givenCountry = CountryData("Belarus", "BY", null)
-        val givenIds = listOf("foo", "bar")
-
-        ruleIds.ids = givenIds
-        model.saveCountriesAndLoadRules(listOf(givenCountry))
-
-        assertThat(Direct.countries).containsOnly(givenCountry)
-        @Suppress("DeferredResultUnused")
-        verify(merchantService).getRuleAsync(eq("foo"))
+        reset(placementApi, placementValidator)
     }
 
     @Test
     fun checkPlacement() {
         Direct.credentials = Credentials("foo", "s3cr3t")
 
-        model.checkPlacement()
-
-        // FIXME : replace with test dispatcher provide
-        SystemClock.sleep(500)
+        model.loadPlacementData()
 
         @Suppress("DeferredResultUnused")
-        verify(merchantService).getPlacementInfoAsync(anyString())
+        verify(placementApi).loadPlacementData(any(), any())
     }
 }

@@ -36,10 +36,10 @@ import com.cexdirect.lib.buy.TradeInputFilter
 import com.cexdirect.lib.databinding.ItemReturnBinding
 import com.cexdirect.lib.network.models.MonetaryData
 import com.cexdirect.lib.network.models.RuleData
+import com.cexdirect.lib.order.OrderStep
+import com.cexdirect.lib.order.StepsPagerAdapter
+import com.cexdirect.lib.order.confirmation.TdsData
 import com.cexdirect.lib.terms.showTerms
-import com.cexdirect.lib.verification.OrderStep
-import com.cexdirect.lib.verification.StepsPagerAdapter
-import com.cexdirect.lib.verification.confirmation._3dsData
 import com.cexdirect.lib.views.SuperDuperViewPager
 import com.google.android.material.textfield.TextInputLayout
 import ru.noties.markwon.Markwon
@@ -106,7 +106,6 @@ fun SuperDuperViewPager.applyAdapter(position: Int, adapter: StepsPagerAdapter, 
     }
 }
 
-
 @BindingAdapter("pic")
 fun ImageView.applyPic(id: Int) {
     val drawable = ResourcesCompat.getDrawable(resources, id, context.theme)
@@ -134,9 +133,11 @@ fun EditText.applyTextWatcher(listener: InverseBindingListener) {
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            // do nothing
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            // do nothing
         }
     })
 }
@@ -151,15 +152,15 @@ fun EditText.setCurrentText(text: String?, filter: TradeInputFilter?) {
 }
 
 @BindingAdapter("_3dsData")
-fun WebView.apply3DsData(_3dsData: _3dsData?) {
-    _3dsData?.takeIf { it.hasData() }
-        ?._3dsExtras
-        ?.apply { this["TermUrl"] = _3dsData.termUrl }
+fun WebView.apply3DsData(tdsData: TdsData?) {
+    tdsData
+        ?.tdsExtras
+        ?.apply { this["TermUrl"] = tdsData.getTermUrl() }
         ?.mapValues { URLEncoder.encode(it.value, "UTF-8") }
         ?.asIterable()
         ?.joinToString("&") { (key, value) -> "$key=$value" }
         ?.toByteArray()
-        ?.let { this.postUrl(_3dsData._3dsUrl, it) }
+        ?.let { this.postUrl(tdsData.tdsUrl, it) }
 }
 
 @BindingAdapter("content")

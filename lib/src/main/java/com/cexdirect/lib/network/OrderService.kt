@@ -17,7 +17,6 @@
 package com.cexdirect.lib.network
 
 import com.cexdirect.lib.network.models.*
-import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -26,41 +25,41 @@ import retrofit2.http.PUT
 interface OrderService {
 
     @PUT("api/v1/orders/new")
-    fun createNewOrder(@Body body: NewOrderBody): Deferred<OrderDataResponse>
+    suspend fun createNewOrder(@Body body: NewOrderBody): OrderDataResponse
 
     @POST("api/v1/orders/send2processing")
-    fun sendToProcessing(@Body body: ProcessingBody): Deferred<ApiResponse<Void>>
+    suspend fun sendToProcessing(@Body body: ProcessingBody): ApiResponse<Void>
 
     @POST("api/v1/orders/check")
-    fun checkCode(@Body body: CheckCodeBody): Deferred<OrderDataResponse>
+    suspend fun checkCode(@Body body: CheckCodeBody): OrderDataResponse
 
     @POST("api/v1/orders/resend-check-code")
-    fun resendCheckCode(@Body body: ResendCheckCodeBody): Deferred<OrderDataResponse>
+    suspend fun resendCheckCode(@Body body: ResendCheckCodeBody): OrderDataResponse
 
     @POST("api/v1/orders/info")
-    fun checkOrderInfo(@Body body: OrderInfoBody): Deferred<OrderInfoResponse>
+    suspend fun checkOrderInfo(@Body body: OrderInfoBody): OrderInfoResponse
 
     @PUT("api/v1/orders/payment")
-    fun sendPaymentData(@Body body: PaymentBody): Deferred<OrderInfoResponse>
+    suspend fun sendPaymentData(@Body body: PaymentBody): OrderInfoResponse
 
     @POST("api/v1/orders/payment")
-    fun updatePaymentData(@Body body: PaymentBody): Deferred<OrderInfoResponse>
+    suspend fun updatePaymentData(@Body body: PaymentBody): OrderInfoResponse
 
     @PUT("api/v1/orders/image")
-    fun uploadImage(@Body body: ImageBody): Deferred<ApiResponse<Void>>
+    suspend fun uploadImage(@Body body: ImageBody): ApiResponse<Void>
 
     @POST("api/v1/orders/crypto/verification")
-    fun getVerificationPublicKey(@Body body: PublicKeyBody): Deferred<PublicKeyResponse>
+    suspend fun getVerificationPublicKey(@Body body: PublicKeyBody): PublicKeyResponse
 
     @POST("api/v1/orders/crypto/processing")
-    fun getProcessingPublicKey(@Body body: PublicKeyBody): Deferred<PublicKeyResponse>
+    suspend fun getProcessingPublicKey(@Body body: PublicKeyBody): PublicKeyResponse
 
     @PUT("api/v1/orders/email")
-    fun changeEmail(@Body body: ChangeEmailBody): Deferred<ChangeEmailResponse>
+    suspend fun changeEmail(@Body body: ChangeEmailBody): ChangeEmailResponse
 
     @POST("api/v1/orders/send2verification")
-    fun sendToVerification(@Body body: VerificationBody): Deferred<ApiResponse<Void>>
+    suspend fun sendToVerification(@Body body: VerificationBody): ApiResponse<Void>
 
     @POST("api/v1/orders/send2processing")
-    fun sendToProcessing(@Body body: VerificationBody): Deferred<ApiResponse<Void>>
+    suspend fun sendToProcessing(@Body body: VerificationBody): ApiResponse<Void>
 }

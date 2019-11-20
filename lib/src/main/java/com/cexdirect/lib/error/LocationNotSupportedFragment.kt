@@ -46,7 +46,7 @@ class LocationNotSupportedFragment : BaseErrorFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        model.informMeEvent.observe(this, Observer {
+        model.informMeEvent.observe(viewLifecycleOwner, Observer {
             if (model.emailStatus == FieldStatus.EMPTY) {
                 toast("Please, enter your e-mail address")
                 return@Observer

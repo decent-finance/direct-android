@@ -16,30 +16,28 @@
 
 package com.cexdirect.lib.network
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.cexdirect.lib.Direct
+import com.cexdirect.lib.network.models.ApiResponse
+import com.google.gson.reflect.TypeToken
+import retrofit2.HttpException
 
 sealed class Resource<out T>
 
 class Loading<T> : Resource<T>()
-class Success<T>(val data: T?) : Resource<T>()
+class Success<T>(val data: T? = null) : Resource<T>()
 class Failure<T>(val code: Int = 0, val message: String = "Unknown Error") : Resource<T>()
 
-fun <X, Y : Resource<Z>, Z> Resource<X>.enqueueWith(
-    successBlock: (resource: Success<X>) -> LiveData<Resource<Z>>,
-    failureBlock: (resource: Failure<X>) -> LiveData<Resource<Z>> = {
-        ErrorEvent<Resource<Z>>().apply { postValue(Failure(it.code, it.message)) }
-    },
-    loadingBlock: (resource: Loading<X>) -> LiveData<Resource<Z>> = {
-        LoadingEvent<Resource<Z>>().apply { postValue(Loading()) }
+fun <T> Throwable.mapFailure(): Failure<T> =
+     if (this is HttpException) {
+        val response = this.response()!!.errorBody()!!.string()
+        try {
+            val type = object : TypeToken<ApiResponse<Void>>() {}.type
+            val body = Direct.directComponent.gson()
+                .fromJson<ApiResponse<Void>>(response, type)
+            Failure<T>(body.code, body.message ?: "Error")
+        } catch (e: Exception) {
+            Failure<T>(0, this.message ?: "Error")
+        }
+    } else {
+        Failure<T>(0, this.message ?: "Error")
     }
-): LiveData<Resource<Z>> {
-    return when (this) {
-        is Success -> successBlock.invoke(this)
-        is Failure -> failureBlock.invoke(this)
-        is Loading -> loadingBlock.invoke(this)
-    }
-}
-
-class LoadingEvent<T> : MutableLiveData<T>()
-class ErrorEvent<T> : MutableLiveData<T>()

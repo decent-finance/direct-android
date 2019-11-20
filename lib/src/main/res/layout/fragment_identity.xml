@@ -21,7 +21,7 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.OrderStep" />
+        <import type="com.cexdirect.lib.order.OrderStep" />
 
         <import type="com.cexdirect.lib.views.CollapsibleLayout.ContentState" />
 
@@ -31,7 +31,7 @@
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+            type="com.cexdirect.lib.order.OrderActivityViewModel" />
     </data>
 
     <LinearLayout

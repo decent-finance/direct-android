@@ -21,7 +21,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseFragment
 import com.cexdirect.lib.Direct
-import com.cexdirect.lib._di.annotation.ErrorActivityFactory
+import com.cexdirect.lib.di.annotation.ErrorActivityFactory
 import javax.inject.Inject
 
 abstract class BaseErrorFragment : BaseFragment() {

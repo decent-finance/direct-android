@@ -2,58 +2,6 @@
 <SmellBaseline>
     <Blacklist></Blacklist>
     <Whitelist>
-        <ID>ChainWrapping:</ID>
-        <ID>ClassNaming:OrderInfoResponse.kt$_3Ds</ID>
-        <ID>ClassNaming:OrderInfoResponse.kt$_3DsExtras : HashMap</ID>
-        <ID>ClassNaming:_3dsData.kt$_3dsData : BaseObservable</ID>
-        <ID>EmptyFunctionBlock:BindingAdapters.kt$&lt;no name provided&gt;${ }</ID>
-        <ID>EmptyFunctionBlock:CexdSocket.kt$CexdSocket.&lt;no name provided&gt;${ }</ID>
-        <ID>EmptyFunctionBlock:DateWatcher.kt$DateWatcher${ }</ID>
-        <ID>FunctionParameterNaming:BindingAdapters.kt$_3dsData: _3dsData?</ID>
-        <ID>MagicNumber:UserCardData.kt$UserCardData$12</ID>
-        <ID>MagicNumber:UserCardData.kt$UserCardData$16</ID>
-        <ID>MagicNumber:UserCardData.kt$UserCardData$3</ID>
-        <ID>MatchingDeclarationName:CustomLiveData.kt$com.cexdirect.lib.CustomLiveData.kt</ID>
-        <ID>MatchingDeclarationName:SymbolMapping.kt$com.cexdirect.lib.util.SymbolMapping.kt</ID>
-        <ID>MatchingDeclarationName:ValidationUtils.kt$com.cexdirect.lib.util.ValidationUtils.kt
-        </ID>
-        <ID>MaxLineLength:BaseActivity.kt$BaseActivity$protected inline</ID>
-        <ID>MaxLineLength:BaseFragment.kt$BaseFragment$protected inline</ID>
-        <ID>MaxLineLength:ExtraFieldsLayout.kt$@BindingAdapter("input", "validation") fun
-            ExtraFieldsLayout.applyInput(input: ObservableArrayMap&lt;String, String&gt;,
-            validation: ObservableArrayMap&lt;String, FieldStatus&gt;)
-        </ID>
-        <ID>MultiLineIfElse:</ID>
-        <ID>NestedBlockDepth:ExtraFieldsLayout.kt$ExtraFieldsLayout$private fun updateLayout()</ID>
-        <ID>NestedBlockDepth:IdentityFragment.kt$IdentityFragment$override fun
-            onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-        </ID>
-        <ID>NoBlankLineBeforeRbrace:</ID>
-        <ID>NoConsecutiveBlankLines:</ID>
-        <ID>PackageName:</ID>
-        <ID>PackageNaming:BuyActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:CheckActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:CoreModule.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:DirectComponent.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:ErrorActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:HeaderInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:IdentityFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:IdentityScope.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:IdentitySubcomponent.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:IdentityVmModule.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:LoggingInterceptor.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:NetworkModule.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:PaymentConfirmationFragmentFactory.kt$package
-            com.cexdirect.lib._di.annotation
-        </ID>
-        <ID>PackageNaming:PhotoSourceDialogFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:ReceiptFragmentFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:SharedStateModule.kt$package com.cexdirect.lib._di</ID>
-        <ID>PackageNaming:TermsActivityFactory.kt$package com.cexdirect.lib._di.annotation</ID>
-        <ID>PackageNaming:VerificationActivityFactory.kt$package com.cexdirect.lib._di.annotation
-        </ID>
-        <ID>PackageNaming:VmModule.kt$package com.cexdirect.lib._di</ID>
-        <ID>ParameterListWrapping:</ID>
-        <ID>SpreadOperator:StringProvider.kt$StringProvider$(id, *args)</ID>
+
     </Whitelist>
 </SmellBaseline>

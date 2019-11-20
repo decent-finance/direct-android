@@ -21,11 +21,11 @@
 
         <import type="android.view.View" />
 
-        <import type="com.cexdirect.lib.verification.OrderStep" />
+        <import type="com.cexdirect.lib.order.OrderStep" />
 
         <variable
             name="model"
-            type="com.cexdirect.lib.verification.VerificationActivityViewModel" />
+            type="com.cexdirect.lib.order.OrderActivityViewModel" />
 
     </data>
 
@@ -69,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 app:additionalFields="@{model.additionalFields}"
                 app:input="@={model.extras}"

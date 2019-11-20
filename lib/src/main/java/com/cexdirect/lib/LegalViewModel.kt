@@ -18,8 +18,7 @@ package com.cexdirect.lib
 
 import com.cexdirect.lib.network.models.RuleData
 
-abstract class LegalViewModel(dispatcherProvider: CoroutineDispatcherProvider) :
-    BaseObservableViewModel(dispatcherProvider) {
+abstract class LegalViewModel : BaseObservableViewModel() {
 
     val rules = Direct.rules
 

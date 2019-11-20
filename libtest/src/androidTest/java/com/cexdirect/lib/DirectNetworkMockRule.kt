@@ -17,11 +17,7 @@
 package com.cexdirect.lib
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.cexdirect.lib._di.CoreModule
-import com.cexdirect.lib._di.DirectComponent
-import com.cexdirect.lib._di.OkHttpClientModule
-import com.cexdirect.lib.di.MockNetworkModule
-import com.cexdirect.lib.di.MockVmModule
+import com.cexdirect.lib.di.*
 import it.cosenonjaviste.daggermock.DaggerMockRule
 
 class DirectNetworkMockRule : DaggerMockRule<DirectComponent>(
@@ -29,7 +25,7 @@ class DirectNetworkMockRule : DaggerMockRule<DirectComponent>(
     CoreModule(InstrumentationRegistry.getInstrumentation().targetContext),
     OkHttpClientModule(),
     MockNetworkModule(),
-    MockVmModule()
+    VmModule()
 ) {
     init {
         set { Direct.directComponent = it }

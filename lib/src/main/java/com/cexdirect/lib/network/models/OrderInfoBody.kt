@@ -19,7 +19,6 @@ package com.cexdirect.lib.network.models
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.util.sha512
 
-
 class OrderInfoBody(credentials: OrderInfoCredentials = OrderInfoCredentials()) :
     BaseBody<OrderInfoCredentials>(data = credentials) {
 

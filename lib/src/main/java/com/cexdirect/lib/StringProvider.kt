@@ -23,5 +23,6 @@ class StringProvider(private val context: Context) {
 
     fun provideString(id: Int): String = context.getString(id)
 
+    @Suppress("SpreadOperator") // intended
     fun provideString(id: Int, vararg args: String): String = context.getString(id, *args)
 }

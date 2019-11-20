@@ -40,11 +40,6 @@
         <attr name="presetRadioCheckedId" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="FooterScrollView">
-        <attr name="anchoredHeight" format="dimension"/>
-        <attr name="anchoredView" format="reference"/>
-    </declare-styleable>
-
     <declare-styleable name="CompleteSectionTitleLayout">
         <attr name="title" format="string"/>
     </declare-styleable>

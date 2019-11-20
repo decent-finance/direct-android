@@ -25,4 +25,3 @@ data class EventData(
     val fiat: MonetaryData?,
     val crypto: MonetaryData?
 )
-

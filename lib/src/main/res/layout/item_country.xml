@@ -66,6 +66,6 @@
 
         <variable
             name="listener"
-            type="com.cexdirect.lib.verification.identity.country.CountryClickListener" />
+            type="com.cexdirect.lib.order.identity.country.CountryClickListener" />
     </data>
 </layout>

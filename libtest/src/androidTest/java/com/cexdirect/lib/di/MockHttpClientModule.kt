@@ -16,7 +16,6 @@
 
 package com.cexdirect.lib.di
 
-import com.cexdirect.lib._di.OkHttpClientModule
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 

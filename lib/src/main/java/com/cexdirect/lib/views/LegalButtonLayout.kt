@@ -86,4 +86,3 @@ fun LegalButtonLayout.applyOnButtonClickListener(rules: Set<RuleData>, event: Le
     this.clickEvent = event
     this.rules = rules
 }
-
