@@ -34,6 +34,7 @@ import com.cexdirect.lib.databinding.ActivityOrderBinding
 import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.order.confirmation.PaymentConfirmationFragment
 import com.cexdirect.lib.order.identity.IdentityFragment
+import com.cexdirect.lib.order.identity.VerificationProgressFragment
 import com.cexdirect.lib.order.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
@@ -99,6 +100,24 @@ class OrderActivity : BaseActivity() {
                 val view = findViewById<View>(it)
                 binding.aoScroll.requestChildFocus(view, view)
             })
+            verificationInProgressEvent.observe(this@OrderActivity, Observer { inProgress ->
+                val orderStep = supportFragmentManager.findFragmentByTag("step")!!
+                if (inProgress) {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .hide(orderStep)
+                        .add(R.id.aoFragmentFrame, VerificationProgressFragment(), "ivs-loader")
+                        .commit()
+                } else {
+                    supportFragmentManager.findFragmentByTag("ivs-loader")?.let {
+                        supportFragmentManager
+                            .beginTransaction()
+                            .remove(it)
+                            .show(orderStep)
+                            .commit()
+                    }
+                }
+            })
         }.let { binding.model = it }
 
         replaceFragment(0)
@@ -108,7 +127,7 @@ class OrderActivity : BaseActivity() {
     fun replaceFragment(position: Int) {
         hideLoader()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.aoFragmentFrame, fragments[position])
+            .replace(R.id.aoFragmentFrame, fragments[position], "step")
             .commit()
     }
 

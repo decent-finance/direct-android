@@ -78,6 +78,7 @@ class OrderActivityViewModel(
     val txIdCopyEvent = StringLiveEvent()
     val txIdOpenEvent = StringLiveEvent()
     val scrollRequestEvent = IntLiveEvent()
+    val verificationInProgressEvent = BooleanLiveEvent()
     // --- Events --- //
 
     val currentStep = ObservableInt(1)

@@ -140,11 +140,16 @@ class IdentityFragment : BaseOrderFragment() {
                 onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
             sendToVerificationRequest.observe(viewLifecycleOwner, requestObserver(
+                onLoading = {
+                    hideKeyboard()
+                    hideLoader()
+                    verificationInProgressEvent.value = true
+                },
                 onOk = {},
                 onFail = {
+                    verificationInProgressEvent.value = false
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
                         userWallet.walletStatus = FieldStatus.INVALID
-                        hideLoader()
                     } else {
                         purchaseFailed(it.message, model.extractAmounts())
                     }
@@ -185,7 +190,7 @@ class IdentityFragment : BaseOrderFragment() {
                         requireContext().paymentRejected(it, model.extractAmounts())
                         finish()
                     },
-                    { hideLoader() },
+                    { /*hideLoader()*/  model.verificationInProgressEvent.value = false  },
                     {
                         // FIXME: A workaround (dirty hack) to request scroll after view is laid out
                         binding.fiExtras.peExtrasTitle.postDelayed(

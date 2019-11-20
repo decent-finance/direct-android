@@ -181,4 +181,6 @@
     <string name="cexd_service_offline_desc">We expect this to be resolved shortly. Payment will be refunded, if your card has been charged.</string>
     <string name="cexd_error_icon">Error icon</string>
     <string name="cexd_back">Back</string>
+    <string name="cexd_please_wait">Please wait…</string>
+    <string name="cexd_checking">We are checking your documents,\ncard data and wallet address</string>
 </resources>

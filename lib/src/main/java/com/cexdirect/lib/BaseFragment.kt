@@ -16,6 +16,8 @@
 
 package com.cexdirect.lib
 
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PROTECTED
 import androidx.fragment.app.Fragment
@@ -60,5 +62,10 @@ abstract class BaseFragment : Fragment() {
                 onFail.invoke(it)
             }
         }
+    }
+
+    protected fun hideKeyboard() {
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(requireView().windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }
