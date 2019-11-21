@@ -16,116 +16,142 @@
 
 package com.cexdirect.lib.buy
 
+import android.os.SystemClock
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.rule.ActivityTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
+import com.cexdirect.lib.network.models.ExchangeRate
+import com.cexdirect.lib.network.models.Precision
 import com.cexdirect.lib.network.models.RuleData
-import com.cexdirect.lib.network.ws.LiveSocket
-import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.stub.StubActivity
-import com.cexdirect.lib.util.MockServerIdlingResource
 import com.cexdirect.lib.util.TEST_PLACEMENT
-import com.cexdirect.lib.util.WaitForActivityResource
 import com.cexdirect.lib.views.PopularValuesView
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.*
-import org.mockito.ArgumentMatchers.anyString
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mock
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CalcActivityTest {
-
-    @get:Rule
-    val activityRule = ActivityTestRule(CalcActivity::class.java, true, false)
 
     @get:Rule
     val mockRule = DirectNetworkMockRule()
 
     @Mock
-    lateinit var messenger: Messenger
+    lateinit var calcApi: CalcApi
 
-    @Mock
-    lateinit var cexdSocket: LiveSocket
+    private lateinit var scenario: ActivityScenario<CalcActivity>
 
-    private val mockServer = MockWebServer()
+    private lateinit var liveData: MutableLiveData<Resource<Pair<List<Precision>, List<ExchangeRate>>>>
 
     @Before
     fun setUp() {
+        Intents.init()
         Direct.credentials = Credentials(TEST_PLACEMENT, "superTopSecret")
         Direct.rules.addAll(
-                hashSetOf(
-                        RuleData("1", "Terms", "Test terms", Date().toGMTString()),
-                        RuleData("2", "Refund", "Test refund policy", Date().toGMTString())
-                )
+            hashSetOf(
+                RuleData("1", "Terms", "Test terms", Date().toGMTString()),
+                RuleData("2", "Refund", "Test refund policy", Date().toGMTString())
+            )
         )
-        whenever(messenger.subscribeToExchangeRates(anyString())).thenReturn(MutableLiveData())
-        Intents.init()
-        mockServer.start(8080)
+        whenever(calcApi.subscribeToExchangeRates()).thenReturn(MutableLiveData())
+        liveData = MutableLiveData()
+        whenever(calcApi.calcData).thenReturn(liveData)
     }
 
     @After
     fun tearDown() {
-        mockServer.shutdown()
         Intents.release()
-        reset(messenger, cexdSocket)
+        reset(calcApi)
     }
 
-    @Ignore
     @Test
-    fun loadData() {
-        mockServer.dispatcher = BuyActivityDispatcher()
-        activityRule.launchActivity(null)
+    fun loadDataWhenLaunched() {
+        scenario = ActivityScenario.launch(CalcActivity::class.java)
 
-        val paths = ArrayList<String>()
-        paths.add(mockServer.takeRequest().path!!)
-        paths.add(mockServer.takeRequest().path!!)
-        paths.add(mockServer.takeRequest().path!!)
+        scenario.moveToState(Lifecycle.State.RESUMED)
 
-        assertThat(paths).hasSize(3)
-
-        assertThat(paths.find { it.endsWith("v1/orders/opened") }).isNotNull()
-        assertThat(paths.find { it.endsWith("v1/merchant/precisions/$TEST_PLACEMENT") }).isNotNull()
-        assertThat(paths.find { it.endsWith("v1/payments/currencies/$TEST_PLACEMENT") }).isNotNull()
+        verify(calcApi).loadCalcData(any())
     }
 
-    @Ignore
     @Test
     fun displayPopularValues() {
-        val activityIdlingRes = WaitForActivityResource(CalcActivity::class.java.name)
-        val mockServerIdlingRes = MockServerIdlingResource(mockServer)
-        IdlingRegistry.getInstance().register(activityIdlingRes, mockServerIdlingRes)
+        scenario = ActivityScenario.launch(CalcActivity::class.java)
 
-        mockServer.dispatcher = BuyActivityDispatcher()
-        activityRule.launchActivity(null)
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        scenario.onActivity {
+            liveData.postValue(givenResource())
+        }
 
-        onView(isAssignableFrom(PopularValuesView::class.java)).perform(scrollTo()).check(matches(isDisplayed()))
+        SystemClock.sleep(500)
+
+        onView(isAssignableFrom(PopularValuesView::class.java)).check(matches(isDisplayed()))
         onView(withText("100 USD")).check(matches(isDisplayed()))
         onView(withText("150 USD")).check(matches(isDisplayed()))
         onView(withText("200 USD")).check(matches(isDisplayed()))
-
-        IdlingRegistry.getInstance().unregister(activityIdlingRes, mockServerIdlingRes)
     }
 
     @Test
     fun showStubScreenOnError() {
-        mockServer.dispatcher = BuyActivityErrorDispatcher()
+        scenario = ActivityScenario.launch(CalcActivity::class.java)
 
-        activityRule.launchActivity(null)
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        scenario.onActivity {
+            liveData.postValue(Failure(500, "Internal server error"))
+        }
 
         intended(hasComponent(StubActivity::class.java.name))
+    }
+
+    private fun givenResource(): Success<Pair<List<Precision>, List<ExchangeRate>>> {
+        val precisions = listOf(
+            Precision(
+                "fiat",
+                "USD",
+                2,
+                2,
+                "trunk",
+                "100",
+                "1000"
+            ),
+            Precision(
+                "crypto",
+                "BTC",
+                8,
+                8,
+                "trunk",
+                "0.01",
+                "0.5"
+            )
+        )
+        val rates = listOf(
+            ExchangeRate(
+                "USD",
+                "BTC",
+                1.0,
+                0.0,
+                1.0,
+                listOf("100", "150", "200"),
+                emptyList()
+            )
+        )
+        return Success(precisions to rates)
     }
 }
