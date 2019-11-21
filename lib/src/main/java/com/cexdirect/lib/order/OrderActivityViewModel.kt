@@ -54,6 +54,7 @@ class OrderActivityViewModel(
     private val scanQrClickEvent = VoidLiveEvent()
     private val returnClickEvent = VoidLiveEvent()
     private val editClickEvent = VoidLiveEvent()
+    private val uploadPhotoEvent = UploadPhotoEvent()
     val nextClick = nextClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val buyMoreClick = buyMoreEvent
@@ -64,10 +65,11 @@ class OrderActivityViewModel(
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val editClick = editClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val uploadPhoto = uploadPhotoEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val stepChangeEvent = VoidLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
     val chooseStateEvent = VoidLiveEvent()
-    val uploadPhotoEvent = UploadPhotoEvent()
     val cvvInfoEvent = VoidLiveEvent()
     val countryClickEvent = CountryClickEvent()
     val countryPickerExitEvent = VoidLiveEvent()

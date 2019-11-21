@@ -104,7 +104,7 @@ class IdentityFragment : BaseOrderFragment() {
             chooseStateEvent.observe(viewLifecycleOwner, Observer {
                 StatePickerDialog().show(requireFragmentManager(), "state")
             })
-            uploadPhotoEvent.observe(viewLifecycleOwner, Observer {
+            uploadPhoto.observe(viewLifecycleOwner, Observer {
                 PhotoSourceDialog().show(requireFragmentManager(), "choose")
             })
             cvvInfoEvent.observe(viewLifecycleOwner, Observer {
