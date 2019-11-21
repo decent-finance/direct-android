@@ -34,7 +34,6 @@ class PlacementApi(private val merchantFlow: MerchantFlow, private val paymentFl
     val checkResult = MutableLiveData<Resource<Boolean>>()
 
     fun loadPlacementData(scope: CoroutineScope, predicate: (info: PlacementInfo) -> Boolean) {
-        checkResult.value = Loading()
         merchantFlow.getPlacementInfo(Direct.credentials.placementId)
             .onStart { checkResult.value = Loading() }
             .map {

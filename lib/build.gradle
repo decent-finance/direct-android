@@ -168,6 +168,9 @@ dependencies {
     testImplementation "org.assertj:assertj-core:$assertjVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'com.jraska.livedata:testing-ktx:1.1.1'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.test:core:$testCoreVersion"
@@ -187,6 +190,11 @@ dependencies {
     kaptAndroidTest "androidx.databinding:databinding-compiler:$databindVersion"
 
     detektPlugins 'io.gitlab.arturbosch.detekt:detekt-formatting:1.1.1'
+}
+
+task copyResDirectoryToClasses(type: Copy, dependsOn: 'assembleDebug') {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/intermediates/classes/test/debug/res"
 }
 
 apply from: 'publish.gradle'
