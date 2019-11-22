@@ -37,10 +37,7 @@ class LocationNotSupportedFragment : BaseErrorFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = DataBindingUtil.inflate<FragmentLocationNotSupportedBinding>(
-        inflater,
-        R.layout.fragment_location_not_supported,
-        container,
-        false
+        inflater, R.layout.fragment_location_not_supported, container, false
     ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

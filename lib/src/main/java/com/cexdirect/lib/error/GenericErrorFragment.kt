@@ -33,10 +33,7 @@ class GenericErrorFragment : BaseErrorFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = DataBindingUtil.inflate<FragmentGenericErrorBinding>(
-        inflater,
-        R.layout.fragment_generic_error,
-        container,
-        false
+        inflater, R.layout.fragment_generic_error, container, false
     ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

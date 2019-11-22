@@ -175,7 +175,7 @@
     <string name="cexd_open_qr_scanner">Open QR scanner</string>
     <string name="cexd_you_have_not_passed">You haven\'t passed verification</string>
     <string name="cexd_verification_rejected_reason">Unfortunately your order hasn\'t passed \nour verification process, \nso it was rejected.</string>
-    <string name="cexd_verification_rejected_desc">Some reasons that can influence rejection:\n\n &#8226; Bad quality of uploaded photo/documents;\n &#8226; Documents are cropped, blurry or masked;\n &#8226; Document front and back sides were switched;\n &#8226; Documents are expired\n\nWe are sorry for the inconvenience.</string>
+    <string name="cexd_verification_rejected_desc">Some reasons that can influence rejection:\n\n&#8226; Bad quality of uploaded photo/documents;\n&#8226; Documents are cropped, blurry or masked;\n&#8226; Document front and back sides were switched;\n&#8226; Documents are expired\n\nWe are sorry for the inconvenience.</string>
     <string name="cexd_service_offline">Service is experiencing technical difficulties</string>
     <string name="cexd_service_offline_desc">We expect this to be resolved shortly. Payment will be refunded, if your card has been charged.</string>
     <string name="cexd_error_icon">Error icon</string>
@@ -186,4 +186,8 @@
     <string name="cexd_selfie_dl">Selfie with Your Driver License</string>
     <string name="cexd_selfie_passport">Selfie with Your Passport</string>
     <string name="cexd_press_back">Tap Back again to exit</string>
+    <string name="cexd_pss_rejected_desc">Some reasons that can influence rejection:\n\n&#8226;Transaction was declined by the card issuing bank\n&#8226;Declined due to insufficient funds\n&#8226;Security failure: CVV2 or 3DS code\n&#8226;Card has expired\n&#8226;Incorrect card details\n&#8226;Declined due to withdrawal limits.</string>
+    <string name="cexd_pss_rejected_reason">Unfortunately, we cannot complete your\npayment, so it was rejected.</string>
+    <string name="cexd_pss_rejected_title">Your payment has been\nrejected</string>
+    <string name="cexd_pss_rejected_sorry">Please check with the issuing bank or try\nusing a different card.\nWe are sorry for the inconvenience.</string>
 </resources>

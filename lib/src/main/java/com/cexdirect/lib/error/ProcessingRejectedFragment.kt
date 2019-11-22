@@ -22,18 +22,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentVerificationRejectedBinding
+import com.cexdirect.lib.databinding.FragmentProcessingRejectedBinding
 
-class VerificationRejectedFragment : BaseErrorFragment() {
+class ProcessingRejectedFragment : BaseErrorFragment() {
 
-    private lateinit var binding: FragmentVerificationRejectedBinding
+    private lateinit var binding: FragmentProcessingRejectedBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentVerificationRejectedBinding>(
-        inflater, R.layout.fragment_verification_rejected, container, false
+    ) = DataBindingUtil.inflate<FragmentProcessingRejectedBinding>(
+        inflater, R.layout.fragment_processing_rejected, container, false
     ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

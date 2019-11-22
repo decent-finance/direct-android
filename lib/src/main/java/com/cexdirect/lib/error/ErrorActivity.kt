@@ -87,6 +87,10 @@ class ErrorActivity : BaseActivity() {
                 .beginTransaction()
                 .replace(binding.aeErrorFrame.id, LocationNotSupportedFragment())
                 .commit()
+            ErrorType.PROCESSING_REJECTED -> supportFragmentManager
+                .beginTransaction()
+                .replace(binding.aeErrorFrame.id, ProcessingRejectedFragment())
+                .commit()
         }
 
         model.clearData()
@@ -101,9 +105,15 @@ fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrder
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
-        OrderStatus.IVS_FAILED -> {
+        OrderStatus.IVS_FAILED, OrderStatus.PSS_FAILED -> {
             Intent(this, ErrorActivity::class.java).apply {
                 putExtra("type", ErrorType.VERIFICATION_ERROR.name)
+                putExtra("info", orderInfo)
+            }.let { startActivity(it) }
+        }
+        OrderStatus.PSS_REJECTED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.PROCESSING_REJECTED.name)
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
@@ -155,5 +165,9 @@ fun Fragment.locationNotSupported(
 }
 
 enum class ErrorType {
-    VERIFICATION_ERROR, NOT_VERIFIED, LOCATION_NOT_SUPPORTED, PURCHASE_FAILED
+    VERIFICATION_ERROR,
+    NOT_VERIFIED,
+    LOCATION_NOT_SUPPORTED,
+    PURCHASE_FAILED,
+    PROCESSING_REJECTED
 }
