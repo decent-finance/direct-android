@@ -125,7 +125,11 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onFail = {
                     if (it.code == COUNTRY_NOT_SUPPORTED) {
-                        locationNotSupported(extractAmounts())
+                        locationNotSupported(
+                            extractAmounts(),
+                            userCountry.selectedCountry.code,
+                            userEmail.email
+                        )
                     } else {
                         purchaseFailed(it.message, extractAmounts())
                     }

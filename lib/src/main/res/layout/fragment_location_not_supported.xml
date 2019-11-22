@@ -19,84 +19,46 @@
     <data>
 
         <variable
-                name="model"
-                type="com.cexdirect.lib.error.ErrorActivityViewModel"/>
+            name="model"
+            type="com.cexdirect.lib.error.ErrorActivityViewModel" />
     </data>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
-                style="@style/Direct.ErrorTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/cexd_location_not_supported"/>
+            style="@style/Direct.ErrorTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/cexd_location_not_supported" />
 
-        <LinearLayout
-                style="@style/Direct.ErrorLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_unsupported_location" />
 
-            <TextView
-                    style="@style/Direct.ErrorText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cexd_sorry3"/>
+        <TextView
+            style="@style/Direct.ErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/cexd_sorry3" />
 
-            <LinearLayout
-                    style="@style/Direct.InputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="40dp">
+        <Button
+            style="@style/Direct.MainButton.Big"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:elevation="8dp"
+            android:onClick="@{() -> model.goBack()}"
+            android:text="@string/cexd_back" />
 
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:contentDescription="@string/cexd_email_icon"
-                        android:src="@drawable/ic_email"/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:clipChildren="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/flnsEmailAddress"
-                            style="@style/Direct.Input2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/cexd_email_address"
-                            android:inputType="textEmailAddress"
-                            android:maxLines="1"
-                            android:text="@={model.userEmail}"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <CheckBox
-                    style="@style/Direct.Checkbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:checked="@={model.emailNotificationChecked}"
-                    android:text="@string/cexd_receive_emails"/>
-
-            <Button
-                    style="@style/Direct.MainButton.Big"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:elevation="8dp"
-                    android:onClick="@{() -> model.informMe()}"
-                    android:text="@string/cexd_inform_me"/>
-
-        </LinearLayout>
     </LinearLayout>
 </layout>

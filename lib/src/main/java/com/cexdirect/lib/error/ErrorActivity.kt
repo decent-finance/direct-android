@@ -64,7 +64,6 @@ class ErrorActivity : BaseActivity() {
 
         model.applyLegalObservers()
 
-        model.userEmail.set(Direct.userEmail)
         model.tryAgainEvent.observe(this, Observer {
             finish()
             startBuyActivity(data = null)
@@ -138,10 +137,16 @@ internal fun Context.showPurchaseFailedScreen(reason: String?, orderInfo: LastKn
     }.let { startActivity(it) }
 }
 
-fun Fragment.locationNotSupported(orderInfo: LastKnownOrderInfo) {
+fun Fragment.locationNotSupported(
+    orderInfo: LastKnownOrderInfo,
+    countryCode: String,
+    email: String
+) {
     Intent(requireContext(), ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
         putExtra("info", orderInfo)
+        putExtra("code", countryCode)
+        putExtra("email", email)
     }.let {
         startActivity(it)
         finish()

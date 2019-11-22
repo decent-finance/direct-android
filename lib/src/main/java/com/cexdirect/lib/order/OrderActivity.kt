@@ -76,6 +76,10 @@ class OrderActivity : BaseActivity() {
                     it.getStringExtra("fiat"),
                     it.getStringExtra("fiatAmount")
                 )
+                userEmail.email = it.getStringExtra("email") ?: ""
+                val countryCode = it.getStringExtra("countryCode")
+                Direct.countries.find { it.code == countryCode }
+                    ?.let { userCountry.selectedCountry = it }
             }
             applyLegalObservers()
             stepChangeEvent.observe(this@OrderActivity, Observer {

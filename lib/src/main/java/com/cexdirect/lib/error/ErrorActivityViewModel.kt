@@ -16,42 +16,32 @@
 
 package com.cexdirect.lib.error
 
-import androidx.databinding.Observable
-import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.AmountViewModel
+import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.VoidLiveEvent
 import com.cexdirect.lib.network.ws.Messenger
-import com.cexdirect.lib.util.FieldStatus
-import com.cexdirect.lib.util.checkEmailStatus
+import com.cexdirect.livedatax.throttleFirst
+import java.util.concurrent.TimeUnit
 
 class ErrorActivityViewModel(private val messenger: Messenger) : AmountViewModel() {
 
-    var emailStatus = FieldStatus.EMPTY
-        private set
-
     val reason = ObservableField("")
-    val userEmail = ObservableField("").apply {
-        addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                emailStatus = checkEmailStatus(get())
-            }
-        })
-    }
-    val emailNotificationChecked = ObservableBoolean(false)
 
     val tryAgainEvent = VoidLiveEvent()
-    val informMeEvent = VoidLiveEvent()
+    private val goBackEvent = VoidLiveEvent()
+    val goBack = goBackEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
 
     fun tryAgain() {
         tryAgainEvent.call()
     }
 
-    fun informMe() {
-        informMeEvent.call()
+    fun goBack() {
+        goBackEvent.call()
     }
 
     fun stopSubscriptions() {

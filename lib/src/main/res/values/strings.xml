@@ -37,7 +37,7 @@
     <string name="cexd_verification_error">Verification Error</string>
     <string name="cexd_not_charged">No money has been charged from your card</string>
     <string name="cexd_location_not_supported">Location Not Supported</string>
-    <string name="cexd_sorry3">We are sorry, but we cannot process transactions from your country at this time. We aim for global coverage! We will let you know when our service is available at your location</string>
+    <string name="cexd_sorry3">We are sorry, but we cannot process\ntransactions from your country at this time.\nWe aim for global coverage!</string>
     <string name="cexd_receive_emails">I agree to receive notification email</string>
     <string name="cexd_inform_me">Inform Me!</string>
     <string name="cexd_email_address">Email Address</string>
@@ -180,4 +180,5 @@
     <string name="cexd_service_offline">Service is experiencing technical difficulties</string>
     <string name="cexd_service_offline_desc">We expect this to be resolved shortly. Payment will be refunded, if your card has been charged.</string>
     <string name="cexd_error_icon">Error icon</string>
+    <string name="cexd_back">Back</string>
 </resources>
