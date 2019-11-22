@@ -33,7 +33,7 @@ class AnalyticsFlow(private val service: AnalyticsService) {
         flow {
             val eventData =
                 EventData(fiat = MonetaryData("0", "USD"), crypto = MonetaryData("0", "BTC"))
-            emit(service.sendNewOrderEvent(DefaultEvent(eventData)))
+            emit(service.sendOpenEvent(DefaultEvent(eventData)))
         }.flowOn(DispatcherRegistry.io)
 
     fun sendBuyEvent(data: EventData) =

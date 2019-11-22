@@ -1,0 +1,62 @@
+{
+  "code": 200,
+  "nonce": 1574436310802,
+  "data": {
+    "precisions": [
+      {
+        "currency": "BCH",
+        "type": "crypto",
+        "visiblePrecision": 4,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 8,
+        "minLimit": "0.01",
+        "maxLimit": "0"
+      },
+      {
+        "currency": "BTC",
+        "type": "crypto",
+        "visiblePrecision": 4,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 8,
+        "minLimit": "0.002",
+        "maxLimit": "0"
+      },
+      {
+        "currency": "ETH",
+        "type": "crypto",
+        "visiblePrecision": 6,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 6,
+        "minLimit": "0.01",
+        "maxLimit": "0"
+      },
+      {
+        "currency": "EUR",
+        "type": "fiat",
+        "visiblePrecision": 2,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 2,
+        "minLimit": "50",
+        "maxLimit": "1000"
+      },
+      {
+        "currency": "TRX",
+        "type": "crypto",
+        "visiblePrecision": 0,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 6,
+        "minLimit": "11",
+        "maxLimit": "0"
+      },
+      {
+        "currency": "USD",
+        "type": "fiat",
+        "visiblePrecision": 2,
+        "visibleRoundRule": "trunk",
+        "currencyPrecision": 2,
+        "minLimit": "50",
+        "maxLimit": "1000"
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,18 +14,11 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.network
+package com.cexdirect.lib
 
-import com.cexdirect.lib.network.models.ApiResponse
-import com.cexdirect.lib.network.models.DefaultEvent
-import retrofit2.http.Body
-import retrofit2.http.PUT
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-interface AnalyticsService {
-
-    @PUT("api/v1/orders/buy")
-    suspend fun sendBuyEvent(@Body body: DefaultEvent): ApiResponse<Void>
-
-    @PUT("api/v1/orders/opened")
-    suspend fun sendOpenEvent(@Body body: DefaultEvent): ApiResponse<Void>
+inline fun <reified T> Gson.fromString(json: String): T {
+    return this.fromJson(json, object: TypeToken<T>(){}.type)
 }
