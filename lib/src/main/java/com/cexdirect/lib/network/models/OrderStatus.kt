@@ -16,21 +16,25 @@
 
 package com.cexdirect.lib.network.models
 
-enum class OrderStatus(val raw: String) {
-    INCOMPLETE("uncomplited"),
-    IVS_READY("ivs-ready"),
-    IVS_PENDING("ivs-pending"),
-    IVS_SUCCESS("ivs-success"),
-    IVS_FAILED("ivs-failed"),
-    IVS_REJECTED("ivs-rejected"),
-    PSS_WAITDATA("pss-waitdata"),
-    PSS_READY("pss-ready"),
-    PSS_PENDING("pss-pending"),
-    PSS_3DS_REQUIRED("pss-3ds-required"),
-    PSS_3DS_PENDING("pss-3ds-pending"),
-    PSS_SUCCESS("pss-success"),
-    WAITING_FOR_CONFIRMATION("waiting-for-confirmation"),
-    COMPLETE("completed"),
-    FINISHED("finished"),
-    REJECTED("rejected")
+enum class OrderStatus(val raws: List<String>) {
+    INCOMPLETE(listOf("uncomplited", "new")),
+    IVS_READY(listOf("ivs-ready", "verification-ready")),
+    IVS_PENDING(listOf("ivs-pending", "verification-in-progress")),
+    IVS_SUCCESS(listOf("ivs-success", "verification-success")),
+    IVS_FAILED(listOf("ivs-failed", "verification-failed")),
+    IVS_REJECTED(listOf("ivs-rejected", "verification-failed")),
+    PSS_WAITDATA(listOf("pss-waitdata", "processing-acknowledge")),
+    PSS_READY(listOf("pss-ready", "processing-ready")),
+    PSS_PENDING(listOf("pss-pending", "processing-in-progress")),
+    PSS_3DS_REQUIRED(listOf("pss-3ds-required", "processing-3ds")),
+    PSS_3DS_PENDING(listOf("pss-3ds-pending", "processing-3ds-pending")),
+    PSS_FAILED(listOf("processing-failed")),
+    PSS_REJECTED(listOf("processing-rejected")),
+    PSS_SUCCESS(listOf("pss-success", "processing-success")),
+    REFUND_PENDING(listOf("refund-in-progress")),
+    REFUNDED(listOf("refunded")),
+    WAITING_FOR_CONFIRMATION(listOf("waiting-for-confirmation", "email-confirmation")),
+    COMPLETE(listOf("completed", "crypto-sending")),
+    FINISHED(listOf("finished", "crypto-sent")),
+    REJECTED(listOf("rejected", "crashed"))
 }
