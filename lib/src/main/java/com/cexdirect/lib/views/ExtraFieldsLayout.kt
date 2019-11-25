@@ -53,7 +53,7 @@ class ExtraFieldsLayout @JvmOverloads constructor(
     @Suppress("NestedBlockDepth")
     private fun updateLayout() {
         val inflater = LayoutInflater.from(context)
-        if (additional["userResidentialCountry"]?.value == "UK") {
+        if (additional["userResidentialCountry"]?.value == "GB") {
             fieldRules["userResidentialPostcode"] = ExtraFieldRule(
                 InputType.TYPE_CLASS_TEXT,
                 null,
