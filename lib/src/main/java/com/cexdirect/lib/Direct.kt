@@ -27,6 +27,7 @@ import com.cexdirect.lib.di.DaggerDirectComponent
 import com.cexdirect.lib.di.DirectComponent
 import com.cexdirect.lib.di.IdentitySubcomponent
 import com.cexdirect.lib.network.models.CountryData
+import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.models.RuleData
 import java.util.*
 import kotlin.collections.HashSet
@@ -43,6 +44,8 @@ object Direct {
 
     var countries: List<CountryData> = emptyList()
     val rules = HashSet<RuleData>()
+
+    private var orderStatusCallback: OrderStatusCallback? = null
 
     var identitySubcomponent: IdentitySubcomponent? = null
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) get() {
@@ -85,6 +88,15 @@ object Direct {
     fun clear() {
         pendingOrderId = ""
         userEmail = ""
+    }
+
+    fun registerOrderStatusCallback(callback: OrderStatusCallback) {
+        orderStatusCallback = callback
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun notifyOrderStatusChanged(orderStatus: OrderStatus, orderId: String?) {
+        orderStatusCallback?.onOrderStatusChanged(orderStatus, orderId)
     }
 
     fun startDirect() {

@@ -307,6 +307,7 @@ class OrderActivityViewModel(
     }
 
     fun setPaymentBase() {
+        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, orderId.get())
         orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)

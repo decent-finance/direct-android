@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.order
 
+import com.cexdirect.lib.Direct
 import com.cexdirect.lib.network.models.OrderStatus
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -35,6 +36,7 @@ class StatusWatcher(initial: OrderStatus = OrderStatus.INCOMPLETE) {
 
             currentStatus.set(newStatus)
             updateAction.invoke()
+            Direct.notifyOrderStatusChanged(newStatus, Direct.pendingOrderId)
         }
     }
 
