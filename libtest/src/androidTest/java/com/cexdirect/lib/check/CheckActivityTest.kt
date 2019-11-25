@@ -17,7 +17,6 @@
 package com.cexdirect.lib.check
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
@@ -25,6 +24,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
+import com.cexdirect.lib.SingleLiveEvent
 import com.cexdirect.lib.buy.CalcActivity
 import com.cexdirect.lib.network.Failure
 import com.cexdirect.lib.network.Resource
@@ -52,7 +52,7 @@ class CheckActivityTest {
 
     private lateinit var scenario: ActivityScenario<CheckActivity>
 
-    private lateinit var liveData: MutableLiveData<Resource<Boolean>>
+    private lateinit var liveData: SingleLiveEvent<Resource<Boolean>>
 
     companion object {
 
@@ -67,7 +67,7 @@ class CheckActivityTest {
     fun setUp() {
         Intents.init()
         whenever(validator.isPlacementUriAllowed(any())).thenReturn(true)
-        liveData = MutableLiveData()
+        liveData = SingleLiveEvent()
         whenever(placementApi.checkResult).thenReturn(liveData)
     }
 
