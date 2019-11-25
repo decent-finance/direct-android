@@ -81,6 +81,11 @@ class OrderActivity : BaseActivity() {
                 val countryCode = it.getStringExtra("countryCode")
                 Direct.countries.find { it.code == countryCode }
                     ?.let { userCountry.selectedCountry = it }
+                val stateCode = it.getStringExtra("stateCode")
+                Direct.countries.find { !it.states.isNullOrEmpty() }
+                    ?.states
+                    ?.find { it.code == stateCode }
+                    ?.let { userCountry.selectedState = it }
             }
             applyLegalObservers()
             stepChangeEvent.observe(this@OrderActivity, Observer {

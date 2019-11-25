@@ -128,6 +128,7 @@ class IdentityFragment : BaseOrderFragment() {
                         locationNotSupported(
                             extractAmounts(),
                             userCountry.selectedCountry.code,
+                            userCountry.selectedState.code,
                             userEmail.email
                         )
                     } else {

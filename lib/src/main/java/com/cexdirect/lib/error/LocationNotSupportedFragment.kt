@@ -50,6 +50,7 @@ class LocationNotSupportedFragment : BaseErrorFragment() {
                 val intent = requireActivity().intent
                 putExtra("email", intent.getStringExtra("email"))
                 putExtra("countryCode", intent.getStringExtra("code"))
+                putExtra("stateCode", intent.getStringExtra("state"))
                 model.extractAmounts().let {
                     putExtra("cryptoAmount", it.cryptoAmount)
                     putExtra("crypto", it.cryptoCurrency)

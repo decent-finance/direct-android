@@ -140,12 +140,14 @@ internal fun Context.showPurchaseFailedScreen(reason: String?, orderInfo: LastKn
 fun Fragment.locationNotSupported(
     orderInfo: LastKnownOrderInfo,
     countryCode: String,
+    stateCode: String,
     email: String
 ) {
     Intent(requireContext(), ErrorActivity::class.java).apply {
         putExtra("type", ErrorType.LOCATION_NOT_SUPPORTED.name)
         putExtra("info", orderInfo)
         putExtra("code", countryCode)
+        putExtra("state", stateCode)
         putExtra("email", email)
     }.let {
         startActivity(it)
