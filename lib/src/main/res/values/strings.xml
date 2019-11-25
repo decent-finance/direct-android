@@ -86,7 +86,6 @@
     <string name="cexd_card_number">Card Number</string>
     <string name="cexd_card_icon">Card icon</string>
     <string name="cexd_enter_your_payment_card">Enter Your Payment Card</string>
-    <string name="cexd_selfie_with_your_payment_card">Selfie with Your Payment Card</string>
     <string name="cexd_upload_photo">Upload photo</string>
     <string name="cexd_choose_document_type">Choose Document Type</string>
     <string name="cexd_invalid_email">Please enter a valid email</string>
@@ -183,4 +182,7 @@
     <string name="cexd_back">Back</string>
     <string name="cexd_please_wait">Please wait…</string>
     <string name="cexd_checking">We are checking your documents,\ncard data and wallet address</string>
+    <string name="cexd_selfie_id">Selfie with Your ID Card</string>
+    <string name="cexd_selfie_dl">Selfie with Your Driver License</string>
+    <string name="cexd_selfie_passport">Selfie with Your Passport</string>
 </resources>

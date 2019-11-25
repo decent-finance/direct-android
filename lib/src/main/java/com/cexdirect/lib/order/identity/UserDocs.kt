@@ -71,6 +71,13 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
         }
 
     @get:Bindable
+    var selfieLabel = stringProvider.provideString(R.string.cexd_selfie_id)
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.selfieLabel)
+        }
+
+    @get:Bindable
     var shouldSendPhoto = false
         set(value) {
             field = value
@@ -179,6 +186,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                                 documentImageBack = R.drawable.ic_pic_id_back
                                 documentTypeText =
                                     stringProvider.provideString(R.string.cexd_take_pic_id)
+                                selfieLabel = stringProvider.provideString(R.string.cexd_selfie_id)
                             }
                             R.id.fiPassport -> {
                                 documentTypeSelected = true
@@ -186,6 +194,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                                 documentImage = R.drawable.ic_pic_passport
                                 documentTypeText =
                                     stringProvider.provideString(R.string.cexd_take_pic_passport)
+                                selfieLabel = stringProvider.provideString(R.string.cexd_selfie_passport)
                             }
                             R.id.fiDriversLicence -> {
                                 documentTypeSelected = true
@@ -194,6 +203,7 @@ class UserDocs(private val stringProvider: StringProvider) : BaseObservable() {
                                 documentImageBack = R.drawable.ic_pic_license_back
                                 documentTypeText =
                                     stringProvider.provideString(R.string.cexd_take_pic_licence)
+                                selfieLabel = stringProvider.provideString(R.string.cexd_selfie_dl)
                             }
                             else -> error("Illegal doc type")
                         }
