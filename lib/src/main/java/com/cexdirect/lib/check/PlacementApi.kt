@@ -16,9 +16,9 @@
 
 package com.cexdirect.lib.check
 
-import androidx.lifecycle.MutableLiveData
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.OpenForTesting
+import com.cexdirect.lib.SingleLiveEvent
 import com.cexdirect.lib.network.*
 import com.cexdirect.lib.network.models.PlacementInfo
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.*
 @OpenForTesting
 class PlacementApi(private val merchantFlow: MerchantFlow, private val paymentFlow: PaymentFlow) {
 
-    val checkResult = MutableLiveData<Resource<Boolean>>()
+    val checkResult = SingleLiveEvent<Resource<Boolean>>()
 
     fun loadPlacementData(scope: CoroutineScope, predicate: (info: PlacementInfo) -> Boolean) {
         merchantFlow.getPlacementInfo(Direct.credentials.placementId)

@@ -16,9 +16,11 @@
 
 package com.cexdirect.lib.check
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.BaseObservableViewModel
+import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.util.PlacementValidator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -30,7 +32,7 @@ class CheckActivityViewModel(
     private val placementValidator: PlacementValidator
 ) : BaseObservableViewModel() {
 
-    val result = placementApi.checkResult
+    val result: LiveData<Resource<Boolean>> = placementApi.checkResult
 
     fun loadPlacementData() {
         placementApi.loadPlacementData(this) {
