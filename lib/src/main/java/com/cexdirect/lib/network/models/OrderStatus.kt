@@ -36,5 +36,6 @@ enum class OrderStatus(val raws: List<String>) {
     WAITING_FOR_CONFIRMATION(listOf("waiting-for-confirmation", "email-confirmation")),
     COMPLETE(listOf("completed", "crypto-sending")),
     FINISHED(listOf("finished", "crypto-sent")),
-    REJECTED(listOf("rejected", "crashed"))
+    REJECTED(listOf("rejected")),
+    CRASHED(listOf("crashed"))
 }
