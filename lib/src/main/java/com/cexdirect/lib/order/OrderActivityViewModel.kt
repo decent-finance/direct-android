@@ -227,7 +227,7 @@ class OrderActivityViewModel(
                 NewOrderData(
                     userEmail.email,
                     userCountry.selectedCountry.code,
-                    userCountry.selectedState.code.ifBlank { null },
+                    userCountry.getStateCode(),
                     MonetaryData(
                         orderAmounts.selectedFiatAmount,
                         orderAmounts.selectedFiatCurrency
