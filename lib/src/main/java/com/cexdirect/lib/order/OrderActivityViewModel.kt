@@ -429,6 +429,9 @@ class OrderActivityViewModel(
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
                 rejectAction.invoke(OrderStatus.REJECTED)
             }
+            OrderStatus.CRASHED -> statusWatcher.updateAndDo(OrderStatus.CRASHED) {
+                rejectAction.invoke(OrderStatus.CRASHED)
+            }
             OrderStatus.IVS_FAILED -> statusWatcher.updateAndDo(OrderStatus.IVS_FAILED) {
                 rejectAction.invoke(OrderStatus.IVS_FAILED)
             }
@@ -555,7 +558,7 @@ class OrderActivityViewModel(
         data: OrderInfoData,
         showLoaderAction: () -> Unit,
         hideLoaderAction: () -> Unit,
-        rejectAction: () -> Unit
+        rejectAction: (status: OrderStatus) -> Unit
     ) {
         when (data.orderStatus) {
             OrderStatus.PSS_3DS_REQUIRED -> statusWatcher.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
@@ -574,7 +577,11 @@ class OrderActivityViewModel(
             }
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
                 hideLoaderAction.invoke()
-                rejectAction.invoke()
+                rejectAction.invoke(OrderStatus.REJECTED)
+            }
+            OrderStatus.CRASHED -> statusWatcher.updateAndDo(OrderStatus.CRASHED) {
+                hideLoaderAction.invoke()
+                rejectAction.invoke(OrderStatus.CRASHED)
             }
             else -> { /* do nothing */
             }

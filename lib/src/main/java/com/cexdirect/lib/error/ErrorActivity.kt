@@ -105,7 +105,7 @@ fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrder
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
-        OrderStatus.IVS_FAILED, OrderStatus.PSS_FAILED -> {
+        OrderStatus.IVS_FAILED, OrderStatus.PSS_FAILED, OrderStatus.CRASHED -> {
             Intent(this, ErrorActivity::class.java).apply {
                 putExtra("type", ErrorType.VERIFICATION_ERROR.name)
                 putExtra("info", orderInfo)
