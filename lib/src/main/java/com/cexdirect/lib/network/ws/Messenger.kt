@@ -20,6 +20,7 @@ import androidx.lifecycle.LiveData
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.OrderInfoBody
 import com.cexdirect.lib.network.models.OrderInfoData
@@ -28,28 +29,37 @@ import com.cexdirect.livedatax.map
 import com.google.gson.Gson
 
 @OpenForTesting
-class Messenger(private val cexdSocket: LiveSocket, private val gson: Gson) {
+class Messenger(private val socket: LiveSocket, private val gson: Gson) {
 
     fun subscribeToOrderInfo(): LiveData<Resource<OrderInfoData>> =
-        cexdSocket.run {
+        socket.run {
             sendMessage { OrderInfoSubscription(OrderInfoBody(), "orderInfo") }
             parsedMessage
                 .filter { it.first == "orderInfo" }
                 .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
                 .map { mapResponse(it) }
+                .filter {
+                    if (it is Success) {
+                        it.data!!.orderId == Direct.pendingOrderId
+                    } else {
+                        true
+                    }
+                }
         }
 
     fun removeOrderInfoSubscription() {
-        cexdSocket.sendMessage(false) {
-            UnsubscribeMessage(data = UnsubscribeData(event = UnsubscribeType.ORDER_INFO.raw))
+        if (socket.hasSubscription("orderInfo")) {
+            socket.sendMessage(false) {
+                UnsubscribeMessage(data = UnsubscribeData(event = UnsubscribeType.ORDER_INFO.raw))
+            }
+            socket.removeSubscriptionByKey("orderInfo")
         }
-        cexdSocket.removeSubscriptionByKey("orderInfo")
     }
 
     fun subscribeToExchangeRates(
         placementId: String = Direct.credentials.placementId
     ): LiveData<Resource<List<ExchangeRate>>> =
-        cexdSocket.run {
+        socket.run {
             sendMessage { ExchangeRatesSubscription(placementId, "currencies") }
             parsedMessage
                 .filter { it.first == "currencies" }
@@ -58,14 +68,9 @@ class Messenger(private val cexdSocket: LiveSocket, private val gson: Gson) {
         }
 
     fun removeExchangesSubscription() {
-        cexdSocket.sendMessage(false) {
+        socket.sendMessage(false) {
             UnsubscribeMessage(data = UnsubscribeData(event = UnsubscribeType.CURRENCIES.raw))
         }
-        cexdSocket.removeSubscriptionByKey("currencies")
-    }
-
-    fun clear() {
-        cexdSocket.stop()
-        cexdSocket.removeAllSubscriptions()
+        socket.removeSubscriptionByKey("currencies")
     }
 }

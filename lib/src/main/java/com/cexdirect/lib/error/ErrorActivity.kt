@@ -90,7 +90,7 @@ class ErrorActivity : BaseActivity() {
                 .commit()
         }
 
-        model.stopSubscriptions()
+        model.clearData()
     }
 }
 

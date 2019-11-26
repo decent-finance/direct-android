@@ -280,10 +280,6 @@ class OrderActivityViewModel(
 
     fun subscribeToOrderInfo() = api.subscribeToOrderInfo()
 
-    fun stopSubscriptions() {
-        api.clear()
-    }
-
     fun toggleLocationEmail() {
         when (locationEmailContentState.get()) {
             CollapsibleLayout.ContentState.COLLAPSED -> locationEmailContentState.set(
@@ -612,11 +608,15 @@ class OrderActivityViewModel(
             OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
-                api.removeOrderInfoSubscription()
+                unsubscribe()
             }
             else -> { // do nothing
             }
         }
+    }
+
+    private fun unsubscribe() {
+        api.removeOrderInfoSubscription()
     }
 
     fun copyTxId(txId: String) {
@@ -635,6 +635,11 @@ class OrderActivityViewModel(
 
     fun requestScrollTo(coordinate: Int) {
         scrollRequestEvent.postValue(coordinate)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        unsubscribe()
     }
 
     class Factory(

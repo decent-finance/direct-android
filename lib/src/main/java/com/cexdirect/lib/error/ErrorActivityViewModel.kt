@@ -44,8 +44,7 @@ class ErrorActivityViewModel(private val messenger: Messenger) : AmountViewModel
         goBackEvent.call()
     }
 
-    fun stopSubscriptions() {
-        messenger.clear()
+    fun clearData() {
         Direct.clear()
     }
 
