@@ -185,4 +185,5 @@
     <string name="cexd_selfie_id">Selfie with Your ID Card</string>
     <string name="cexd_selfie_dl">Selfie with Your Driver License</string>
     <string name="cexd_selfie_passport">Selfie with Your Passport</string>
+    <string name="cexd_press_back">Tap Back again to exit</string>
 </resources>

@@ -25,7 +25,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.BaseActivity
+import com.cexdirect.lib.ConfirmExitActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.AmountData
@@ -39,7 +39,7 @@ import com.cexdirect.lib.order.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
-class OrderActivity : BaseActivity() {
+class OrderActivity : ConfirmExitActivity() {
 
     @field:[Inject VerificationActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
