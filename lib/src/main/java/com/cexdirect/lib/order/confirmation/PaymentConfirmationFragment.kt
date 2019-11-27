@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.Direct
@@ -113,6 +114,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
     private fun setup3dsWebView() {
         binding.fpc3ds.apply {
             webViewClient = this@PaymentConfirmationFragment.webViewClient
+            webChromeClient = WebChromeClient()
             settings.apply {
                 javaScriptEnabled = true
                 loadWithOverviewMode = true

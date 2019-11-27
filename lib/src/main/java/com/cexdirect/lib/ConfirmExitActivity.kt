@@ -14,12 +14,28 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.buy
+package com.cexdirect.lib
 
-import com.cexdirect.lib.BaseDispatcher
-import okhttp3.mockwebserver.RecordedRequest
+import android.os.Handler
+import com.mcxiaoke.koi.ext.toast
+import java.util.concurrent.atomic.AtomicBoolean
 
-class BuyActivityErrorDispatcher : BaseDispatcher() {
+abstract class ConfirmExitActivity : BaseActivity() {
 
-    override fun dispatch(request: RecordedRequest) = makeErrorResponse()
+    private val canExit = AtomicBoolean(false)
+
+    private val handler = Handler()
+
+    override fun onBackPressed() {
+        if (canExit.compareAndSet(false, true)) {
+            toast(getString(R.string.cexd_press_back))
+            handler.postDelayed({ canExit.set(false) }, RESET_DELAY)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    companion object {
+        private const val RESET_DELAY = 2500L
+    }
 }

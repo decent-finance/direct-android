@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package com.cexdirect.lib
 
-import okhttp3.mockwebserver.RecordedRequest
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class ErrorDispatcher : BaseDispatcher() {
-
-    override fun dispatch(request: RecordedRequest) = makeErrorResponse()
+inline fun <reified T> Gson.fromString(json: String): T {
+    return this.fromJson(json, object: TypeToken<T>(){}.type)
 }

@@ -1,0 +1,26 @@
+{
+  "code": 200,
+  "nonce": 1574345941612,
+  "data": {
+    "merchantId": "none",
+    "placementId": "test-1",
+    "activityStatus": false,
+    "placementUris": [
+      "android://com.cexdirect.sample.dev"
+    ],
+    "rulesIds": [
+      "13a1fcc7-624e-432b-baf8-4e429db90421",
+      "152bc3ae-43de-4b20-964c-724033260541"
+    ],
+    "rules": [
+      {
+        "ruleId": "13a1fcc7-624e-432b-baf8-4e429db90421",
+        "ruleName": "REFUND POLICY DEV"
+      },
+      {
+        "ruleId": "152bc3ae-43de-4b20-964c-724033260541",
+        "ruleName": "TERMS OF USE"
+      }
+    ]
+  }
+}

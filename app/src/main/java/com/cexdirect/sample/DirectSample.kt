@@ -18,8 +18,11 @@ package com.cexdirect.sample
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
+import com.cexdirect.lib.OrderStatusCallback
+import com.cexdirect.lib.network.models.OrderStatus
 
 @SuppressLint("Registered")
 @Suppress("unused")
@@ -28,5 +31,10 @@ open class DirectSample : Application() {
     override fun onCreate() {
         super.onCreate()
         Direct.credentials = Credentials(BuildConfig.PLACEMENT_ID, BuildConfig.SECRET)
+        Direct.registerOrderStatusCallback(object : OrderStatusCallback {
+            override fun onOrderStatusChanged(newStatus: OrderStatus, orderId: String?) {
+                Log.w("ORDER", "${newStatus.name} $orderId")
+            }
+        })
     }
 }

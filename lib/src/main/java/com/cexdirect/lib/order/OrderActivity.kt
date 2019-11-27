@@ -25,7 +25,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.BaseActivity
+import com.cexdirect.lib.ConfirmExitActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.buy.AmountData
@@ -34,11 +34,12 @@ import com.cexdirect.lib.databinding.ActivityOrderBinding
 import com.cexdirect.lib.di.annotation.VerificationActivityFactory
 import com.cexdirect.lib.order.confirmation.PaymentConfirmationFragment
 import com.cexdirect.lib.order.identity.IdentityFragment
+import com.cexdirect.lib.order.identity.VerificationProgressFragment
 import com.cexdirect.lib.order.receipt.ReceiptFragment
 import com.mcxiaoke.koi.ext.toast
 import javax.inject.Inject
 
-class OrderActivity : BaseActivity() {
+class OrderActivity : ConfirmExitActivity() {
 
     @field:[Inject VerificationActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory
@@ -76,6 +77,15 @@ class OrderActivity : BaseActivity() {
                     it.getStringExtra("fiat"),
                     it.getStringExtra("fiatAmount")
                 )
+                userEmail.email = it.getStringExtra("email") ?: ""
+                val countryCode = it.getStringExtra("countryCode")
+                Direct.countries.find { it.code == countryCode }
+                    ?.let { userCountry.selectedCountry = it }
+                val stateCode = it.getStringExtra("stateCode")
+                Direct.countries.find { !it.states.isNullOrEmpty() }
+                    ?.states
+                    ?.find { it.code == stateCode }
+                    ?.let { userCountry.selectedState = it }
             }
             applyLegalObservers()
             stepChangeEvent.observe(this@OrderActivity, Observer {
@@ -95,6 +105,24 @@ class OrderActivity : BaseActivity() {
                 val view = findViewById<View>(it)
                 binding.aoScroll.requestChildFocus(view, view)
             })
+            verificationInProgressEvent.observe(this@OrderActivity, Observer { inProgress ->
+                val orderStep = supportFragmentManager.findFragmentByTag("step")!!
+                if (inProgress) {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .hide(orderStep)
+                        .add(R.id.aoFragmentFrame, VerificationProgressFragment(), "ivs-loader")
+                        .commit()
+                } else {
+                    supportFragmentManager.findFragmentByTag("ivs-loader")?.let {
+                        supportFragmentManager
+                            .beginTransaction()
+                            .remove(it)
+                            .show(orderStep)
+                            .commit()
+                    }
+                }
+            })
         }.let { binding.model = it }
 
         replaceFragment(0)
@@ -104,7 +132,7 @@ class OrderActivity : BaseActivity() {
     fun replaceFragment(position: Int) {
         hideLoader()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.aoFragmentFrame, fragments[position])
+            .replace(R.id.aoFragmentFrame, fragments[position], "step")
             .commit()
     }
 

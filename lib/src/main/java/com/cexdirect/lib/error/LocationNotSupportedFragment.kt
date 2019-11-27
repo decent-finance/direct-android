@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.error
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,9 +25,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentLocationNotSupportedBinding
-import com.cexdirect.lib.util.FieldStatus
+import com.cexdirect.lib.order.OrderActivity
 import com.mcxiaoke.koi.ext.finish
-import com.mcxiaoke.koi.ext.toast
 
 class LocationNotSupportedFragment : BaseErrorFragment() {
 
@@ -45,23 +45,21 @@ class LocationNotSupportedFragment : BaseErrorFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        model.informMeEvent.observe(viewLifecycleOwner, Observer {
-            if (model.emailStatus == FieldStatus.EMPTY) {
-                toast("Please, enter your e-mail address")
-                return@Observer
-            } else if (model.emailStatus == FieldStatus.INVALID) {
-                toast("Please, enter valid e-mail address")
-                return@Observer
-            }
-            if (!model.emailNotificationChecked.get()) {
-                toast("Please, check the checkbox below")
-                return@Observer
-            }
-            // todo subscribe
+        model.goBack.observe(viewLifecycleOwner, Observer {
+            Intent(requireActivity(), OrderActivity::class.java).apply {
+                val intent = requireActivity().intent
+                putExtra("email", intent.getStringExtra("email"))
+                putExtra("countryCode", intent.getStringExtra("code"))
+                putExtra("stateCode", intent.getStringExtra("state"))
+                model.extractAmounts().let {
+                    putExtra("cryptoAmount", it.cryptoAmount)
+                    putExtra("crypto", it.cryptoCurrency)
+                    putExtra("fiatAmount", it.fiatAmount)
+                    putExtra("fiat", it.fiatCurrency)
+                }
+            }.let { startActivity(it) }
             finish()
         })
-
         binding.model = model
     }
 }

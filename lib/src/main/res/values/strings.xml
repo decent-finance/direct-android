@@ -37,7 +37,7 @@
     <string name="cexd_verification_error">Verification Error</string>
     <string name="cexd_not_charged">No money has been charged from your card</string>
     <string name="cexd_location_not_supported">Location Not Supported</string>
-    <string name="cexd_sorry3">We are sorry, but we cannot process transactions from your country at this time. We aim for global coverage! We will let you know when our service is available at your location</string>
+    <string name="cexd_sorry3">We are sorry, but we cannot process\ntransactions from your country at this time.\nWe aim for global coverage!</string>
     <string name="cexd_receive_emails">I agree to receive notification email</string>
     <string name="cexd_inform_me">Inform Me!</string>
     <string name="cexd_email_address">Email Address</string>
@@ -86,7 +86,6 @@
     <string name="cexd_card_number">Card Number</string>
     <string name="cexd_card_icon">Card icon</string>
     <string name="cexd_enter_your_payment_card">Enter Your Payment Card</string>
-    <string name="cexd_selfie_with_your_payment_card">Selfie with Your Payment Card</string>
     <string name="cexd_upload_photo">Upload photo</string>
     <string name="cexd_choose_document_type">Choose Document Type</string>
     <string name="cexd_invalid_email">Please enter a valid email</string>
@@ -180,4 +179,11 @@
     <string name="cexd_service_offline">Service is experiencing technical difficulties</string>
     <string name="cexd_service_offline_desc">We expect this to be resolved shortly. Payment will be refunded, if your card has been charged.</string>
     <string name="cexd_error_icon">Error icon</string>
+    <string name="cexd_back">Back</string>
+    <string name="cexd_please_wait">Please wait…</string>
+    <string name="cexd_checking">We are checking your documents,\ncard data and wallet address</string>
+    <string name="cexd_selfie_id">Selfie with Your ID Card</string>
+    <string name="cexd_selfie_dl">Selfie with Your Driver License</string>
+    <string name="cexd_selfie_passport">Selfie with Your Passport</string>
+    <string name="cexd_press_back">Tap Back again to exit</string>
 </resources>

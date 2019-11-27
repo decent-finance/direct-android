@@ -16,29 +16,43 @@
 
 package com.cexdirect.lib.check
 
+import androidx.lifecycle.Lifecycle
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.intent.rule.IntentsTestRule
 import com.cexdirect.lib.Credentials
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.DirectNetworkMockRule
-import com.cexdirect.lib.ErrorDispatcher
+import com.cexdirect.lib.SingleLiveEvent
 import com.cexdirect.lib.buy.CalcActivity
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.stub.StubActivity
+import com.cexdirect.lib.util.PlacementValidator
 import com.cexdirect.lib.util.TEST_PLACEMENT
-import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Java6Assertions.assertThat
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.*
+import org.mockito.Mock
 
 class CheckActivityTest {
 
     @get:Rule
-    val activityRule = IntentsTestRule(CheckActivity::class.java, true, false)
-
-    @get:Rule
     val mockRule = DirectNetworkMockRule()
 
-    private val mockServer = MockWebServer()
+    @Mock
+    lateinit var placementApi: PlacementApi
+
+    @Mock
+    lateinit var validator: PlacementValidator
+
+    private lateinit var scenario: ActivityScenario<CheckActivity>
+
+    private lateinit var liveData: SingleLiveEvent<Resource<Boolean>>
 
     companion object {
 
@@ -51,45 +65,52 @@ class CheckActivityTest {
 
     @Before
     fun setUp() {
-        mockServer.start(8080)
+        Intents.init()
+        whenever(validator.isPlacementUriAllowed(any())).thenReturn(true)
+        liveData = SingleLiveEvent()
+        whenever(placementApi.checkResult).thenReturn(liveData)
     }
 
     @After
     fun tearDown() {
-        mockServer.shutdown()
+        Intents.release()
+        reset(placementApi, validator)
     }
 
-    @Ignore
     @Test
     fun loadDataAndLaunchDirect() {
-        mockServer.dispatcher = CheckActivityDispatcher()
-        activityRule.launchActivity(null)
+        scenario = ActivityScenario.launch(CheckActivity::class.java)
 
-        assertThat(mockServer.takeRequest().path).endsWith("v1/merchant/placement/check/$TEST_PLACEMENT")
-        assertThat(mockServer.takeRequest().path).endsWith("v1/merchant/rules/1")
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        scenario.onActivity {
+            liveData.postValue(Success(true))
+        }
 
+        verify(placementApi).loadPlacementData(any(), any())
         intended(hasComponent(CalcActivity::class.java.name))
     }
 
-    @Ignore
     @Test
     fun showStubScreenOnNetworkError() {
-        mockServer.dispatcher = ErrorDispatcher()
+        scenario = ActivityScenario.launch(CheckActivity::class.java)
 
-        activityRule.launchActivity(null)
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        scenario.onActivity {
+            liveData.postValue(Failure(500, "Internal server error"))
+        }
 
-        assertThat(activityRule.activity.isFinishing).isTrue()
         intended(hasComponent(StubActivity::class.java.name))
     }
 
-    @Ignore
     @Test
     fun showStubScreenOnInactiveMerchant() {
-        mockServer.dispatcher = CheckActivityInactiveMerchantDispatcher()
+        scenario = ActivityScenario.launch(CheckActivity::class.java)
 
-        activityRule.launchActivity(null)
+        scenario.moveToState(Lifecycle.State.RESUMED)
+        scenario.onActivity {
+            liveData.postValue(Failure(0, "Placement inactive"))
+        }
 
-        assertThat(activityRule.activity.isFinishing).isTrue()
         intended(hasComponent(StubActivity::class.java.name))
     }
 }

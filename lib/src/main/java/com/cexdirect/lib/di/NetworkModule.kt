@@ -96,7 +96,6 @@ class NetworkModule {
         CalcApi(analyticsFlow, merchantFlow, paymentFlow, messenger)
 
     @Provides
-    @Singleton
     fun providePlacementApi(
         merchantFlow: MerchantFlow,
         paymentFlow: PaymentFlow

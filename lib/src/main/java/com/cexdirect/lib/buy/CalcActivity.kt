@@ -22,7 +22,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.cexdirect.lib.BaseActivity
+import com.cexdirect.lib.ConfirmExitActivity
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.ActivityCalcBinding
@@ -33,7 +33,7 @@ import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.order.OrderActivity
 import javax.inject.Inject
 
-class CalcActivity : BaseActivity() {
+class CalcActivity : ConfirmExitActivity() {
 
     @field:[Inject BuyActivityFactory]
     lateinit var modelFactory: ViewModelProvider.Factory

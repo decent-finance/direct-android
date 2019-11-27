@@ -83,15 +83,19 @@ class LiveSocket(
     }
 
     private val ping = gson.toJson(BaseSocketMessage("ping"))
+
     private val sendPingRunnable = Runnable {
         sendRawMessage(ping)
         handler.postDelayed(checkPongRunnable, MAX_PONG_DELAY)
     }
+
     private val checkPongRunnable = Runnable {
         if (lastPongTimestamp.get() < System.currentTimeMillis() - MAX_PONG_DELAY) {
             reconnect()
         }
     }
+
+    private val stopWhenIdleRunnable = Runnable { if (subscriptions.isEmpty()) stop() }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -140,18 +144,21 @@ class LiveSocket(
         }
     }
 
+    fun hasSubscription(key: String) =
+        subscriptions.containsKey(key)
+
     fun removeSubscriptionByKey(key: String) {
         subscriptions.remove(key)
-    }
-
-    fun removeAllSubscriptions() {
-        subscriptions.clear()
+        if (subscriptions.isEmpty()) {
+            handler.postDelayed(stopWhenIdleRunnable, IDLE_DELAY)
+        }
     }
 
     companion object {
         const val PING_PONG_DELAY = 10_000L
         const val CLOSE_STATUS = 1000
         const val MAX_PONG_DELAY = 1500L
+        const val IDLE_DELAY = 30_000L
     }
 }
 

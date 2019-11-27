@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright 2019 CEX.​IO Ltd (UK)
+  ~    Copyright 2019 CEX.​IO Ltd (UK)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-        <variable
-            name="model"
-            type="com.cexdirect.lib.error.ErrorActivityViewModel" />
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,33 +25,25 @@
         android:paddingRight="16dp">
 
         <TextView
-            style="@style/Direct.ErrorTitle"
+            style="@style/Direct.Textfield.M2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
             android:gravity="center"
-            android:text="@string/cexd_location_not_supported" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/ic_unsupported_location" />
+            android:text="@string/cexd_checking" />
 
         <TextView
-            style="@style/Direct.ErrorText"
+            style="@style/Direct.PleaseWait"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/cexd_sorry3" />
+            android:layout_marginTop="16dp"
+            android:text="@string/cexd_please_wait" />
 
-        <Button
-            style="@style/Direct.MainButton.Big"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:elevation="8dp"
-            android:onClick="@{() -> model.goBack()}"
-            android:text="@string/cexd_back" />
+        <com.cexdirect.lib.views.IvsProgressView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="40dp" />
 
     </LinearLayout>
+
 </layout>

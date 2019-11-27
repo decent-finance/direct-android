@@ -141,10 +141,6 @@ class OrderProcessingApi(
 
     fun subscribeToOrderInfo() = messenger.subscribeToOrderInfo()
 
-    fun clear() {
-        messenger.clear()
-    }
-
     fun removeOrderInfoSubscription() {
         messenger.removeOrderInfoSubscription()
     }

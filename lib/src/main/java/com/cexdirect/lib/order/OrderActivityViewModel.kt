@@ -54,6 +54,7 @@ class OrderActivityViewModel(
     private val scanQrClickEvent = VoidLiveEvent()
     private val returnClickEvent = VoidLiveEvent()
     private val editClickEvent = VoidLiveEvent()
+    private val uploadPhotoEvent = UploadPhotoEvent()
     val nextClick = nextClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val buyMoreClick = buyMoreEvent
@@ -64,10 +65,11 @@ class OrderActivityViewModel(
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val editClick = editClickEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
+    val uploadPhoto = uploadPhotoEvent
+        .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
     val stepChangeEvent = VoidLiveEvent()
     val chooseCountryEvent = VoidLiveEvent()
     val chooseStateEvent = VoidLiveEvent()
-    val uploadPhotoEvent = UploadPhotoEvent()
     val cvvInfoEvent = VoidLiveEvent()
     val countryClickEvent = CountryClickEvent()
     val countryPickerExitEvent = VoidLiveEvent()
@@ -76,6 +78,7 @@ class OrderActivityViewModel(
     val txIdCopyEvent = StringLiveEvent()
     val txIdOpenEvent = StringLiveEvent()
     val scrollRequestEvent = IntLiveEvent()
+    val verificationInProgressEvent = BooleanLiveEvent()
     // --- Events --- //
 
     val currentStep = ObservableInt(1)
@@ -224,7 +227,7 @@ class OrderActivityViewModel(
                 NewOrderData(
                     userEmail.email,
                     userCountry.selectedCountry.code,
-                    userCountry.selectedState.code.ifBlank { null },
+                    userCountry.getStateCode(),
                     MonetaryData(
                         orderAmounts.selectedFiatAmount,
                         orderAmounts.selectedFiatCurrency
@@ -277,10 +280,6 @@ class OrderActivityViewModel(
 
     fun subscribeToOrderInfo() = api.subscribeToOrderInfo()
 
-    fun stopSubscriptions() {
-        api.clear()
-    }
-
     fun toggleLocationEmail() {
         when (locationEmailContentState.get()) {
             CollapsibleLayout.ContentState.COLLAPSED -> locationEmailContentState.set(
@@ -304,6 +303,7 @@ class OrderActivityViewModel(
     }
 
     fun setPaymentBase() {
+        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, orderId.get())
         orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -608,11 +608,15 @@ class OrderActivityViewModel(
             OrderStatus.FINISHED -> statusWatcher.updateAndDo(OrderStatus.FINISHED) {
                 paymentInfo.set(data.paymentInfo)
                 txId.set(data.paymentInfo!!.txId!!)
-                api.removeOrderInfoSubscription()
+                unsubscribe()
             }
             else -> { // do nothing
             }
         }
+    }
+
+    private fun unsubscribe() {
+        api.removeOrderInfoSubscription()
     }
 
     fun copyTxId(txId: String) {
@@ -631,6 +635,11 @@ class OrderActivityViewModel(
 
     fun requestScrollTo(coordinate: Int) {
         scrollRequestEvent.postValue(coordinate)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        unsubscribe()
     }
 
     class Factory(

@@ -1,0 +1,127 @@
+{
+  "code": 200,
+  "nonce": 1574436181114,
+  "data": {
+    "currencies": [
+      {
+        "fiat": "USD",
+        "crypto": "BTC",
+        "a": 0.00012603618236809678,
+        "b": 0.0005,
+        "c": 1,
+        "fiatPopularValues": [
+          "100",
+          "200",
+          "500"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "EUR",
+        "crypto": "BTC",
+        "a": 0.00013842794088245698,
+        "b": 0.0005,
+        "c": 1,
+        "fiatPopularValues": [
+          "50",
+          "100",
+          "200"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "USD",
+        "crypto": "BCH",
+        "a": 0.004304433073501985,
+        "b": 0.001,
+        "c": 1,
+        "fiatPopularValues": [
+          "100",
+          "200",
+          "500"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "EUR",
+        "crypto": "BCH",
+        "a": 0.003572250664761678,
+        "b": 0.001,
+        "c": 1,
+        "fiatPopularValues": [
+          "50",
+          "100",
+          "200"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "USD",
+        "crypto": "ETH",
+        "a": 0.006055977931776896,
+        "b": 0.01,
+        "c": 1,
+        "fiatPopularValues": [
+          "100",
+          "200",
+          "500"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "EUR",
+        "crypto": "ETH",
+        "a": 0.0067307260898826,
+        "b": 0.01,
+        "c": 1,
+        "fiatPopularValues": [
+          "50",
+          "100",
+          "200"
+        ],
+        "cryptoPopularValues": [
+          "0.01",
+          "0.05",
+          "0.1"
+        ]
+      },
+      {
+        "fiat": "USD",
+        "crypto": "TRX",
+        "a": 45.005,
+        "b": 10,
+        "c": 1,
+        "fiatPopularValues": [
+          "100",
+          "200",
+          "500"
+        ],
+        "cryptoPopularValues": [
+          "250",
+          "500",
+          "1000"
+        ]
+      }
+    ]
+  }
+}

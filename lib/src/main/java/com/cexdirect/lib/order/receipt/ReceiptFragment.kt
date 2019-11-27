@@ -93,9 +93,4 @@ class ReceiptFragment : BaseOrderFragment() {
             data = Uri.parse(url)
         }.let { it.resolveActivity(requireContext().packageManager)?.run { startActivity(it) } }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        model.stopSubscriptions()
-    }
 }

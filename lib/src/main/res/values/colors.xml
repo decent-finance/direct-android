@@ -54,5 +54,7 @@
     <color name="cexd_btn_text_disabled">#4D26374D</color>
     <color name="cexd_btn_text_pressed">#80FFFFFF</color>
 
+    <color name="cexd_wait_text">#0C87F2</color>
+
     <color name="white">#FFF</color>
 </resources>

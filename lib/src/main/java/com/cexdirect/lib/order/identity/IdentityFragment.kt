@@ -104,7 +104,7 @@ class IdentityFragment : BaseOrderFragment() {
             chooseStateEvent.observe(viewLifecycleOwner, Observer {
                 StatePickerDialog().show(requireFragmentManager(), "state")
             })
-            uploadPhotoEvent.observe(viewLifecycleOwner, Observer {
+            uploadPhoto.observe(viewLifecycleOwner, Observer {
                 PhotoSourceDialog().show(requireFragmentManager(), "choose")
             })
             cvvInfoEvent.observe(viewLifecycleOwner, Observer {
@@ -125,7 +125,12 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onFail = {
                     if (it.code == COUNTRY_NOT_SUPPORTED) {
-                        locationNotSupported(extractAmounts())
+                        locationNotSupported(
+                            extractAmounts(),
+                            userCountry.selectedCountry.code,
+                            userCountry.selectedState.code,
+                            userEmail.email
+                        )
                     } else {
                         purchaseFailed(it.message, extractAmounts())
                     }
@@ -136,11 +141,16 @@ class IdentityFragment : BaseOrderFragment() {
                 onFail = { purchaseFailed(it.message, extractAmounts()) }
             ))
             sendToVerificationRequest.observe(viewLifecycleOwner, requestObserver(
+                onLoading = {
+                    hideKeyboard()
+                    hideLoader()
+                    verificationInProgressEvent.value = true
+                },
                 onOk = {},
                 onFail = {
+                    verificationInProgressEvent.value = false
                     if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
                         userWallet.walletStatus = FieldStatus.INVALID
-                        hideLoader()
                     } else {
                         purchaseFailed(it.message, model.extractAmounts())
                     }
@@ -181,7 +191,7 @@ class IdentityFragment : BaseOrderFragment() {
                         requireContext().paymentRejected(it, model.extractAmounts())
                         finish()
                     },
-                    { hideLoader() },
+                    { /*hideLoader()*/  model.verificationInProgressEvent.value = false  },
                     {
                         // FIXME: A workaround (dirty hack) to request scroll after view is laid out
                         binding.fiExtras.peExtrasTitle.postDelayed(

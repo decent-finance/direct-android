@@ -65,8 +65,8 @@ class UserCountry : BaseObservable() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 when (propertyId) {
                     BR.selectedCountry -> {
-                        shouldShowState =
-                            selectedCountry.states != null && selectedCountry.states!!.isNotEmpty()
+                        shouldShowState = !selectedCountry.states.isNullOrEmpty()
+                        if (!shouldShowState) selectedState = emptyCountry()
                         selectedCountryStatus = if (selectedCountry != emptyCountry()) {
                             FieldStatus.VALID
                         } else {
@@ -101,4 +101,6 @@ class UserCountry : BaseObservable() {
             selectedStateStatus = FieldStatus.INVALID
         }
     }
+
+    fun getStateCode() = if (shouldShowState) selectedState.code.ifBlank { null } else null
 }

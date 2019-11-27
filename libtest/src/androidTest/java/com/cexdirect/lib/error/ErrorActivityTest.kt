@@ -37,7 +37,6 @@ import com.cexdirect.lib.util.CustomViewActions.collapseAppBarLayout
 import com.cexdirect.lib.util.CustomViewActions.nestedScrollTo
 import com.cexdirect.lib.util.TEST_PLACEMENT
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assume.assumeThat
@@ -159,24 +158,6 @@ class ErrorActivityTest {
         activityRule.launchActivity(intent)
 
         onView(withText(R.string.cexd_location_not_supported)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun displayGivenUserEmail() {
-        Direct.userEmail = "fast@usps.gov"
-
-        val intent = givenLocationNotSupportedIntent()
-
-        activityRule.launchActivity(intent)
-
-        onView(
-            allOf(
-                withText("fast@usps.gov"),
-                isAssignableFrom(TextInputEditText::class.java)
-            )
-        ).check(
-            matches(isDisplayed())
-        )
     }
 
     @Test
