@@ -190,7 +190,9 @@ class IdentityFragment : BaseOrderFragment() {
                 model.updateOrderStatus(
                     it,
                     {
-                        requireContext().paymentRejected(it, model.extractAmounts())
+                        requireContext().paymentRejected(
+                            it, model.extractAmounts(), model.extractRefundExtras()
+                        )
                         finish()
                     },
                     { model.verificationInProgressEvent.value = false },

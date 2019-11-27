@@ -69,7 +69,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                         { hideLoader() },
                         {
                             // TODO: for now, only REJECTED is possible here
-                            requireContext().paymentRejected(it, extractAmounts())
+                            requireContext().paymentRejected(it, extractAmounts(), extractRefundExtras())
                             finish()
                         }
                     )

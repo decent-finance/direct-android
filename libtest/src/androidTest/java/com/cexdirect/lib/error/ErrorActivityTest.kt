@@ -28,6 +28,7 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cexdirect.lib.*
 import com.cexdirect.lib.buy.CalcActivity
@@ -47,6 +48,7 @@ import org.junit.Test
 import java.util.*
 import org.assertj.core.api.Java6Assertions.assertThat as assertjThat
 
+@LargeTest
 class ErrorActivityTest {
 
     @get:Rule
@@ -201,6 +203,15 @@ class ErrorActivityTest {
     }
 
     @Test
+    fun displayRefundScreen() {
+        val intent = givenPaymentRefundedIntent()
+
+        activityRule.launchActivity(intent)
+
+        onView(withText(R.string.cexd_refund_title)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun relaunchDirectFromPurchaseErrorScreen() {
         val intent = givenPurchaseFailedIntent()
 
@@ -243,12 +254,19 @@ class ErrorActivityTest {
 
     private fun givenGenericErrorIntent() =
         Intent().apply {
-            putExtra("type", ErrorType.VERIFICATION_ERROR.name)
+            putExtra("type", ErrorType.FAIL.name)
         }
 
     private fun givenVerificationRejectedIntent() =
         Intent().apply {
             putExtra("type", ErrorType.NOT_VERIFIED.name)
             putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
+        }
+
+    private fun givenPaymentRefundedIntent() =
+        Intent().apply {
+            putExtra("type", ErrorType.REFUND.name)
+            putExtra("info", LastKnownOrderInfo("abc123", "10", "EUR", "0.0001", "BTC"))
+            putExtra("refund_extras", RefundExtras("0001"))
         }
 }

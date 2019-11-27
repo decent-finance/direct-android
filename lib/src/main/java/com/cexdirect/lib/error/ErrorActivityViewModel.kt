@@ -23,13 +23,13 @@ import com.cexdirect.lib.AmountViewModel
 import com.cexdirect.lib.BuildConfig
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.VoidLiveEvent
-import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.livedatax.throttleFirst
 import java.util.concurrent.TimeUnit
 
-class ErrorActivityViewModel(private val messenger: Messenger) : AmountViewModel() {
+class ErrorActivityViewModel : AmountViewModel() {
 
     val reason = ObservableField("")
+    val cardBin = ObservableField("")
 
     val tryAgainEvent = VoidLiveEvent()
     private val goBackEvent = VoidLiveEvent()
@@ -48,10 +48,10 @@ class ErrorActivityViewModel(private val messenger: Messenger) : AmountViewModel
         Direct.clear()
     }
 
-    class Factory(private val messenger: Messenger) : ViewModelProvider.Factory {
+    class Factory : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            ErrorActivityViewModel(messenger) as T
+            ErrorActivityViewModel() as T
     }
 }

@@ -178,6 +178,11 @@ fun ImageView.applyCoinIcon(data: MonetaryData?) {
     data?.let { setImageResource(symbolMap[it.currency].orDefault().iconId) }
 }
 
+@BindingAdapter("coinIcon")
+fun ImageView.applyCoinIcon(currency: String?) {
+    currency?.let { setImageResource(symbolMap[it].orDefault().iconId) }
+}
+
 @BindingAdapter("legal")
 fun TextView.applyLegalText(rules: Set<RuleData>) {
     movementMethod = LinkMovementMethod.getInstance()

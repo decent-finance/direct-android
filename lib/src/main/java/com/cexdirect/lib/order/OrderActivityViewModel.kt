@@ -22,7 +22,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
+import com.cexdirect.lib.error.RefundExtras
 import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.order.confirmation.CheckCode
 import com.cexdirect.lib.order.confirmation.TdsData
@@ -458,10 +460,7 @@ class OrderActivityViewModel(
                 }
             }
             OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) {
-                api.startProcessing(
-                    this,
-                    userCardData.getPublicKey()
-                ) {
+                api.startProcessing(this, userCardData.getPublicKey()) {
                     VerificationData(
                         secretId = it.secretId,
                         cardData = userCardData.generateProcessingCardData(it.publicKey)
@@ -649,6 +648,12 @@ class OrderActivityViewModel(
     fun requestScrollTo(coordinate: Int) {
         scrollRequestEvent.postValue(coordinate)
     }
+
+    fun extractRefundExtras() =
+        (api.basePaymentDataResult.value as? Success<OrderInfoData>)?.data?.basic?.cardBin?.let {
+            RefundExtras(it)
+        } ?: error("No info present")
+
 
     override fun onCleared() {
         super.onCleared()
