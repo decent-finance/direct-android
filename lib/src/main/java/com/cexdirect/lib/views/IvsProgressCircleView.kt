@@ -29,6 +29,7 @@ import com.cexdirect.lib.R
 import com.mcxiaoke.koi.ext.dpToPx
 import kotlin.math.min
 
+@Suppress("MagicNumber")
 class IvsProgressCircleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

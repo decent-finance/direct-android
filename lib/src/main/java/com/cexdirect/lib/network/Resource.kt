@@ -28,7 +28,7 @@ class Success<T>(val data: T? = null) : Resource<T>()
 class Failure<T>(val code: Int = 0, val message: String = "Unknown Error") : Resource<T>()
 
 fun <T> Throwable.mapFailure(): Failure<T> =
-     if (this is HttpException) {
+    if (this is HttpException) {
         val response = this.response()!!.errorBody()!!.string()
         try {
             val type = object : TypeToken<ApiResponse<Void>>() {}.type

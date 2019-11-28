@@ -61,7 +61,6 @@ class ErrorActivity : BaseActivity() {
                 model.orderAmounts.selectedFiatCurrency = it.fiatCurrency
             }
 
-
         model.applyLegalObservers()
 
         model.tryAgainEvent.observe(this, Observer {

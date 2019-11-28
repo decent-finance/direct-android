@@ -43,30 +43,33 @@ class LiveSocket(
     internal val listener = object : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
-            connected = true
             connecting.set(false)
+            Log.d("Socket", "Open")
             sendPingRunnable.run()
             subscriptions.entries.forEach { sendMessage(it.value) }
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            connected = false
             Log.e("Socket", response?.message, t)
             reconnect()
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            Log.d("Socket", "Received $text")
+            Log.i("Socket", "Received $text")
             socketMessage.postValue(text)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            // do nothing
+            if (code != CLOSE_STATUS && reason != "Stopped" && subscriptions.isNotEmpty()) {
+                Log.w("Socket", "Closed with code $code / reason $reason. Reconnecting")
+                reconnect()
+            } else {
+                Log.d("Socket", "Closed")
+            }
         }
     }
 
     private var webSocket: WebSocket? = null
-    private var connected = false
     private val connecting = AtomicBoolean(false)
     private val lastPongTimestamp = AtomicLong(0)
 
@@ -95,8 +98,6 @@ class LiveSocket(
         }
     }
 
-    private val stopWhenIdleRunnable = Runnable { if (subscriptions.isEmpty()) stop() }
-
     private val handler = Handler(Looper.getMainLooper())
 
     fun start() {
@@ -110,9 +111,8 @@ class LiveSocket(
     }
 
     private fun reconnect() {
-        if (!connecting.get()) {
+        if (connecting.compareAndSet(false, true)) {
             Log.d("Socket", "Reconnecting")
-            connecting.compareAndSet(false, true)
             stop()
             start()
         }
@@ -122,12 +122,17 @@ class LiveSocket(
         handler.removeCallbacks(checkPongRunnable)
         handler.removeCallbacks(sendPingRunnable)
         handler.post { parsedMessage.removeObserver(pingPongObserver) }
-        webSocket?.close(CLOSE_STATUS, "Stopped")
+        if (webSocket?.close(CLOSE_STATUS, "Stopped") == true) {
+            Log.d("Socket", "Closing sockets")
+        }
     }
 
     private fun sendRawMessage(msg: String) {
-        if (connected) {
-            webSocket?.send(msg)
+        if (webSocket?.send(msg) == true) {
+            Log.i("Socket", "Sent $msg")
+        } else {
+            Log.w("Socket", "Couldn't send message")
+            reconnect()
         }
     }
 
@@ -137,10 +142,12 @@ class LiveSocket(
 
     fun <T : BaseSocketMessage> sendMessage(addToSubs: Boolean, msg: SubscriptionMessage<T>) {
         if (addToSubs) subscriptions[msg.invoke().event] = msg
-        if (connected) {
-            val json = gson.toJson(msg.invoke())
-            webSocket?.send(json)
-            Log.d("Socket", "Sent $json")
+        val json = gson.toJson(msg.invoke())
+        if (webSocket?.send(json) == true) {
+            Log.i("Socket", "Sent $json")
+        } else {
+            Log.w("Socket", "Couldn't send message")
+            reconnect()
         }
     }
 
@@ -149,16 +156,12 @@ class LiveSocket(
 
     fun removeSubscriptionByKey(key: String) {
         subscriptions.remove(key)
-        if (subscriptions.isEmpty()) {
-            handler.postDelayed(stopWhenIdleRunnable, IDLE_DELAY)
-        }
     }
 
     companion object {
         const val PING_PONG_DELAY = 10_000L
         const val CLOSE_STATUS = 1000
         const val MAX_PONG_DELAY = 1500L
-        const val IDLE_DELAY = 30_000L
     }
 }
 

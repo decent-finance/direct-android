@@ -116,7 +116,9 @@ class IdentityFragment : BaseOrderFragment() {
             nextClick.observe(viewLifecycleOwner, Observer { handleNextClick() })
             sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
-            sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(onOk = {}, final = {}))
+            sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(
+                onOk = {}, final = {}
+            ))
             newOrderInfoRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
                     setRequiredImages(it!!.basic.images)
@@ -191,7 +193,7 @@ class IdentityFragment : BaseOrderFragment() {
                         requireContext().paymentRejected(it, model.extractAmounts())
                         finish()
                     },
-                    { /*hideLoader()*/  model.verificationInProgressEvent.value = false  },
+                    { model.verificationInProgressEvent.value = false },
                     {
                         // FIXME: A workaround (dirty hack) to request scroll after view is laid out
                         binding.fiExtras.peExtrasTitle.postDelayed(
