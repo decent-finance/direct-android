@@ -98,5 +98,4 @@ class NestedScrollWebView constructor(
         childHelper.dispatchNestedScroll(
             dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type
         )
-
 }

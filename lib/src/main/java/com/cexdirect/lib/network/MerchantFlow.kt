@@ -42,4 +42,3 @@ class MerchantFlow(private val service: MerchantService) {
             }.let { emit(it) }
         }.flowOn(DispatcherRegistry.io)
 }
-

@@ -33,7 +33,7 @@ class PaymentFlow(private val service: PaymentService) {
         flow { emit(service.getExchangeRates(placementId)) }
             .flowOn(DispatcherRegistry.io)
 
-    fun verifyWalletAddress(addressData:WalletAddressData) =
+    fun verifyWalletAddress(addressData: WalletAddressData) =
         flow {
             if (!BuildConfig.DEBUG) {
                 val (address, currency) = addressData
