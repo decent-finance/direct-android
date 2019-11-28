@@ -51,7 +51,7 @@ class OkHttpClientModule {
     @LoggingInterceptor
     @Singleton
     fun provideLoggingInterceptor(): Interceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.BASIC
     }
 
     @Provides

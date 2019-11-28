@@ -20,7 +20,6 @@ import androidx.lifecycle.LiveData
 import com.cexdirect.lib.Direct
 import com.cexdirect.lib.OpenForTesting
 import com.cexdirect.lib.network.Resource
-import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.ExchangeRate
 import com.cexdirect.lib.network.models.OrderInfoBody
 import com.cexdirect.lib.network.models.OrderInfoData
@@ -37,14 +36,7 @@ class Messenger(private val socket: LiveSocket, private val gson: Gson) {
             parsedMessage
                 .filter { it.first == "orderInfo" }
                 .map { gson.fromJson(it.second, OrderInfoMessage::class.java).data }
-                .map { mapResponse(it) }
-                .filter {
-                    if (it is Success) {
-                        it.data!!.orderId == Direct.pendingOrderId
-                    } else {
-                        true
-                    }
-                }
+                .map(::mapResponse)
         }
 
     fun removeOrderInfoSubscription() {
@@ -64,7 +56,7 @@ class Messenger(private val socket: LiveSocket, private val gson: Gson) {
             parsedMessage
                 .filter { it.first == "currencies" }
                 .map { gson.fromJson(it.second, ExchangeRatesMessage::class.java).data }
-                .map { mapResponse(it) }
+                .map(::mapResponse)
         }
 
     fun removeExchangesSubscription() {
