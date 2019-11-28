@@ -23,5 +23,6 @@ class OrderDataResponse(val data: OrderData) : ApiResponse<OrderData>() {
 
 data class OrderData(
     val orderId: String,
+    val merchOrderId: String,
     val orderStatus: OrderStatus
 )

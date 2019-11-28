@@ -24,6 +24,7 @@ class OrderInfoResponse(val data: OrderInfoData) : ApiResponse<OrderInfoData>() 
 
 data class OrderInfoData(
     val orderId: String,
+    val merchOrderId: String,
     val orderStatus: OrderStatus,
     val orderExpiredAt: Date,
     val userEmail: String,

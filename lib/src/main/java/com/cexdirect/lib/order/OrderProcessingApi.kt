@@ -47,11 +47,11 @@ class OrderProcessingApi(
     fun createNewOrder(
         scope: CoroutineScope,
         data: NewOrderData,
-        onOrderCreated: (orderId: String) -> Unit
+        onOrderCreated: (orderId: String, merchOrderId:String) -> Unit
     ) {
         orderFlow.createNewOrder(data)
             .onStart { newOrderResult.value = Loading() }
-            .onEach { onOrderCreated.invoke(it.data.orderId) }
+            .onEach { onOrderCreated.invoke(it.data.orderId, it.data.merchOrderId) }
             .flatMapConcat { orderFlow.checkOrderInfo() }
             .catch { newOrderResult.value = it.mapFailure() }
             .onEach { newOrderResult.value = Success(it.data) }

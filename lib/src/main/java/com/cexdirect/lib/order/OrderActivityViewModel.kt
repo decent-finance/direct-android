@@ -130,7 +130,7 @@ class OrderActivityViewModel(
         .switchMap { api.changeEmail(this@OrderActivityViewModel, it) }
     val changeCheckCodeRequest = resendCodeEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
-        .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, orderId.get()!!) }
+        .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, Direct.pendingOrderId) }
     val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
@@ -213,8 +213,8 @@ class OrderActivityViewModel(
         }
     }
 
-    private fun updateOrderId(orderId: String) {
-        this.orderId.set(orderId)
+    private fun updateOrderId(orderId: String, merchOrderId: String) {
+        this.orderId.set(merchOrderId)
         Direct.pendingOrderId = orderId
     }
 
@@ -238,8 +238,9 @@ class OrderActivityViewModel(
                         orderAmounts.selectedCryptoAmount,
                         orderAmounts.selectedCryptoCurrency
                     )
-                )
-            ) { updateOrderId(it) }
+                ),
+                this::updateOrderId
+            )
         }
     }
 
@@ -305,7 +306,7 @@ class OrderActivityViewModel(
     }
 
     fun setPaymentBase() {
-        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, orderId.get())
+        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, Direct.pendingOrderId)
         orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -544,7 +545,7 @@ class OrderActivityViewModel(
         checkCode.forceValidate()
 
         if (checkCode.isValid()) {
-            api.checkCode(this, orderId.get()!!, checkCode.code)
+            api.checkCode(this, Direct.pendingOrderId, checkCode.code)
         }
     }
 
@@ -590,7 +591,7 @@ class OrderActivityViewModel(
     @VisibleForTesting
     fun askFor3ds(threeDS: Tds) {
         orderStep.set(OrderStep.TDS)
-        tdsData.set(TdsData(threeDS.url, threeDS.data, threeDS.txId, orderId.get()!!))
+        tdsData.set(TdsData(threeDS.url, threeDS.data, threeDS.txId, Direct.pendingOrderId))
     }
 
     @VisibleForTesting
