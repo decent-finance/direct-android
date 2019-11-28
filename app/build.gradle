@@ -84,8 +84,8 @@ android {
             versionNameSuffix '-dev'
 
             firebaseAppDistribution {
-                releaseNotes="DEV/${grgit.branch.current().name}"
-                testers="${project.ext.configProperties['testers']}"
+                releaseNotes = "DEV/${grgit.branch.current().name}"
+                groups = "cexd-android"
             }
         }
 
@@ -97,8 +97,8 @@ android {
             versionNameSuffix '-uat'
 
             firebaseAppDistribution {
-                releaseNotes="UAT/${grgit.branch.current().name}"
-                testers="${project.ext.configProperties['testers']}"
+                releaseNotes = "UAT/${grgit.branch.current().name}"
+                groups = "cexd-android"
             }
         }
 
@@ -107,8 +107,8 @@ android {
             buildConfigField('String', 'SECRET', "\"${project.ext.configProperties['prodSecret']}\"")
 
             firebaseAppDistribution {
-                releaseNotes="PROD/${grgit.branch.current().name}"
-                testers="${project.ext.configProperties['testers']}"
+                releaseNotes = "PROD/${grgit.branch.current().name}"
+                groups = "cexd-android"
             }
         }
     }
