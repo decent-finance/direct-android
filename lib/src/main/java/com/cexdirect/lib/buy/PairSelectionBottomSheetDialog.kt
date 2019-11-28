@@ -83,14 +83,14 @@ class PairSelectionBottomSheetDialog : BaseBottomSheetDialog() {
         }
 
         viewModel.apply {
-            currencyClickEvent.observe(this@PairSelectionBottomSheetDialog, Observer {
+            currencyClickEvent.observe(viewLifecycleOwner, Observer {
                 when (type) {
                     TYPE_BASE -> viewModel.setSelectedCryptoCurrency(it)
                     TYPE_QUOTE -> viewModel.setSelectedFiatCurrency(it)
                 }
                 dismiss()
             })
-            closeSelectorEvent.observe(this@PairSelectionBottomSheetDialog, Observer { dismiss() })
+            closeSelectorEvent.observe(viewLifecycleOwner, Observer { dismiss() })
         }
     }
 
