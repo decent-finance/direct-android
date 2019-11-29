@@ -117,7 +117,14 @@ class IdentityFragment : BaseOrderFragment() {
             sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(
-                onOk = {}, final = {}
+                onOk = {},
+                onFail = {
+                    if (it.code != 400) {
+                        hideLoader()
+                        purchaseFailed(it.message, model.extractAmounts())
+                    }
+                },
+                final = {}
             ))
             newOrderInfoRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
