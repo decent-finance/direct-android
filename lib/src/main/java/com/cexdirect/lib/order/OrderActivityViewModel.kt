@@ -475,6 +475,9 @@ class OrderActivityViewModel(
             OrderStatus.PSS_REJECTED -> statusWatcher.updateAndDo(OrderStatus.PSS_REJECTED) {
                 rejectAction.invoke(OrderStatus.PSS_REJECTED)
             }
+            OrderStatus.REFUND_PENDING -> statusWatcher.updateAndDo(OrderStatus.REFUND_PENDING) {
+                rejectAction.invoke(OrderStatus.REFUND_PENDING)
+            }
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
                     changeOrderStep()

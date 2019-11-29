@@ -196,4 +196,5 @@
     <string name="cexd_refund_details">Refund payment details:</string>
     <string name="cexd_returned_amount">Returned Amount:</string>
     <string name="cexd_card">Card:</string>
+    <string name="cexd_card_bin">**** %1s</string>
 </resources>

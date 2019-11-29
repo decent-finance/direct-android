@@ -22,7 +22,7 @@ enum class OrderStatus(val raws: List<String>) {
     IVS_PENDING(listOf("ivs-pending", "verification-in-progress")),
     IVS_SUCCESS(listOf("ivs-success", "verification-success")),
     IVS_FAILED(listOf("ivs-failed", "verification-failed")),
-    IVS_REJECTED(listOf("ivs-rejected", "verification-failed")),
+    IVS_REJECTED(listOf("ivs-rejected", "verification-rejected")),
     PSS_WAITDATA(listOf("pss-waitdata", "processing-acknowledge")),
     PSS_READY(listOf("pss-ready", "processing-ready")),
     PSS_PENDING(listOf("pss-pending", "processing-in-progress")),

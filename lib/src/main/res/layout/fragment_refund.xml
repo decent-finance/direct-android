@@ -58,8 +58,8 @@
                 android:layout_marginTop="44dp"
                 android:background="@color/cexd_finish_bg"
                 android:elevation="8dp"
-                android:outlineProvider="bounds"
                 android:orientation="vertical"
+                android:outlineProvider="bounds"
                 android:paddingLeft="16dp"
                 android:paddingTop="72dp"
                 android:paddingRight="16dp"
@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:text="@{model.cardBin}"
+                        android:text="@{@string/cexd_card_bin(model.cardBin)}"
                         tools:text="1234" />
 
                 </LinearLayout>
