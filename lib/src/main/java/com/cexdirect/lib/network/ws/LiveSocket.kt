@@ -30,11 +30,25 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 @OpenForTesting
-class LiveSocket(
+class LiveSocket @VisibleForTesting internal constructor(
     private val client: OkHttpClient,
     private val wsUrlProvider: WsUrlProvider,
-    private val gson: Gson
+    private val gson: Gson,
+    private val handler: Handler
 ) {
+
+    @VisibleForTesting
+    internal val sendPingRunnable = Runnable {
+        sendRawMessage(ping)
+        handler.postDelayed(checkPongRunnable, MAX_PONG_DELAY)
+    }
+
+    @VisibleForTesting
+    internal val checkPongRunnable = Runnable {
+        if (lastPongTimestamp.get() < System.currentTimeMillis() - MAX_PONG_DELAY) {
+            reconnect()
+        }
+    }
 
     @VisibleForTesting
     internal val subscriptions = HashMap<String, SubscriptionMessage<BaseSocketMessage>>()
@@ -87,18 +101,12 @@ class LiveSocket(
 
     private val ping = gson.toJson(BaseSocketMessage("ping"))
 
-    private val sendPingRunnable = Runnable {
-        sendRawMessage(ping)
-        handler.postDelayed(checkPongRunnable, MAX_PONG_DELAY)
-    }
-
-    private val checkPongRunnable = Runnable {
-        if (lastPongTimestamp.get() < System.currentTimeMillis() - MAX_PONG_DELAY) {
-            reconnect()
-        }
-    }
-
-    private val handler = Handler(Looper.getMainLooper())
+    constructor(client: OkHttpClient, wsUrlProvider: WsUrlProvider, gson: Gson) : this(
+        client,
+        wsUrlProvider,
+        gson,
+        Handler(Looper.getMainLooper())
+    )
 
     fun start() {
         handler.post { parsedMessage.observeForever(pingPongObserver) }
@@ -110,7 +118,8 @@ class LiveSocket(
         webSocket = client.newWebSocket(request, listener)
     }
 
-    private fun reconnect() {
+    @VisibleForTesting
+    internal fun reconnect() {
         if (connecting.compareAndSet(false, true)) {
             Log.d("Socket", "Reconnecting")
             stop()
@@ -127,7 +136,8 @@ class LiveSocket(
         }
     }
 
-    private fun sendRawMessage(msg: String) {
+    @VisibleForTesting
+    internal fun sendRawMessage(msg: String) {
         if (webSocket?.send(msg) == true) {
             Log.i("Socket", "Sent $msg")
         } else {

@@ -41,7 +41,6 @@ import androidx.test.rule.GrantPermissionRule
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
 import com.cexdirect.lib.network.models.*
-import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.OrderActivityViewModel
 import com.cexdirect.lib.order.OrderStep
@@ -73,9 +72,6 @@ class IdentityFragmentTest {
 
     @Mock
     lateinit var messenger: Messenger
-
-    @Mock
-    lateinit var cexdSocket: LiveSocket
 
     private val mockServer = MockWebServer()
 
