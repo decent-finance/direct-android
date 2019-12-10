@@ -125,7 +125,7 @@ ext {
     daggerVersion = '2.25.2'
     permissionDispatcherVersion = '4.6.0'
     okHttpVersion = '4.2.2'
-    retrofitVersion = '2.6.2'
+    retrofitVersion = '2.7.0'
     glideVersion = '4.10.0'
 }
 
@@ -162,7 +162,7 @@ dependencies {
 
     api 'org.bouncycastle:bcprov-jdk15on:1.64'
 
-    debugApi 'androidx.fragment:fragment-testing:1.2.0-rc02'
+    debugApi 'androidx.fragment:fragment-testing:1.2.0-rc03'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:$assertjVersion"
