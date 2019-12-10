@@ -189,7 +189,7 @@ dependencies {
     // Without the following dependency instrumented tests fail with NoClassDefFoundError
     kaptAndroidTest "androidx.databinding:databinding-compiler:$databindVersion"
 
-    detektPlugins 'io.gitlab.arturbosch.detekt:detekt-formatting:1.1.1'
+    detektPlugins 'io.gitlab.arturbosch.detekt:detekt-formatting:1.2.2'
 }
 
 task copyResDirectoryToClasses(type: Copy, dependsOn: 'assembleDebug') {
