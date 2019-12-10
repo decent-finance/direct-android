@@ -323,6 +323,7 @@ class IdentityFragmentTest {
     private fun givenOrderInfo() =
         OrderInfoData(
             "abc123",
+            "abc123",
             OrderStatus.PSS_WAITDATA,
             Date(),
             "poststelle@bundeskanzlerin.de-mail.de",
