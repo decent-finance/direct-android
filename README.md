@@ -37,7 +37,7 @@ android {
 }
 ```
 
-Direct is included in `jcenter`. New versions should be available immideately after release, but if you're having problems with artifacts, please add these to your poject:
+Direct is included in `jcenter`. New versions should be available immediately after release, but if you're having problems with artifacts, please add these to your poject:
 ```gradle
 allprojects {
     repositories {
