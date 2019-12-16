@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -32,6 +31,7 @@ import com.cexdirect.lib.buy.CalcActivity.Companion.startBuyActivity
 import com.cexdirect.lib.databinding.ActivityErrorBinding
 import com.cexdirect.lib.di.annotation.ErrorActivityFactory
 import com.cexdirect.lib.network.models.OrderStatus
+import com.mcxiaoke.koi.ext.Bundle
 import com.mcxiaoke.koi.ext.finish
 import javax.inject.Inject
 
@@ -95,9 +95,12 @@ class ErrorActivity : BaseActivity() {
             ErrorType.REFUND -> supportFragmentManager
                 .beginTransaction()
                 .replace(binding.aeErrorFrame.id, RefundFragment().apply {
-                    arguments = bundleOf(
-                        "refund_extras" to intent.getParcelableExtra<RefundExtras>("refund_extras")
-                    )
+                    arguments = Bundle {
+                        putParcelable(
+                            "refund_extras",
+                            intent.getParcelableExtra<RefundExtras>("refund_extras")
+                        )
+                    }
                 })
                 .commit()
         }
