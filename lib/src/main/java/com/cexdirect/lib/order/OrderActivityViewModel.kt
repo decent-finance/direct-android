@@ -334,7 +334,11 @@ class OrderActivityViewModel(
                 emptyMap()
             }
 
-            api.sendBasePaymentData(this, PaymentData(payment, additional))
+            api.sendBasePaymentData(
+                this,
+                WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency),
+                PaymentData(payment, additional)
+            )
         }
     }
 
@@ -347,7 +351,6 @@ class OrderActivityViewModel(
     private fun startVerificationChain() {
         api.startVerification(
             this,
-            WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency),
             userCardData.getPublicKey()
         ) {
             VerificationData(

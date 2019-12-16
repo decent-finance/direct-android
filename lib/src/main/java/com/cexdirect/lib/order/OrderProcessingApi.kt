@@ -47,7 +47,7 @@ class OrderProcessingApi(
     fun createNewOrder(
         scope: CoroutineScope,
         data: NewOrderData,
-        onOrderCreated: (orderId: String, merchOrderId:String) -> Unit
+        onOrderCreated: (orderId: String, merchOrderId: String) -> Unit
     ) {
         orderFlow.createNewOrder(data)
             .onStart { newOrderResult.value = Loading() }
@@ -60,13 +60,11 @@ class OrderProcessingApi(
 
     fun startVerification(
         scope: CoroutineScope,
-        walletAddress: WalletAddressData,
         pubKey: String,
         verificationData: (data: PublicKeyResponseData) -> VerificationData
     ) {
-        paymentFlow.verifyWalletAddress(walletAddress)
+        orderFlow.getVerificationKey(PublicKeyData(pubKey))
             .onStart { verificationResult.value = Loading() }
-            .flatMapConcat { orderFlow.getVerificationKey(PublicKeyData(pubKey)) }
             .flatMapConcat { orderFlow.sendToVerification { verificationData.invoke(it.data) } }
             .catch { verificationResult.value = it.mapFailure() }
             .onEach { verificationResult.value = Success() }
@@ -94,9 +92,14 @@ class OrderProcessingApi(
             .launchIn(scope)
     }
 
-    fun sendBasePaymentData(scope: CoroutineScope, paymentData: PaymentData) {
-        orderFlow.sendPaymentData(paymentData)
+    fun sendBasePaymentData(
+        scope: CoroutineScope,
+        walletAddress: WalletAddressData,
+        paymentData: PaymentData
+    ) {
+        paymentFlow.verifyWalletAddress(walletAddress)
             .onStart { basePaymentDataResult.value = Loading() }
+            .flatMapConcat { orderFlow.sendPaymentData(paymentData) }
             .catch { basePaymentDataResult.value = it.mapFailure() }
             .onEach { basePaymentDataResult.value = Success(it.data) }
             .launchIn(scope)

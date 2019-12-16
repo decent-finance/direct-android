@@ -114,7 +114,16 @@ class IdentityFragment : BaseOrderFragment() {
                 scanQrCodeWithPermissionCheck()
             })
             nextClick.observe(viewLifecycleOwner, Observer { handleNextClick() })
-            sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
+            sendBasePaymentDataRequest.observe(viewLifecycleOwner, requestObserver(
+                onOk = {},
+                onFail = {
+                    if (it.code == 400 && it.message.contains("wallet")) {
+                        userWallet.walletStatus = FieldStatus.INVALID
+                    } else {
+                        paymentDataObserver.onChanged(it)
+                    }
+                }
+            ))
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {},
@@ -157,10 +166,7 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onOk = {},
                 onFail = {
-                    if (it.code == 400 && it.message.contains("wallet")) {
-                        verificationInProgressEvent.value = false
-                        userWallet.walletStatus = FieldStatus.INVALID
-                    } else {
+                    if (it.code >= 500) {
                         purchaseFailed(it.message, model.extractAmounts())
                     }
                 },
