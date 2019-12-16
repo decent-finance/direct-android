@@ -45,13 +45,13 @@ ext {
     espressoVersion = '3.2.0'
     assertjVersion = '2.9.1'
     daggerMockVersion = '0.8.5'
-    mockitoVersion = '3.2.0'
+    mockitoVersion = '3.2.4'
     mockitoKotlinVersion = '2.2.0'
     testRunnerVersion = '1.2.0'
     testRulesVersion = '1.2.0'
     orchestratorVersion = '1.2.0'
     databindVersion = '3.5.2'
-    coroutinesVersion = '1.3.2'
+    coroutinesVersion = '1.3.3'
 
     lifecycleVersion = '2.1.0'
 }
