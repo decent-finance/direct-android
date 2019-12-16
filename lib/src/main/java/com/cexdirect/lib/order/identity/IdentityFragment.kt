@@ -157,12 +157,12 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onOk = {},
                 onFail = {
-                    if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
+                    if (it.code == 400 && it.message.contains("wallet")) {
                         verificationInProgressEvent.value = false
                         userWallet.walletStatus = FieldStatus.INVALID
-                    } /*else {
+                    } else {
                         purchaseFailed(it.message, model.extractAmounts())
-                    }*/
+                    }
                 },
                 final = {}
             ))

@@ -149,7 +149,7 @@ fun Context.paymentRejected(
 }
 
 fun Fragment.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
-    this.context!!.showPurchaseFailedScreen(reason, orderInfo)
+    this.requireContext().showPurchaseFailedScreen(reason, orderInfo)
     finish()
 }
 
@@ -160,7 +160,7 @@ fun Activity.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
 
 internal fun Context.showPurchaseFailedScreen(reason: String?, orderInfo: LastKnownOrderInfo) {
     Intent(this, ErrorActivity::class.java).apply {
-        putExtra("type", ErrorType.PURCHASE_FAILED.name)
+        putExtra("type", ErrorType.FAIL.name)
         putExtra("reason", reason)
         putExtra("info", orderInfo)
     }.let { startActivity(it) }
