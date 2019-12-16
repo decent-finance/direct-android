@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CEX.​IO Ltd (UK)
+ *    Copyright 2019 CEX.​IO Ltd (UK)
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  *    limitations under the License.
  */
 
-package com.cexdirect.lib.network.models
+package com.cexdirect.lib.error
 
-class OrderDataResponse(val data: OrderData) : ApiResponse<OrderData>() {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-    override fun extract() = data
-}
-
-data class OrderData(
-    val orderId: String,
-    val merchOrderId: String,
-    val orderStatus: OrderStatus
-)
+@Parcelize
+data class RefundExtras(val cardBin: String) : Parcelable

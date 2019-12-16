@@ -8,18 +8,7 @@ Please note, that this library requires `minSdkVersion` to be at least `21`. Thi
 
 ## Installation
 
-Add the following repositories to your top-level `build.gradle`
-
-```gradle
-allprojects {
-    repositories {
-        maven {	url  'https://dl.bintray.com/decent-finance/direct-android' }
-        maven { url 'https://dl.bintray.com/decent-finance/utils' }
-    }
-}
-```
-
-Also add these repositories so that required dependencies are properly resolved
+Please make sure that the following repositories are present in your project's `build.gradle` so that required dependencies are properly resolved
 
 ```gradle
 google()
@@ -45,6 +34,16 @@ android {
     }
 
     // ...
+}
+```
+
+Direct is included in `jcenter`. New versions should be available immediately after release, but if you're having problems with artifacts, please add these to your poject:
+```gradle
+allprojects {
+    repositories {
+        maven {	url  'https://dl.bintray.com/decent-finance/direct-android' }
+        maven { url 'https://dl.bintray.com/decent-finance/utils' }
+    }
 }
 ```
 

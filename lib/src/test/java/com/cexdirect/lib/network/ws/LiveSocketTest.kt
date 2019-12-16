@@ -16,6 +16,7 @@
 
 package com.cexdirect.lib.network.ws
 
+import android.os.Handler
 import com.cexdirect.lib.network.models.OrderInfoBody
 import com.cexdirect.lib.network.models.OrderInfoCredentials
 import com.google.gson.Gson
@@ -27,6 +28,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class LiveSocketTest {
 
@@ -36,29 +40,55 @@ class LiveSocketTest {
     @Mock
     lateinit var webSocket: WebSocket
 
+    @Mock
+    lateinit var handler: Handler
+
+    private lateinit var executor: ScheduledExecutorService
     private lateinit var liveSocket: LiveSocket
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         whenever(client.newWebSocket(any(), any())).thenReturn(webSocket)
-        liveSocket = LiveSocket(client, WsUrlProvider(), Gson())
+
+        executor = Executors.newSingleThreadScheduledExecutor()
+
+        doAnswer {
+            val runnable = it.getArgument<Runnable>(0)
+            val delay = it.getArgument<Long>(1)
+            executor.schedule(runnable, delay, TimeUnit.MILLISECONDS)
+            true
+        }.whenever(handler).postDelayed(any(), any())
     }
 
     @After
     fun tearDown() {
         reset(client, webSocket)
+        executor.shutdownNow()
     }
 
     @Test
     fun addSubscription() {
+        liveSocket = LiveSocket(client, WsUrlProvider(), Gson())
+
         liveSocket.sendMessage { givenOrderInfoSubscription() }
 
         assertThat(liveSocket.subscriptions).hasSize(1).containsKey("orderInfo")
     }
 
     @Test
+    fun dontAddSubscription() {
+        liveSocket = LiveSocket(client, WsUrlProvider(), Gson())
+
+        liveSocket.sendMessage(false) { givenOrderInfoSubscription() }
+
+        assertThat(liveSocket.subscriptions).isEmpty()
+    }
+
+    @Test
     fun removeSubscription() {
+        liveSocket = LiveSocket(client, WsUrlProvider(), Gson())
+
         liveSocket.sendMessage { givenOrderInfoSubscription() }
 
         liveSocket.removeSubscriptionByKey("orderInfo")
@@ -68,6 +98,8 @@ class LiveSocketTest {
 
     @Test
     fun sendMessagesOnStart() {
+        liveSocket = LiveSocket(client, WsUrlProvider(), Gson())
+
         liveSocket.sendMessage { givenOrderInfoSubscription() }
 
         liveSocket.start()
@@ -75,6 +107,64 @@ class LiveSocketTest {
 
         verify(webSocket).send(argWhere<String> { it.contains("ping") })
         verify(webSocket).send(argWhere<String> { it.contains("orderInfo") })
+    }
+
+    @Test
+    fun startSocket() {
+        val urlProvider = mock<WsUrlProvider> {
+            on { provideWsUrl() } doReturn "wss://example.com"
+        }
+        liveSocket = LiveSocket(client, urlProvider, Gson(), handler)
+
+        liveSocket.start()
+
+        verify(handler).post(notNull())
+        verify(urlProvider).provideWsUrl()
+        verify(client).newWebSocket(any(), eq(liveSocket.listener))
+    }
+
+    @Test
+    fun stopSocket() {
+        liveSocket = LiveSocket(client, WsUrlProvider(), Gson(), handler)
+
+        liveSocket.start()
+        liveSocket.stop()
+
+        verify(handler).removeCallbacks(eq(liveSocket.checkPongRunnable))
+        verify(handler).removeCallbacks(eq(liveSocket.sendPingRunnable))
+        verify(webSocket).close(eq(LiveSocket.CLOSE_STATUS), eq("Stopped"))
+    }
+
+    @Test
+    fun callStopAndStartOnReconnect() {
+        liveSocket = spy(LiveSocket(client, WsUrlProvider(), Gson(), handler))
+
+        liveSocket.reconnect()
+
+        verify(liveSocket).stop()
+        verify(liveSocket).start()
+    }
+
+    @Test
+    fun reconnectWhenMsgWasNotSent() {
+        whenever(webSocket.send(any<String>())).thenReturn(false)
+
+        liveSocket = spy(LiveSocket(client, WsUrlProvider(), Gson(), handler))
+
+        liveSocket.sendMessage(false) { givenOrderInfoSubscription() }
+
+        verify(liveSocket).reconnect()
+    }
+
+    @Test
+    fun reconnectWhenRawMsgWasNotSent() {
+        whenever(webSocket.send(any<String>())).thenReturn(false)
+
+        liveSocket = spy(LiveSocket(client, WsUrlProvider(), Gson(), handler))
+
+        liveSocket.sendRawMessage("hi!")
+
+        verify(liveSocket).reconnect()
     }
 
     private fun givenResponse(): Response =

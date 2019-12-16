@@ -33,13 +33,8 @@ class PurchaseFailedFragment : BaseErrorFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = DataBindingUtil.inflate<FragmentPurchaseFailedBinding>(
-        inflater,
-        R.layout.fragment_purchase_failed,
-        container,
-        false
-    ).apply {
-        binding = this
-    }.root
+        inflater, R.layout.fragment_purchase_failed, container, false
+    ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

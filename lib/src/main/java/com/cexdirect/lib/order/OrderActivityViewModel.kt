@@ -22,7 +22,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cexdirect.lib.*
+import com.cexdirect.lib.error.RefundExtras
 import com.cexdirect.lib.network.Resource
+import com.cexdirect.lib.network.Success
 import com.cexdirect.lib.network.models.*
 import com.cexdirect.lib.order.confirmation.CheckCode
 import com.cexdirect.lib.order.confirmation.TdsData
@@ -128,7 +130,7 @@ class OrderActivityViewModel(
         .switchMap { api.changeEmail(this@OrderActivityViewModel, it) }
     val changeCheckCodeRequest = resendCodeEvent
         .throttleFirst(BuildConfig.THROTTLE_DELAY_MILLIS, TimeUnit.MILLISECONDS)
-        .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, orderId.get()!!) }
+        .switchMap { api.requestNewCheckCode(this@OrderActivityViewModel, Direct.pendingOrderId) }
     val checkCodeRequest = api.checkCode
     // --- Requests --- //
 
@@ -211,8 +213,8 @@ class OrderActivityViewModel(
         }
     }
 
-    private fun updateOrderId(orderId: String) {
-        this.orderId.set(orderId)
+    private fun updateOrderId(orderId: String, merchOrderId: String) {
+        this.orderId.set(merchOrderId)
         Direct.pendingOrderId = orderId
     }
 
@@ -236,8 +238,9 @@ class OrderActivityViewModel(
                         orderAmounts.selectedCryptoAmount,
                         orderAmounts.selectedCryptoCurrency
                     )
-                )
-            ) { updateOrderId(it) }
+                ),
+                this::updateOrderId
+            )
         }
     }
 
@@ -303,7 +306,7 @@ class OrderActivityViewModel(
     }
 
     fun setPaymentBase() {
-        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, orderId.get())
+        Direct.notifyOrderStatusChanged(OrderStatus.INCOMPLETE, Direct.pendingOrderId)
         orderStep.set(OrderStep.PAYMENT_BASE)
         locationEmailContentState.set(CollapsibleLayout.ContentState.COLLAPSED)
         paymentBaseContentState.set(CollapsibleLayout.ContentState.EXPANDED)
@@ -331,7 +334,11 @@ class OrderActivityViewModel(
                 emptyMap()
             }
 
-            api.sendBasePaymentData(this, PaymentData(payment, additional))
+            api.sendBasePaymentData(
+                this,
+                WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency),
+                PaymentData(payment, additional)
+            )
         }
     }
 
@@ -344,7 +351,6 @@ class OrderActivityViewModel(
     private fun startVerificationChain() {
         api.startVerification(
             this,
-            WalletAddressData(userWallet.address, orderAmounts.selectedCryptoCurrency),
             userCardData.getPublicKey()
         ) {
             VerificationData(
@@ -429,6 +435,9 @@ class OrderActivityViewModel(
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
                 rejectAction.invoke(OrderStatus.REJECTED)
             }
+            OrderStatus.CRASHED -> statusWatcher.updateAndDo(OrderStatus.CRASHED) {
+                rejectAction.invoke(OrderStatus.CRASHED)
+            }
             OrderStatus.IVS_FAILED -> statusWatcher.updateAndDo(OrderStatus.IVS_FAILED) {
                 rejectAction.invoke(OrderStatus.IVS_FAILED)
             }
@@ -455,10 +464,7 @@ class OrderActivityViewModel(
                 }
             }
             OrderStatus.PSS_READY -> statusWatcher.updateAndDo(OrderStatus.PSS_READY) {
-                api.startProcessing(
-                    this,
-                    userCardData.getPublicKey()
-                ) {
+                api.startProcessing(this, userCardData.getPublicKey()) {
                     VerificationData(
                         secretId = it.secretId,
                         cardData = userCardData.generateProcessingCardData(it.publicKey)
@@ -466,6 +472,15 @@ class OrderActivityViewModel(
                 }
             }
             OrderStatus.PSS_PENDING -> statusWatcher.updateAndDo(OrderStatus.PSS_PENDING) {}
+            OrderStatus.PSS_FAILED -> statusWatcher.updateAndDo(OrderStatus.PSS_FAILED) {
+                rejectAction.invoke(OrderStatus.PSS_FAILED)
+            }
+            OrderStatus.PSS_REJECTED -> statusWatcher.updateAndDo(OrderStatus.PSS_REJECTED) {
+                rejectAction.invoke(OrderStatus.PSS_REJECTED)
+            }
+            OrderStatus.REFUND_PENDING -> statusWatcher.updateAndDo(OrderStatus.REFUND_PENDING) {
+                rejectAction.invoke(OrderStatus.REFUND_PENDING)
+            }
             OrderStatus.PSS_3DS_REQUIRED, OrderStatus.WAITING_FOR_CONFIRMATION, OrderStatus.COMPLETE ->
                 statusWatcher.updateAndDo(data.orderStatus) {
                     changeOrderStep()
@@ -536,7 +551,7 @@ class OrderActivityViewModel(
         checkCode.forceValidate()
 
         if (checkCode.isValid()) {
-            api.checkCode(this, orderId.get()!!, checkCode.code)
+            api.checkCode(this, Direct.pendingOrderId, checkCode.code)
         }
     }
 
@@ -549,7 +564,7 @@ class OrderActivityViewModel(
         data: OrderInfoData,
         showLoaderAction: () -> Unit,
         hideLoaderAction: () -> Unit,
-        rejectAction: () -> Unit
+        rejectAction: (status: OrderStatus) -> Unit
     ) {
         when (data.orderStatus) {
             OrderStatus.PSS_3DS_REQUIRED -> statusWatcher.updateAndDo(OrderStatus.PSS_3DS_REQUIRED) {
@@ -568,7 +583,11 @@ class OrderActivityViewModel(
             }
             OrderStatus.REJECTED -> statusWatcher.updateAndDo(OrderStatus.REJECTED) {
                 hideLoaderAction.invoke()
-                rejectAction.invoke()
+                rejectAction.invoke(OrderStatus.REJECTED)
+            }
+            OrderStatus.CRASHED -> statusWatcher.updateAndDo(OrderStatus.CRASHED) {
+                hideLoaderAction.invoke()
+                rejectAction.invoke(OrderStatus.CRASHED)
             }
             else -> { /* do nothing */
             }
@@ -578,7 +597,7 @@ class OrderActivityViewModel(
     @VisibleForTesting
     fun askFor3ds(threeDS: Tds) {
         orderStep.set(OrderStep.TDS)
-        tdsData.set(TdsData(threeDS.url, threeDS.data, threeDS.txId, orderId.get()!!))
+        tdsData.set(TdsData(threeDS.url, threeDS.data, threeDS.txId, Direct.pendingOrderId))
     }
 
     @VisibleForTesting
@@ -636,6 +655,12 @@ class OrderActivityViewModel(
     fun requestScrollTo(coordinate: Int) {
         scrollRequestEvent.postValue(coordinate)
     }
+
+    fun extractRefundExtras() =
+        (api.basePaymentDataResult.value as? Success<OrderInfoData>)?.data?.basic?.cardBin?.let {
+            RefundExtras(it)
+        } ?: error("No info present")
+
 
     override fun onCleared() {
         super.onCleared()

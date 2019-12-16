@@ -30,7 +30,6 @@ import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
 import com.cexdirect.lib.network.models.Tds
 import com.cexdirect.lib.network.models.TdsExtras
-import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.util.hasVisibility
 import com.nhaarman.mockitokotlin2.whenever
@@ -49,9 +48,6 @@ class PaymentConfirmationFragmentTest {
 
     @Mock
     lateinit var messenger: Messenger
-
-    @Mock
-    lateinit var cexdSocket: LiveSocket
 
     private val mockServer = MockWebServer()
 

@@ -29,7 +29,6 @@ import com.cexdirect.lib.R
 import com.cexdirect.lib.databinding.FragmentPaymentConfirmationBinding
 import com.cexdirect.lib.error.paymentRejected
 import com.cexdirect.lib.error.purchaseFailed
-import com.cexdirect.lib.network.models.OrderStatus
 import com.cexdirect.lib.network.webview.Client
 import com.cexdirect.lib.network.ws.CODE_BAD_REQUEST
 import com.cexdirect.lib.order.BaseOrderFragment
@@ -70,7 +69,7 @@ class PaymentConfirmationFragment : BaseOrderFragment() {
                         { hideLoader() },
                         {
                             // TODO: for now, only REJECTED is possible here
-                            requireContext().paymentRejected(OrderStatus.REJECTED, extractAmounts())
+                            requireContext().paymentRejected(it, extractAmounts(), extractRefundExtras())
                             finish()
                         }
                     )

@@ -22,22 +22,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.cexdirect.lib.R
-import com.cexdirect.lib.databinding.FragmentVerificationRejectedBinding
+import com.cexdirect.lib.databinding.FragmentRefundBinding
 
-class VerificationRejectedFragment : BaseErrorFragment() {
+class RefundFragment : BaseErrorFragment() {
 
-    private lateinit var binding: FragmentVerificationRejectedBinding
+    private lateinit var binding: FragmentRefundBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = DataBindingUtil.inflate<FragmentVerificationRejectedBinding>(
-        inflater, R.layout.fragment_verification_rejected, container, false
+    ) = DataBindingUtil.inflate<FragmentRefundBinding>(
+        inflater, R.layout.fragment_refund, container, false
     ).apply { binding = this }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        model.cardBin.set(
+            requireArguments().getParcelable<RefundExtras>("refund_extras")!!.cardBin
+        )
         binding.model = model
     }
 }

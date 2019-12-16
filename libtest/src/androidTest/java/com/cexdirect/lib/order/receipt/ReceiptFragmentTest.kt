@@ -197,9 +197,10 @@ class ReceiptFragmentTest {
         verify(api).removeOrderInfoSubscription()
     }
 
-    private fun givenFinishedValue(): Success<OrderInfoData> {
-        return Success(
+    private fun givenFinishedValue(): Success<OrderInfoData> =
+        Success(
             OrderInfoData(
+                "abc123",
                 "abc123",
                 OrderStatus.FINISHED,
                 Date(),
@@ -225,7 +226,6 @@ class ReceiptFragmentTest {
                 emptyMap()
             )
         )
-    }
 
     private fun givenPaymentInfo() = PaymentInfo(
         fiat = MonetaryData("100", "USD"),

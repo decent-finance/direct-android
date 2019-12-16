@@ -35,11 +35,11 @@ class PaymentFlow(private val service: PaymentService) {
 
     fun verifyWalletAddress(addressData: WalletAddressData) =
         flow {
-            if (!BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG && BuildConfig.FLAVOR == "dev") {
+                emit(ApiResponse())
+            } else {
                 val (address, currency) = addressData
                 emit(service.verifyWalletAddress(address, currency))
-            } else {
-                emit(ApiResponse())
             }
         }.flowOn(DispatcherRegistry.io)
 

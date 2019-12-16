@@ -40,24 +40,23 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
 import com.cexdirect.lib.DirectNetworkMockRule
 import com.cexdirect.lib.R
+import com.cexdirect.lib.network.Failure
+import com.cexdirect.lib.network.Resource
 import com.cexdirect.lib.network.models.*
-import com.cexdirect.lib.network.ws.LiveSocket
 import com.cexdirect.lib.network.ws.Messenger
 import com.cexdirect.lib.order.OrderActivityViewModel
+import com.cexdirect.lib.order.OrderProcessingApi
 import com.cexdirect.lib.order.OrderStep
 import com.cexdirect.lib.order.scanner.QrScannerActivity
 import com.cexdirect.lib.util.FieldStatus
 import com.cexdirect.lib.util.entryData
 import com.cexdirect.lib.util.hasVisibility
 import com.cexdirect.lib.views.CollapsibleLayout
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.mockito.Mock
 import java.util.*
 import org.assertj.core.api.Java6Assertions.assertThat as asserjThat
@@ -75,9 +74,10 @@ class IdentityFragmentTest {
     lateinit var messenger: Messenger
 
     @Mock
-    lateinit var cexdSocket: LiveSocket
+    lateinit var api: OrderProcessingApi
 
-    private val mockServer = MockWebServer()
+    private val orderInfo = MutableLiveData<Resource<OrderInfoData>>()
+    private val baseData = MutableLiveData<Resource<OrderInfoData>>()
 
     private lateinit var scenario: FragmentScenario<IdentityFragment>
 
@@ -85,9 +85,16 @@ class IdentityFragmentTest {
     fun setUp() {
         Intents.init()
 
-        mockServer.start(8080)
+        whenever(api.subscribeToOrderInfo()).thenReturn(orderInfo)
+        whenever(api.newOrderResult).thenReturn(mock())
+        whenever(api.verificationResult).thenReturn(mock())
+        whenever(api.processingResult).thenReturn(mock())
+        whenever(api.uploadResult).thenReturn(mock())
+        whenever(api.basePaymentDataResult).thenReturn(baseData)
+        whenever(api.extraPaymentDataResult).thenReturn(mock())
+        whenever(api.checkCode).thenReturn(mock())
 
-        whenever(messenger.subscribeToOrderInfo()).thenReturn(MutableLiveData())
+        whenever(messenger.subscribeToOrderInfo()).thenReturn(orderInfo)
 
         scenario = launchFragmentInContainer(
             themeResId = R.style.Direct, instantiate = { ScrollableIdentityFragment() }
@@ -96,8 +103,6 @@ class IdentityFragmentTest {
 
     @After
     fun tearDown() {
-        mockServer.shutdown()
-
         Intents.release()
     }
 
@@ -243,6 +248,20 @@ class IdentityFragmentTest {
             .check(hasVisibility(View.VISIBLE))
     }
 
+    @Ignore("Fix ClassCastException")
+    @Test
+    fun displayValidationErrorForWalletAddress() {
+        scenario.onFragment {
+            goToBase(it.model)
+            baseData.value =
+                Failure(400, "Error while executing 'Validate wallet address for crypto currency'")
+        }
+
+        SystemClock.sleep(500)
+
+        onView(withText(R.string.cexd_invalid_wallet)).check(matches(isDisplayed()))
+    }
+
     @Test
     fun launchQrScanner() {
         scenario.onFragment {
@@ -326,6 +345,7 @@ class IdentityFragmentTest {
 
     private fun givenOrderInfo() =
         OrderInfoData(
+            "abc123",
             "abc123",
             OrderStatus.PSS_WAITDATA,
             Date(),

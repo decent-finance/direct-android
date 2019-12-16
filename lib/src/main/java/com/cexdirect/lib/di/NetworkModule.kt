@@ -121,7 +121,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMessenger(cexdSocket: LiveSocket, gson: Gson) = Messenger(cexdSocket, gson)
+    fun provideMessenger(socket: LiveSocket, gson: Gson) = Messenger(socket, gson)
 
     @Provides
     @Singleton

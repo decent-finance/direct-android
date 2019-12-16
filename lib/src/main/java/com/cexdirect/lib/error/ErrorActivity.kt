@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -75,7 +76,7 @@ class ErrorActivity : BaseActivity() {
                 .beginTransaction()
                 .replace(binding.aeErrorFrame.id, PurchaseFailedFragment())
                 .commit()
-            ErrorType.VERIFICATION_ERROR -> supportFragmentManager
+            ErrorType.FAIL -> supportFragmentManager
                 .beginTransaction()
                 .replace(binding.aeErrorFrame.id, GenericErrorFragment())
                 .commit()
@@ -87,13 +88,29 @@ class ErrorActivity : BaseActivity() {
                 .beginTransaction()
                 .replace(binding.aeErrorFrame.id, LocationNotSupportedFragment())
                 .commit()
+            ErrorType.PROCESSING_REJECTED -> supportFragmentManager
+                .beginTransaction()
+                .replace(binding.aeErrorFrame.id, ProcessingRejectedFragment())
+                .commit()
+            ErrorType.REFUND -> supportFragmentManager
+                .beginTransaction()
+                .replace(binding.aeErrorFrame.id, RefundFragment().apply {
+                    arguments = bundleOf(
+                        "refund_extras" to intent.getParcelableExtra<RefundExtras>("refund_extras")
+                    )
+                })
+                .commit()
         }
 
         model.clearData()
     }
 }
 
-fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrderInfo) {
+fun Context.paymentRejected(
+    rejectStatus: OrderStatus,
+    orderInfo: LastKnownOrderInfo,
+    refundExtras: RefundExtras
+) {
     when (rejectStatus) {
         OrderStatus.IVS_REJECTED -> {
             Intent(this, ErrorActivity::class.java).apply {
@@ -101,9 +118,15 @@ fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrder
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
-        OrderStatus.IVS_FAILED -> {
+        OrderStatus.IVS_FAILED, OrderStatus.PSS_FAILED, OrderStatus.CRASHED -> {
             Intent(this, ErrorActivity::class.java).apply {
-                putExtra("type", ErrorType.VERIFICATION_ERROR.name)
+                putExtra("type", ErrorType.FAIL.name)
+                putExtra("info", orderInfo)
+            }.let { startActivity(it) }
+        }
+        OrderStatus.PSS_REJECTED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.PROCESSING_REJECTED.name)
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
@@ -114,12 +137,19 @@ fun Context.paymentRejected(rejectStatus: OrderStatus, orderInfo: LastKnownOrder
                 putExtra("info", orderInfo)
             }.let { startActivity(it) }
         }
+        OrderStatus.REFUND_PENDING, OrderStatus.REFUNDED -> {
+            Intent(this, ErrorActivity::class.java).apply {
+                putExtra("type", ErrorType.REFUND.name)
+                putExtra("info", orderInfo)
+                putExtra("refund_extras", refundExtras)
+            }.let { startActivity(it) }
+        }
         else -> error("Illegal reject status: ${rejectStatus.name}")
     }
 }
 
 fun Fragment.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
-    this.context!!.showPurchaseFailedScreen(reason, orderInfo)
+    this.requireContext().showPurchaseFailedScreen(reason, orderInfo)
     finish()
 }
 
@@ -130,7 +160,7 @@ fun Activity.purchaseFailed(reason: String?, orderInfo: LastKnownOrderInfo) {
 
 internal fun Context.showPurchaseFailedScreen(reason: String?, orderInfo: LastKnownOrderInfo) {
     Intent(this, ErrorActivity::class.java).apply {
-        putExtra("type", ErrorType.PURCHASE_FAILED.name)
+        putExtra("type", ErrorType.FAIL.name)
         putExtra("reason", reason)
         putExtra("info", orderInfo)
     }.let { startActivity(it) }
@@ -155,5 +185,10 @@ fun Fragment.locationNotSupported(
 }
 
 enum class ErrorType {
-    VERIFICATION_ERROR, NOT_VERIFIED, LOCATION_NOT_SUPPORTED, PURCHASE_FAILED
+    FAIL,
+    NOT_VERIFIED,
+    LOCATION_NOT_SUPPORTED,
+    PURCHASE_FAILED,
+    PROCESSING_REJECTED,
+    REFUND
 }

@@ -114,10 +114,26 @@ class IdentityFragment : BaseOrderFragment() {
                 scanQrCodeWithPermissionCheck()
             })
             nextClick.observe(viewLifecycleOwner, Observer { handleNextClick() })
-            sendBasePaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
+            sendBasePaymentDataRequest.observe(viewLifecycleOwner, requestObserver(
+                onOk = {},
+                onFail = {
+                    if (it.code == 400 && it.message.contains("wallet")) {
+                        userWallet.walletStatus = FieldStatus.INVALID
+                    } else {
+                        paymentDataObserver.onChanged(it)
+                    }
+                }
+            ))
             sendExtraPaymentDataRequest.observe(viewLifecycleOwner, paymentDataObserver)
             sendToProcessingRequest.observe(viewLifecycleOwner, requestObserver(
-                onOk = {}, final = {}
+                onOk = {},
+                onFail = {
+                    if (it.code != 400) {
+                        hideLoader()
+                        purchaseFailed(it.message, model.extractAmounts())
+                    }
+                },
+                final = {}
             ))
             newOrderInfoRequest.observe(viewLifecycleOwner, requestObserver(
                 onOk = {
@@ -150,10 +166,7 @@ class IdentityFragment : BaseOrderFragment() {
                 },
                 onOk = {},
                 onFail = {
-                    verificationInProgressEvent.value = false
-                    if (it.message == "Error while executing 'Validate wallet address for crypto currency'") {
-                        userWallet.walletStatus = FieldStatus.INVALID
-                    } else {
+                    if (it.code >= 500) {
                         purchaseFailed(it.message, model.extractAmounts())
                     }
                 },
@@ -190,7 +203,9 @@ class IdentityFragment : BaseOrderFragment() {
                 model.updateOrderStatus(
                     it,
                     {
-                        requireContext().paymentRejected(it, model.extractAmounts())
+                        requireContext().paymentRejected(
+                            it, model.extractAmounts(), model.extractRefundExtras()
+                        )
                         finish()
                     },
                     { model.verificationInProgressEvent.value = false },
