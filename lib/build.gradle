@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-version '1.0.0-alpha9'
+version '1.0.0-beta1'
 
 android {
     compileSdkVersion 28
